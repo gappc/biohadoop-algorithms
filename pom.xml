@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.ac.uibk.dps</groupId>
-	<artifactId>biohadoop-algorithm</artifactId>
+	<artifactId>biohadoop-algorithms</artifactId>
 	<version>0.0.4-SNAPSHOT</version>
 
 	<properties>

@@ -42,7 +42,7 @@ public class NsgaIIConfigWriter {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(NsgaIIConfigWriter.class);
 
-	private static String CONF_OUTPUT_DIR = "/sdb/studium/master-thesis/code/git/masterthesis/conf";
+	private static String CONF_OUTPUT_DIR = "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/conf";
 	private static String CONF_NAME = "biohadoop-nsgaii";
 	private static String LOCAL_OUTPUT_NAME = CONF_OUTPUT_DIR + "/" + CONF_NAME
 			+ "-local.json";
