@@ -9,13 +9,11 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.example.config.ExampleAlgorithmConfig;
-import at.ac.uibk.dps.biohadoop.datastore.DataClient;
-import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.solver.ProgressClient;
+import at.ac.uibk.dps.biohadoop.solver.ProgressClientImpl;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
 public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
@@ -30,10 +28,8 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 		// Get client to distribute work
 		TaskClient<Integer, String> taskClient = new TaskClientImpl<>(
 				EXAMPLE_QUEUE);
-		// Get client for internal data exchange
-		DataClient dataClient = new DataClientImpl(solverId);
-		// Get handler client
-		HandlerClient handlerClient = new HandlerClientImpl(solverId);
+		// Get client to submit progress to Hadoop
+		ProgressClient progressClient = new ProgressClientImpl(solverId);
 
 		int size = config.getSize();
 		List<TaskFuture<String>> tasks = new ArrayList<>();
@@ -45,7 +41,10 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 				// Add task to queue (distribute task to workers)
 				TaskFuture<String> task = taskClient.add(i);
 				tasks.add(task);
+
 				submitted++;
+				progressClient.setProgress((float) submitted
+						/ (float) (2 * size));
 			} catch (InterruptedException e) {
 				LOG.error("Got interrupted while submitting Task - data: {}",
 						i, e);
@@ -60,11 +59,9 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 				String returnValue = task.get();
 				LOG.info("Got result: {}", returnValue);
 
-				// Update algorithm information
-				dataClient.setDefaultData(0, 0, size, returned);
-				handlerClient.invokeDefaultHandlers();
-
 				returned++;
+				progressClient.setProgress((float) (submitted + returned)
+						/ (float) (2 * size));
 			} catch (InterruptedException e) {
 				LOG.error("Got interrupted while waiting for TaskFuture {}",
 						task, e);
