@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.ga.config;
+package at.ac.uibk.dps.biohadoop.algorithms.example.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,23 +12,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaKryo;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaLocal;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaRest;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaSocket;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaWebSocket;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.KryoGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.LocalGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.RestGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.SocketGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.WebSocketGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger;
+import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.KryoExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.LocalExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.RestExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.SocketExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.WebSocketExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.KryoExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.LocalExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.RestExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.SocketExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.WebSocketExampleWorker;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.master.MasterLifecycle;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
-import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionHandler;
 import at.ac.uibk.dps.biohadoop.handler.distribution.ZooKeeperConfiguration;
@@ -41,29 +38,24 @@ import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class GaConfigWriter {
+public class ExampleConfigWriter {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(GaConfigWriter.class);
+			.getLogger(ExampleConfigWriter.class);
 
 	private static String CONF_OUTPUT_DIR = "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/conf";
-	private static String CONF_NAME = "biohadoop-ga";
+	private static String CONF_NAME = "biohadoop-example";
 	private static String LOCAL_OUTPUT_NAME = CONF_OUTPUT_DIR + "/" + CONF_NAME
 			+ "-local.json";
 	private static String REMOTE_OUTPUT_NAME = CONF_OUTPUT_DIR + "/"
 			+ CONF_NAME + ".json";
-
-	private static String LOCAL_PERSISTENCE_SAVE_PATH = "/tmp/biohadoop/ga";
-	private static String REMOTE_PERSISTENCE_SAVE_PATH = "/biohadoop/persistence/ga";
-	private static String LOCAL_PERSISTENCE_LOAD_PATH = "/tmp/biohadoop/ga/GA-LOCAL-1/481038014/";
-	private static String REMOTE_PERSISTENCE_LOAD_PATH = "/biohadoop/persistence/ga";
 
 	private static String LOCAL_DISTRIBUTION_INFO_HOST = "localhost";
 	private static int LOCAL_DISTRIBUTION_INFO_PORT = 2181;
 	private static String REMOTE_DISTRIBUTION_INFO_HOST = "master";
 	private static int REMOTE_DISTRIBUTION_INFO_PORT = 2181;
 
-	private GaConfigWriter() {
+	private ExampleConfigWriter() {
 	}
 
 	public static void main(String[] args) throws IOException,
@@ -87,30 +79,30 @@ public class GaConfigWriter {
 		String version = "0.1";
 		List<String> includePaths = Arrays.asList("/biohadoop/lib/",
 				"/biohadoop/conf/");
-		SolverConfiguration solverConfig = buildSolverConfig("GA-LOCAL-1",
+		SolverConfiguration solverConfig = buildSolverConfig("EXAMPLE-LOCAL-1",
 				local);
 		CommunicationConfiguration communicationConfiguration = buildCommunicationConfiguration();
 		ZooKeeperConfiguration globalDistributionConfiguration = buildGlobalDistributionConfig(local);
 
-		return new BiohadoopConfiguration(version, includePaths, Arrays.asList(
-				solverConfig, solverConfig, solverConfig, solverConfig),
-				communicationConfiguration, globalDistributionConfiguration);
+		return new BiohadoopConfiguration(version, includePaths,
+				Arrays.asList(solverConfig), communicationConfiguration,
+				globalDistributionConfiguration);
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
 		List<Class<? extends MasterLifecycle>> masterEndpoints = new ArrayList<>();
-		masterEndpoints.add(GaSocket.class);
-		masterEndpoints.add(GaKryo.class);
-		masterEndpoints.add(GaRest.class);
-		masterEndpoints.add(GaWebSocket.class);
-		masterEndpoints.add(GaLocal.class);
+		masterEndpoints.add(SocketExampleMaster.class);
+		masterEndpoints.add(KryoExampleMaster.class);
+		masterEndpoints.add(RestExampleMaster.class);
+		masterEndpoints.add(WebSocketExampleMaster.class);
+		masterEndpoints.add(LocalExampleMaster.class);
 
 		Map<String, Integer> workerEndpoints = new HashMap<>();
-		workerEndpoints.put(SocketGaWorker.class.getCanonicalName(), 3);
-		workerEndpoints.put(KryoGaWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(RestGaWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(WebSocketGaWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(LocalGaWorker.class.getCanonicalName(), 1);
+		workerEndpoints.put(SocketExampleWorker.class.getCanonicalName(), 3);
+		workerEndpoints.put(KryoExampleWorker.class.getCanonicalName(), 1);
+		workerEndpoints.put(RestExampleWorker.class.getCanonicalName(), 1);
+		workerEndpoints.put(WebSocketExampleWorker.class.getCanonicalName(), 1);
+		workerEndpoints.put(LocalExampleWorker.class.getCanonicalName(), 1);
 
 		return new CommunicationConfiguration(masterEndpoints, workerEndpoints);
 	}
@@ -119,57 +111,25 @@ public class GaConfigWriter {
 			boolean local) {
 		AlgorithmConfiguration algorithmConfiguration = buildAlgorithmConfig(local);
 
-		FileSaveConfiguration fileSaveConfiguration = buildFileSaveConfig(local);
-		FileLoadConfiguration fileLoadConfiguration = buildFileLoadConfig(local);
-		DistributionConfiguration distributionConfiguration = buildDistributionConfig();
-		List<HandlerConfiguration> handlers = new ArrayList<>();
-		handlers.add(fileSaveConfiguration);
-		handlers.add(fileLoadConfiguration);
-		handlers.add(distributionConfiguration);
+		// FileSaveConfiguration fileSaveConfiguration =
+		// buildFileSaveConfig(local);
+		// FileLoadConfiguration fileLoadConfiguration =
+		// buildFileLoadConfig(local);
+		// DistributionConfiguration distributionConfiguration =
+		// buildDistributionConfig();
+		// List<HandlerConfiguration> handlers = new ArrayList<>();
+		// handlers.add(fileSaveConfiguration);
+		// handlers.add(fileLoadConfiguration);
+		// handlers.add(distributionConfiguration);
 
-		return new SolverConfiguration(name, algorithmConfiguration, Ga.class,
-				handlers);
+		return new SolverConfiguration(name, algorithmConfiguration,
+				Example.class, null);
 	}
 
 	private static AlgorithmConfiguration buildAlgorithmConfig(boolean local) {
-		String dataFile = null;
-		if (local) {
-			dataFile = "/sdb/studium/master-thesis/code/git/masterthesis/data/att48.tsp";
-		} else {
-			dataFile = "/biohadoop/data/att48.tsp";
-		}
-
-		GaAlgorithmConfig gaAlgorithmConfig = new GaAlgorithmConfig();
-		gaAlgorithmConfig.setDataFile(dataFile);
-		gaAlgorithmConfig.setMaxIterations(10000);
-		gaAlgorithmConfig.setPopulationSize(10);
-
-		return gaAlgorithmConfig;
-	}
-
-	private static FileSaveConfiguration buildFileSaveConfig(boolean local) {
-		String savePath = null;
-		if (local) {
-			savePath = LOCAL_PERSISTENCE_SAVE_PATH;
-		} else {
-			savePath = REMOTE_PERSISTENCE_SAVE_PATH;
-		}
-		return new FileSaveConfiguration(FileSaveHandler.class, savePath, 1000);
-	}
-
-	private static FileLoadConfiguration buildFileLoadConfig(boolean local) {
-		String loadPath = null;
-		if (local) {
-			loadPath = LOCAL_PERSISTENCE_LOAD_PATH;
-		} else {
-			loadPath = REMOTE_PERSISTENCE_LOAD_PATH;
-		}
-		return new FileLoadConfiguration(FileLoadHandler.class, loadPath, false);
-	}
-
-	private static DistributionConfiguration buildDistributionConfig() {
-		return new DistributionConfiguration(DistributionHandler.class,
-				GaSimpleMerger.class, GaBestResultGetter.class, 2000);
+		ExampleAlgorithmConfig algorithmConfig = new ExampleAlgorithmConfig();
+		algorithmConfig.setSize(1000);
+		return algorithmConfig;
 	}
 
 	private static ZooKeeperConfiguration buildGlobalDistributionConfig(
