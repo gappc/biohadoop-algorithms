@@ -12,8 +12,7 @@ import at.ac.uibk.dps.biohadoop.algorithms.example.config.ExampleAlgorithmConfig
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
-import at.ac.uibk.dps.biohadoop.solver.ProgressClient;
-import at.ac.uibk.dps.biohadoop.solver.ProgressClientImpl;
+import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
 public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
@@ -28,14 +27,14 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 		// Get client to distribute work
 		TaskClient<Integer, String> taskClient = new TaskClientImpl<>(
 				EXAMPLE_QUEUE);
-		// Get client to submit progress to Hadoop
-		ProgressClient progressClient = new ProgressClientImpl(solverId);
 
 		int size = config.getSize();
 		List<TaskFuture<String>> tasks = new ArrayList<>();
 
-		int submitted = 0;
+		ProgressService.setProgress(solverId, 0.1f);
 
+		int submitted = 0;
+		
 		for (int i = 0; i < size; i++) {
 			try {
 				// Add task to queue (distribute task to workers)
@@ -43,13 +42,13 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 				tasks.add(task);
 
 				submitted++;
-				progressClient.setProgress((float) submitted
-						/ (float) (2 * size));
 			} catch (InterruptedException e) {
 				LOG.error("Got interrupted while submitting Task - data: {}",
 						i, e);
 			}
 		}
+		
+		ProgressService.setProgress(solverId, 0.5f);
 
 		int returned = 0;
 
@@ -60,8 +59,6 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 				LOG.info("Got result: {}", returnValue);
 
 				returned++;
-				progressClient.setProgress((float) (submitted + returned)
-						/ (float) (2 * size));
 			} catch (InterruptedException e) {
 				LOG.error("Got interrupted while waiting for TaskFuture {}",
 						task, e);
@@ -69,6 +66,8 @@ public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
 		}
 
 		LOG.info("Submitted {} tasks, got {} results", submitted, returned);
+
+		ProgressService.setProgress(solverId, 1.0f);
 
 		return returned;
 	}
