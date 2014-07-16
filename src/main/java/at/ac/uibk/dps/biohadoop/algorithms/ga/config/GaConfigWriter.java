@@ -134,7 +134,7 @@ public class GaConfigWriter {
 	private static AlgorithmConfiguration buildAlgorithmConfig(boolean local) {
 		String dataFile = null;
 		if (local) {
-			dataFile = "/sdb/studium/master-thesis/code/git/masterthesis/data/att48.tsp";
+			dataFile = "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp";
 		} else {
 			dataFile = "/biohadoop/data/att48.tsp";
 		}
