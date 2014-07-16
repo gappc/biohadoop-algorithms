@@ -9,7 +9,7 @@ import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-public class RestExampleWorker extends RestWorker<Integer, String> {
+public class RestExampleWorker extends RestWorker<int[], String> {
 
 	@Override
 	public Class<? extends MasterEndpoint> getMasterEndpoint() {
@@ -22,18 +22,13 @@ public class RestExampleWorker extends RestWorker<Integer, String> {
 	}
 
 	@Override
-	public String compute(Integer data) {
+	public String compute(int[] data) {
 		return "Got " + data + " at " + new Date();
 	}
 
 	@Override
-	public String getPath() {
-		return "/example";
-	}
-
-	@Override
-	public TypeReference<Message<Integer>> getInputType() {
-		return new TypeReference<Message<Integer>>() {
+	public TypeReference<Message<int[]>> getInputType() {
+		return new TypeReference<Message<int[]>>() {
 		};
 	}
 

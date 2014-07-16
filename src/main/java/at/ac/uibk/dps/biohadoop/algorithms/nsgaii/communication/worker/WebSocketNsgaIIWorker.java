@@ -30,9 +30,4 @@ public class WebSocketNsgaIIWorker extends WebSocketWorker<double[], double[]> {
 		return result;
 	}
 
-	@Override
-	public String getPath() {
-		return "/nsgaii";
-	}
-
 }

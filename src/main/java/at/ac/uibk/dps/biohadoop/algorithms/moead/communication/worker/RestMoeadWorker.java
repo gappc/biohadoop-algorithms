@@ -29,11 +29,6 @@ public class RestMoeadWorker extends RestWorker<double[], double[]> {
 	}
 
 	@Override
-	public String getPath() {
-		return "/moead";
-	}
-
-	@Override
 	public TypeReference<Message<double[]>> getInputType() {
 		return new TypeReference<Message<double[]>>() {
 		};

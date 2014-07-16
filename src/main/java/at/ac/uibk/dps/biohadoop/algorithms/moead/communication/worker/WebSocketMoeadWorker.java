@@ -30,9 +30,4 @@ public class WebSocketMoeadWorker extends WebSocketWorker<double[], double[]> {
 		return result;
 	}
 
-	@Override
-	public String getPath() {
-		return "/moead";
-	}
-
 }

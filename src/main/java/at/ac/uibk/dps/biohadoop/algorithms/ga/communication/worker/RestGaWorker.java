@@ -30,11 +30,6 @@ public class RestGaWorker extends RestWorker<int[], Double> {
 	}
 
 	@Override
-	public String getPath() {
-		return "/ga";
-	}
-
-	@Override
 	public TypeReference<Message<int[]>> getInputType() {
 		return new TypeReference<Message<int[]>>() {
 		};

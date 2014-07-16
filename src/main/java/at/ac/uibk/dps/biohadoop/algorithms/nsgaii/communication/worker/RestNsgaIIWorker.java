@@ -29,11 +29,6 @@ public class RestNsgaIIWorker extends RestWorker<double[], double[]> {
 	}
 
 	@Override
-	public String getPath() {
-		return "/nsgaii";
-	}
-
-	@Override
 	public TypeReference<Message<double[]>> getInputType() {
 		return new TypeReference<Message<double[]>>() {
 		};

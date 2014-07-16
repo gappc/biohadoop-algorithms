@@ -27,9 +27,4 @@ public class WebSocketExampleWorker extends WebSocketWorker<Integer, String> {
 	public String compute(Integer data) {
 		return "Got " + data + " at " + new Date();
 	}
-
-	@Override
-	public String getPath() {
-		return "/example";
-	}
 }

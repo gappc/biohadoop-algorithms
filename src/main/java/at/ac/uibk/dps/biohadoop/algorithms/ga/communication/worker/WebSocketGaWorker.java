@@ -38,8 +38,4 @@ public class WebSocketGaWorker extends WebSocketWorker<int[], Double> {
 		return GaFitness.computeFitness(distances, data);
 	}
 
-	@Override
-	public String getPath() {
-		return "/ga";
-	}
 }
