@@ -109,7 +109,7 @@ public class MoeadConfigWriter {
 		workerEndpoints.put(WebSocketMoeadWorker.class.getCanonicalName(), 3);
 		workerEndpoints.put(LocalMoeadWorker.class.getCanonicalName(), 1);
 
-		return new CommunicationConfiguration(masterEndpoints, workerEndpoints);
+		return new CommunicationConfiguration(masterEndpoints, null, workerEndpoints, null);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

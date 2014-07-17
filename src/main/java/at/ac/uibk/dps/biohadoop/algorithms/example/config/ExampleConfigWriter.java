@@ -13,18 +13,12 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.KryoExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.LocalExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.RestExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.SocketExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.WebSocketExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.KryoExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.LocalExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.RestExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.SocketExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.WebSocketExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.ExampleWorker;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.master.MasterLifecycle;
+import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.ZooKeeperConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
@@ -58,7 +52,7 @@ public class ExampleConfigWriter {
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
+		
 		BiohadoopConfiguration biohadoopConfig = buildBiohadoopConfiguration(true);
 		mapper.writeValue(new File(LOCAL_OUTPUT_NAME), biohadoopConfig);
 
@@ -85,20 +79,26 @@ public class ExampleConfigWriter {
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
 		List<Class<? extends MasterLifecycle>> masterEndpoints = new ArrayList<>();
-		masterEndpoints.add(SocketExampleMaster.class);
-		masterEndpoints.add(KryoExampleMaster.class);
-		masterEndpoints.add(RestExampleMaster.class);
-		masterEndpoints.add(WebSocketExampleMaster.class);
-		masterEndpoints.add(LocalExampleMaster.class);
+//		masterEndpoints.add(SocketExampleMaster.class);
+//		masterEndpoints.add(KryoExampleMaster.class);
+//		masterEndpoints.add(RestExampleMaster.class);
+//		masterEndpoints.add(WebSocketExampleMaster.class);
+//		masterEndpoints.add(LocalExampleMaster.class);
+		
+		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		masters.add(ExampleMaster.class);
 
 		Map<String, Integer> workerEndpoints = new HashMap<>();
-		workerEndpoints.put(SocketExampleWorker.class.getCanonicalName(), 3);
-		workerEndpoints.put(KryoExampleWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(RestExampleWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(WebSocketExampleWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(LocalExampleWorker.class.getCanonicalName(), 1);
+//		workerEndpoints.put(SocketExampleWorker.class.getCanonicalName(), 3);
+//		workerEndpoints.put(KryoExampleWorker.class.getCanonicalName(), 1);
+//		workerEndpoints.put(RestExampleWorker.class.getCanonicalName(), 1);
+//		workerEndpoints.put(WebSocketExampleWorker.class.getCanonicalName(), 1);
+//		workerEndpoints.put(LocalExampleWorker.class.getCanonicalName(), 1);
+		
+		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
+		workers.put(ExampleWorker.class, 1);
 
-		return new CommunicationConfiguration(masterEndpoints, workerEndpoints);
+		return new CommunicationConfiguration(masterEndpoints, masters, workerEndpoints, workers);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

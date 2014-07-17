@@ -5,7 +5,7 @@
     "name" : "GA-LOCAL-1",
     "algorithmConfiguration" : {
       "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.ga.config.GaAlgorithmConfig",
-      "dataFile" : "/sdb/studium/master-thesis/code/git/masterthesis/data/att48.tsp",
+      "dataFile" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
       "populationSize" : 10,
       "maxIterations" : 10000
     },
@@ -31,7 +31,7 @@
     "name" : "GA-LOCAL-1",
     "algorithmConfiguration" : {
       "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.ga.config.GaAlgorithmConfig",
-      "dataFile" : "/sdb/studium/master-thesis/code/git/masterthesis/data/att48.tsp",
+      "dataFile" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
       "populationSize" : 10,
       "maxIterations" : 10000
     },
@@ -57,7 +57,7 @@
     "name" : "GA-LOCAL-1",
     "algorithmConfiguration" : {
       "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.ga.config.GaAlgorithmConfig",
-      "dataFile" : "/sdb/studium/master-thesis/code/git/masterthesis/data/att48.tsp",
+      "dataFile" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
       "populationSize" : 10,
       "maxIterations" : 10000
     },
@@ -83,7 +83,7 @@
     "name" : "GA-LOCAL-1",
     "algorithmConfiguration" : {
       "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.ga.config.GaAlgorithmConfig",
-      "dataFile" : "/sdb/studium/master-thesis/code/git/masterthesis/data/att48.tsp",
+      "dataFile" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
       "populationSize" : 10,
       "maxIterations" : 10000
     },
@@ -108,6 +108,7 @@
   } ],
   "communicationConfiguration" : {
     "masterEndpoints" : [ "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaSocket", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaKryo", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaRest", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaWebSocket", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaLocal" ],
+    "masters" : null,
     "workerEndpoints" : {
       "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.WebSocketGaWorker" : 1,
       "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.KryoGaWorker" : 1,

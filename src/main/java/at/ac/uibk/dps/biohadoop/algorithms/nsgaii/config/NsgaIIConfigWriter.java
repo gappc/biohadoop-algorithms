@@ -103,7 +103,7 @@ public class NsgaIIConfigWriter {
 		Map<String, Integer> workerEndpoints = new HashMap<>();
 		workerEndpoints.put(SocketNsgaIIWorker.class.getCanonicalName(), 3);
 
-		return new CommunicationConfiguration(masterEndpoints, workerEndpoints);
+		return new CommunicationConfiguration(masterEndpoints, null, workerEndpoints, null);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

@@ -112,7 +112,7 @@ public class GaConfigWriter {
 		workerEndpoints.put(WebSocketGaWorker.class.getCanonicalName(), 1);
 		workerEndpoints.put(LocalGaWorker.class.getCanonicalName(), 1);
 
-		return new CommunicationConfiguration(masterEndpoints, workerEndpoints);
+		return new CommunicationConfiguration(masterEndpoints, null, workerEndpoints, null);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

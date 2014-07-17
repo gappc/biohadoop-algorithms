@@ -108,6 +108,7 @@
   } ],
   "communicationConfiguration" : {
     "masterEndpoints" : [ "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaSocket", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaKryo", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaRest", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaWebSocket", "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaLocal" ],
+    "masters" : null,
     "workerEndpoints" : {
       "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.WebSocketGaWorker" : 1,
       "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.KryoGaWorker" : 1,

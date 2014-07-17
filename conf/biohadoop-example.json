@@ -11,13 +11,11 @@
     "handlerConfigurations" : null
   } ],
   "communicationConfiguration" : {
-    "masterEndpoints" : [ "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.SocketExampleMaster", "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.KryoExampleMaster", "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.RestExampleMaster", "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.WebSocketExampleMaster", "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.LocalExampleMaster" ],
-    "workerEndpoints" : {
-      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.WebSocketExampleWorker" : 1,
-      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.KryoExampleWorker" : 1,
-      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.SocketExampleWorker" : 3,
-      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.RestExampleWorker" : 1,
-      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.LocalExampleWorker" : 1
+    "masterEndpoints" : [ ],
+    "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster" ],
+    "workerEndpoints" : { },
+    "workers" : {
+      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.ExampleWorker" : 1
     }
   },
   "zooKeeperConfiguration" : {
