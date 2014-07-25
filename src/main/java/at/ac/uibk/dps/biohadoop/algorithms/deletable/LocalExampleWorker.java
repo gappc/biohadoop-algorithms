@@ -1,18 +1,17 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import java.util.Date;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.KryoExampleMaster;
 import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker2;
 
-public class KryoExampleWorker extends KryoWorker<Integer, String> {
+public class LocalExampleWorker extends LocalWorker2<Integer, String> {
 
 	@Override
 	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return KryoExampleMaster.class;
+		return LocalExampleMaster.class;
 	}
-
+	
 	@Override
 	public void readRegistrationObject(Object data) {
 		// Since there is no registration Object, there is nothing to do

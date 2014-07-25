@@ -1,9 +1,8 @@
-package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.LocalMoeadWorker;
 import at.ac.uibk.dps.biohadoop.communication.master.local.LocalEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker2;
 
 public class MoeadLocal extends LocalEndpoint {
 
@@ -18,7 +17,8 @@ public class MoeadLocal extends LocalEndpoint {
 	}
 
 	@Override
-	public Class<? extends LocalWorker<?, ?>> getWorkerClass() {
-		return LocalMoeadWorker.class;
+	public Class<? extends LocalWorker2<?, ?>> getWorkerClass() {
+		return null;
+//		return LocalMoeadWorker.class;
 	}
 }

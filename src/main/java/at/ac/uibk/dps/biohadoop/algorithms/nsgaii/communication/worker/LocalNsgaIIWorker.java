@@ -1,65 +1,24 @@
 package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker;
 
-import java.util.concurrent.Callable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
-import at.ac.uibk.dps.biohadoop.queue.Task;
-import at.ac.uibk.dps.biohadoop.queue.TaskEndpoint;
-import at.ac.uibk.dps.biohadoop.queue.TaskEndpointImpl;
-import at.ac.uibk.dps.biohadoop.utils.ClassnameProvider;
-import at.ac.uibk.dps.biohadoop.utils.PerformanceLogger;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 
-public class LocalNsgaIIWorker implements Callable<Integer> {
-
-	private static final Logger LOG = LoggerFactory
-			.getLogger(LocalNsgaIIWorker.class);
-
-	private final String className = ClassnameProvider
-			.getClassname(LocalNsgaIIWorker.class);
-
-	private Boolean stop = false;
-	private int logSteps = 1000;
+@LocalWorkerAnnotation(master=NsgaIIMaster.class)
+public class LocalNsgaIIWorker implements SuperWorker<double[], double[]> {
 
 	@Override
-	public Integer call() {
-		LOG.info("############# {} started ##############",
-				LocalNsgaIIWorker.class.getSimpleName());
-		TaskEndpoint<double[], double[]> taskEndpoint = new TaskEndpointImpl<>(
-				NsgaII.NSGAII_QUEUE);
-
-		PerformanceLogger performanceLogger = new PerformanceLogger(
-				System.currentTimeMillis(), 0, logSteps);
-		while (true) {
-			performanceLogger.step(LOG);
-			try {
-				Task<double[]> task = taskEndpoint.getTask();
-				if (task == null) {
-					LOG.info("############# {} Worker stopped ###############",
-							className);
-					break;
-				}
-
-				double[] fValues = new double[2];
-				fValues[0] = Functions.f1(task.getData());
-				fValues[1] = Functions.f2(task.getData());
-
-				taskEndpoint.putResult(task.getTaskId(), fValues);
-				Thread.sleep(0);
-			} catch (InterruptedException e) {
-				LOG.error("Error while running {}", className, e);
-			}
-		}
-		return 0;
+	public void readRegistrationObject(Object data) {
+		// No registration object for MOEAD
 	}
 
-	public void stop() {
-		synchronized (stop) {
-			stop = true;
-		}
+	@Override
+	public double[] compute(double[] data) {
+		double[] result = new double[2];
+		result[0] = Functions.f1(data);
+		result[1] = Functions.f2(data);
+		return result;
 	}
 
 }

@@ -1,32 +1,33 @@
-package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
+import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
+import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
 import at.ac.uibk.dps.biohadoop.communication.Message;
 import at.ac.uibk.dps.biohadoop.communication.master.rest.RestResource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@Path("/moead")
+@Path("/ga")
 @Produces(MediaType.APPLICATION_JSON)
-public class MoeadRest extends RestResource<double[], double[]> {
+public class GaRest extends RestResource<int[], Double> {
 
 	@Override
 	public String getQueueName() {
-		return Moead.MOEAD_QUEUE;
+		return Ga.GA_QUEUE;
 	}
 
 	@Override
 	public Object getRegistrationObject() {
-		return null;
+		return DistancesGlobal.getDistancesAsObject();
 	}
 
 	@Override
-	public TypeReference<Message<double[]>> getInputType() {
-		return new TypeReference<Message<double[]>>() {
+	public TypeReference<Message<Double>> getInputType() {
+		return new TypeReference<Message<Double>>() {
 		};
 	}
 

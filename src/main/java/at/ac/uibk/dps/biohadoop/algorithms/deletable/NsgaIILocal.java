@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,30 +28,30 @@ public class NsgaIILocal implements MasterLifecycle {
 	public void configure() {
 		BiohadoopConfiguration biohadoopConfiguration = Environment.getBiohadoopConfiguration();
 		CommunicationConfiguration communicationConfiguration = biohadoopConfiguration.getCommunicationConfiguration();
-		Integer workerCount = communicationConfiguration.getWorkerEndpoints().get(workerClass);
-		if (workerCount != null) {
-			for (int i = 0; i < workerCount; i++) {
-				localNsgaIIWorkers.add(new LocalNsgaIIWorker());
-			}
-		}
+//		Integer workerCount = communicationConfiguration.getWorkerEndpoints().get(workerClass);
+//		if (workerCount != null) {
+//			for (int i = 0; i < workerCount; i++) {
+//				localNsgaIIWorkers.add(new LocalNsgaIIWorker());
+//			}
+//		}
 	}
 
 	@Override
 	public void start() throws EndpointLaunchException {
-		try {
-			executorService.invokeAll(localNsgaIIWorkers);
-		} catch (InterruptedException e) {
-			LOG.error("Error while running {}", workerClass);
-			throw new EndpointLaunchException(e);
-		}
+//		try {
+//			executorService.invokeAll(localNsgaIIWorkers);
+//		} catch (InterruptedException e) {
+//			LOG.error("Error while running {}", workerClass);
+//			throw new EndpointLaunchException(e);
+//		}
 	}
 
 	@Override
 	public void stop() {
-		for (LocalNsgaIIWorker localNsgaIIWorker : localNsgaIIWorkers) {
-			localNsgaIIWorker.stop();
-		}
-		executorService.shutdown();
+//		for (LocalNsgaIIWorker localNsgaIIWorker : localNsgaIIWorkers) {
+//			localNsgaIIWorker.stop();
+//		}
+//		executorService.shutdown();
 	}
 
 }

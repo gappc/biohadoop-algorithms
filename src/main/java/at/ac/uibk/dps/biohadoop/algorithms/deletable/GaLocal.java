@@ -1,10 +1,9 @@
-package at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.LocalGaWorker;
 import at.ac.uibk.dps.biohadoop.communication.master.local.LocalEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker2;
 
 public class GaLocal extends LocalEndpoint {
 
@@ -19,8 +18,9 @@ public class GaLocal extends LocalEndpoint {
 	}
 
 	@Override
-	public Class<? extends LocalWorker<?, ?>> getWorkerClass() {
-		return LocalGaWorker.class;
+	public Class<? extends LocalWorker2<?, ?>> getWorkerClass() {
+//		return LocalGaWorker.class;
+		return null;
 	}
 
 }

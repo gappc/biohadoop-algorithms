@@ -1,18 +1,18 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import javax.websocket.server.ServerEndpoint;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
 import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketDecoder;
 import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketEncoder;
 import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketEndpoint;
 
-@ServerEndpoint(value = "/example", encoders = WebSocketEncoder.class, decoders = WebSocketDecoder.class)
-public class WebSocketExampleMaster extends WebSocketEndpoint {
+@ServerEndpoint(value = "/nsgaii", encoders = WebSocketEncoder.class, decoders = WebSocketDecoder.class)
+public class NsgaIIWebSocket extends WebSocketEndpoint {
 
 	@Override
 	public String getQueueName() {
-		return Example.EXAMPLE_QUEUE;
+		return NsgaII.NSGAII_QUEUE;
 	}
 
 	@Override

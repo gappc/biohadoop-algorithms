@@ -13,20 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaKryo;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaLocal;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaRest;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaSocket;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaWebSocket;
+import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaMaster;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.KryoGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.LocalGaWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.RestGaWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.SocketGaWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.WebSocketGaWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterLifecycle;
+import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -98,21 +94,16 @@ public class GaConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends MasterLifecycle>> masterEndpoints = new ArrayList<>();
-		masterEndpoints.add(GaSocket.class);
-		masterEndpoints.add(GaKryo.class);
-		masterEndpoints.add(GaRest.class);
-		masterEndpoints.add(GaWebSocket.class);
-		masterEndpoints.add(GaLocal.class);
+		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		masters.add(GaMaster.class);
 
-		Map<String, Integer> workerEndpoints = new HashMap<>();
-		workerEndpoints.put(SocketGaWorker.class.getCanonicalName(), 3);
-		workerEndpoints.put(KryoGaWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(RestGaWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(WebSocketGaWorker.class.getCanonicalName(), 1);
-		workerEndpoints.put(LocalGaWorker.class.getCanonicalName(), 1);
+		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
+		workers.put(KryoGaWorker.class, 1);
+		workers.put(RestGaWorker.class, 1);
+		workers.put(SocketGaWorker.class, 3);
+		workers.put(WebSocketGaWorker.class, 1);
 
-		return new CommunicationConfiguration(masterEndpoints, null, workerEndpoints, null);
+		return new CommunicationConfiguration(masters, workers);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

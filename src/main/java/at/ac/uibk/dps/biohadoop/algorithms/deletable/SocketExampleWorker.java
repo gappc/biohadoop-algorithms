@@ -1,12 +1,11 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import java.util.Date;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.SocketExampleMaster;
 import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker2;
 
-public class SocketExampleWorker extends SocketWorker<Integer, String> {
+public class SocketExampleWorker extends SocketWorker2<Integer, String> {
 
 	@Override
 	public Class<? extends MasterEndpoint> getMasterEndpoint() {

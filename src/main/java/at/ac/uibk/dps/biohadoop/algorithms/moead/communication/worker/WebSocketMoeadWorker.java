@@ -1,21 +1,12 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker;
 
-import javax.websocket.ClientEndpoint;
-
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadWebSocket;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketDecoder;
-import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketEncoder;
-import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorkerAnnotation;
 
-@ClientEndpoint(encoders = WebSocketEncoder.class, decoders = WebSocketDecoder.class)
-public class WebSocketMoeadWorker extends WebSocketWorker<double[], double[]> {
-
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return MoeadWebSocket.class;
-	}
+@WebSocketWorkerAnnotation(master=MoeadMaster.class)
+public class WebSocketMoeadWorker implements SuperWorker<double[], double[]> {
 	
 	@Override
 	public void readRegistrationObject(Object data) {

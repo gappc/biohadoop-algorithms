@@ -1,22 +1,22 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
 import at.ac.uibk.dps.biohadoop.communication.Message;
 import at.ac.uibk.dps.biohadoop.communication.master.rest.RestResource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@Path("/example")
+@Path("/moead")
 @Produces(MediaType.APPLICATION_JSON)
-public class RestExampleMaster extends RestResource<Integer, String> {
+public class MoeadRest extends RestResource<double[], double[]> {
 
 	@Override
 	public String getQueueName() {
-		return Example.EXAMPLE_QUEUE;
+		return Moead.MOEAD_QUEUE;
 	}
 
 	@Override
@@ -25,8 +25,8 @@ public class RestExampleMaster extends RestResource<Integer, String> {
 	}
 
 	@Override
-	public TypeReference<Message<String>> getInputType() {
-		return new TypeReference<Message<String>>() {
+	public TypeReference<Message<double[]>> getInputType() {
+		return new TypeReference<Message<double[]>>() {
 		};
 	}
 

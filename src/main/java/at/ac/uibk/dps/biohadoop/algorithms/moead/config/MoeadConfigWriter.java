@@ -13,18 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadKryo;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadLocal;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadRest;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadSocket;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadWebSocket;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.LocalMoeadWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.SocketMoeadWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.WebSocketMoeadWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.KryoMoeadWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterLifecycle;
+import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -97,19 +92,14 @@ public class MoeadConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends MasterLifecycle>> masterEndpoints = new ArrayList<>();
-		masterEndpoints.add(MoeadSocket.class);
-		masterEndpoints.add(MoeadWebSocket.class);
-		masterEndpoints.add(MoeadRest.class);
-		masterEndpoints.add(MoeadKryo.class);
-		masterEndpoints.add(MoeadLocal.class);
+		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		masters.add(MoeadMaster.class);
 
-		Map<String, Integer> workerEndpoints = new HashMap<>();
-		workerEndpoints.put(SocketMoeadWorker.class.getCanonicalName(), 3);
-		workerEndpoints.put(WebSocketMoeadWorker.class.getCanonicalName(), 3);
-		workerEndpoints.put(LocalMoeadWorker.class.getCanonicalName(), 1);
+		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
+		workers.put(KryoMoeadWorker.class, 1);
+//		workers.put(LocalMoeadWorker.class, 1);
 
-		return new CommunicationConfiguration(masterEndpoints, null, workerEndpoints, null);
+		return new CommunicationConfiguration(masters, workers);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

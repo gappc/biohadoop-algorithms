@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
 import at.ac.uibk.dps.biohadoop.communication.master.kryo.KryoServer;

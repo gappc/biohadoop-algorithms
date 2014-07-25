@@ -1,21 +1,12 @@
 package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker;
 
-import javax.websocket.ClientEndpoint;
-
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIWebSocket;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketDecoder;
-import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketEncoder;
-import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorkerAnnotation;
 
-@ClientEndpoint(encoders = WebSocketEncoder.class, decoders = WebSocketDecoder.class)
-public class WebSocketNsgaIIWorker extends WebSocketWorker<double[], double[]> {
-
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return NsgaIIWebSocket.class;
-	}
+@WebSocketWorkerAnnotation(master=NsgaIIMaster.class)
+public class WebSocketNsgaIIWorker implements SuperWorker<double[], double[]> {
 	
 	@Override
 	public void readRegistrationObject(Object data) {

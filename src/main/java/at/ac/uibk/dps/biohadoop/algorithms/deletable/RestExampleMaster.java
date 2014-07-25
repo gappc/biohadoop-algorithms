@@ -1,33 +1,32 @@
-package at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
+import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
 import at.ac.uibk.dps.biohadoop.communication.Message;
 import at.ac.uibk.dps.biohadoop.communication.master.rest.RestResource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@Path("/ga")
+@Path("/example")
 @Produces(MediaType.APPLICATION_JSON)
-public class GaRest extends RestResource<int[], Double> {
+public class RestExampleMaster extends RestResource<Integer, String> {
 
 	@Override
 	public String getQueueName() {
-		return Ga.GA_QUEUE;
+		return Example.EXAMPLE_QUEUE;
 	}
 
 	@Override
 	public Object getRegistrationObject() {
-		return DistancesGlobal.getDistancesAsObject();
+		return null;
 	}
 
 	@Override
-	public TypeReference<Message<Double>> getInputType() {
-		return new TypeReference<Message<Double>>() {
+	public TypeReference<Message<String>> getInputType() {
+		return new TypeReference<Message<String>>() {
 		};
 	}
 

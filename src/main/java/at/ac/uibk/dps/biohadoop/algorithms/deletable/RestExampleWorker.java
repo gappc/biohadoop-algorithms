@@ -1,15 +1,14 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import java.util.Date;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.RestExampleMaster;
 import at.ac.uibk.dps.biohadoop.communication.Message;
 import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker2;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-public class RestExampleWorker extends RestWorker<Integer, String> {
+public class RestExampleWorker extends RestWorker2<Integer, String> {
 
 	@Override
 	public Class<? extends MasterEndpoint> getMasterEndpoint() {

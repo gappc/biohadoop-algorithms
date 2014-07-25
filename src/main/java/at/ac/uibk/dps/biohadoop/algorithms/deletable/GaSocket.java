@@ -1,10 +1,10 @@
-package at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
-import at.ac.uibk.dps.biohadoop.communication.master.kryo.KryoServer;
+import at.ac.uibk.dps.biohadoop.communication.master.socket.SocketServer;
 
-public class GaKryo extends KryoServer {
+public class GaSocket extends SocketServer {
 
 	@Override
 	public String getQueueName() {

@@ -1,17 +1,16 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import java.util.Date;
 
 import javax.websocket.ClientEndpoint;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.WebSocketExampleMaster;
 import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
 import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketDecoder;
 import at.ac.uibk.dps.biohadoop.communication.master.websocket.WebSocketEncoder;
-import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker2;
 
 @ClientEndpoint(encoders = WebSocketEncoder.class, decoders = WebSocketDecoder.class)
-public class WebSocketExampleWorker extends WebSocketWorker<Integer, String> {
+public class WebSocketExampleWorker extends WebSocketWorker2<Integer, String> {
 
 	@Override
 	public Class<? extends MasterEndpoint> getMasterEndpoint() {

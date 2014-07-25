@@ -1,19 +1,12 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadRest;
-import at.ac.uibk.dps.biohadoop.communication.Message;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.RestWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 
-public class RestMoeadWorker extends RestWorker<double[], double[]> {
-
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return MoeadRest.class;
-	}
+@RestWorkerAnnotation(master=MoeadMaster.class, receive=double[].class)
+public class RestMoeadWorker implements SuperWorker<double[], double[]> {
 	
 	@Override
 	public void readRegistrationObject(Object data) {
@@ -26,12 +19,6 @@ public class RestMoeadWorker extends RestWorker<double[], double[]> {
 		result[0] = Functions.f1(data);
 		result[1] = Functions.f2(data);
 		return result;
-	}
-
-	@Override
-	public TypeReference<Message<double[]>> getInputType() {
-		return new TypeReference<Message<double[]>>() {
-		};
 	}
 	
 }

@@ -1,17 +1,13 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadKryo;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 
-public class KryoMoeadWorker extends KryoWorker<double[], double[]> {
+@KryoWorkerAnnotation(master=MoeadMaster.class)
+public class KryoMoeadWorker implements SuperWorker<double[], double[]> {
 
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return MoeadKryo.class;
-	}
-	
 	@Override
 	public void readRegistrationObject(Object data) {
 		// No registration object for MOEAD

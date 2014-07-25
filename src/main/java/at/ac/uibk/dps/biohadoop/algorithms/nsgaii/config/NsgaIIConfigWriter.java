@@ -13,15 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIKryo;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIRest;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIISocket;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIWebSocket;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.SocketNsgaIIWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.LocalNsgaIIWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterLifecycle;
+import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -94,16 +92,14 @@ public class NsgaIIConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends MasterLifecycle>> masterEndpoints = new ArrayList<>();
-		masterEndpoints.add(NsgaIISocket.class);
-		masterEndpoints.add(NsgaIIWebSocket.class);
-		masterEndpoints.add(NsgaIIRest.class);
-		masterEndpoints.add(NsgaIIKryo.class);
+		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		masters.add(NsgaIIMaster.class);
 
-		Map<String, Integer> workerEndpoints = new HashMap<>();
-		workerEndpoints.put(SocketNsgaIIWorker.class.getCanonicalName(), 3);
+		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
+//		workers.put(KryoNsgaIIWorker.class, 1);
+//		workers.put(LocalNsgaIIWorker.class, 1);
 
-		return new CommunicationConfiguration(masterEndpoints, null, workerEndpoints, null);
+		return new CommunicationConfiguration(masters, workers);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

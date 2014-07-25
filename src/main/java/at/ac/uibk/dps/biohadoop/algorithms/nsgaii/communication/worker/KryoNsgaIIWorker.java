@@ -1,16 +1,12 @@
 package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIKryo;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 
-public class KryoNsgaIIWorker extends KryoWorker<double[], double[]> {
-
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return NsgaIIKryo.class;
-	}
+@KryoWorkerAnnotation(master=NsgaIIMaster.class)
+public class KryoNsgaIIWorker implements SuperWorker<double[], double[]> {
 
 	@Override
 	public void readRegistrationObject(Object data) {

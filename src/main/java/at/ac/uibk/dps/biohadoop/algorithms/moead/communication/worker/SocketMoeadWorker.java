@@ -1,17 +1,13 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadSocket;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 
-public class SocketMoeadWorker extends SocketWorker<double[], double[]> {
+@SocketWorkerAnnotation(master=MoeadMaster.class)
+public class SocketMoeadWorker implements SuperWorker<double[], double[]> {
 
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return MoeadSocket.class;
-	}
-	
 	@Override
 	public void readRegistrationObject(Object data) {
 		// No registration object for MOEAD

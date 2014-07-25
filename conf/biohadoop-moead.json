@@ -115,11 +115,9 @@
     } ]
   } ],
   "communicationConfiguration" : {
-    "masterEndpoints" : [ "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadSocket", "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadWebSocket", "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadRest", "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadKryo", "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadLocal" ],
-    "workerEndpoints" : {
-      "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.SocketMoeadWorker" : 3,
-      "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.LocalMoeadWorker" : 1,
-      "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.WebSocketMoeadWorker" : 3
+    "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster" ],
+    "workers" : {
+      "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.KryoMoeadWorker" : 1
     }
   },
   "zooKeeperConfiguration" : {

@@ -16,7 +16,6 @@ import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
 import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
 import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.ExampleWorker;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterLifecycle;
 import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
 import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
@@ -78,27 +77,13 @@ public class ExampleConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends MasterLifecycle>> masterEndpoints = new ArrayList<>();
-//		masterEndpoints.add(SocketExampleMaster.class);
-//		masterEndpoints.add(KryoExampleMaster.class);
-//		masterEndpoints.add(RestExampleMaster.class);
-//		masterEndpoints.add(WebSocketExampleMaster.class);
-//		masterEndpoints.add(LocalExampleMaster.class);
-		
 		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
 		masters.add(ExampleMaster.class);
 
-		Map<String, Integer> workerEndpoints = new HashMap<>();
-//		workerEndpoints.put(SocketExampleWorker.class.getCanonicalName(), 3);
-//		workerEndpoints.put(KryoExampleWorker.class.getCanonicalName(), 1);
-//		workerEndpoints.put(RestExampleWorker.class.getCanonicalName(), 1);
-//		workerEndpoints.put(WebSocketExampleWorker.class.getCanonicalName(), 1);
-//		workerEndpoints.put(LocalExampleWorker.class.getCanonicalName(), 1);
-		
 		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
 		workers.put(ExampleWorker.class, 1);
 
-		return new CommunicationConfiguration(masterEndpoints, masters, workerEndpoints, workers);
+		return new CommunicationConfiguration(masters, workers);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,

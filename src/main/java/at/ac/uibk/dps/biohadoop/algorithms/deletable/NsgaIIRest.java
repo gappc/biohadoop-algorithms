@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

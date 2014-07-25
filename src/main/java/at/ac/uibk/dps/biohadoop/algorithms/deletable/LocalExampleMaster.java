@@ -1,9 +1,8 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.LocalExampleWorker;
 import at.ac.uibk.dps.biohadoop.communication.master.local.LocalEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker2;
 
 public class LocalExampleMaster extends LocalEndpoint {
 
@@ -18,7 +17,7 @@ public class LocalExampleMaster extends LocalEndpoint {
 	}
 
 	@Override
-	public Class<? extends LocalWorker<?, ?>> getWorkerClass() {
+	public Class<? extends LocalWorker2<?, ?>> getWorkerClass() {
 		return LocalExampleWorker.class;
 	}
 

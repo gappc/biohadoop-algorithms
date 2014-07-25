@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import javax.websocket.server.ServerEndpoint;
 

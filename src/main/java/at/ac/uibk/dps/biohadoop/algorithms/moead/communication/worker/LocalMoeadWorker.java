@@ -1,16 +1,12 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadLocal;
-import at.ac.uibk.dps.biohadoop.communication.master.MasterEndpoint;
-import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
 
-public class LocalMoeadWorker extends LocalWorker<double[], double[]> {
-
-	@Override
-	public Class<? extends MasterEndpoint> getMasterEndpoint() {
-		return MoeadLocal.class;
-	}
+@LocalWorkerAnnotation(master=MoeadMaster.class)
+public class LocalMoeadWorker implements SuperWorker<double[], double[]> {
 
 	@Override
 	public void readRegistrationObject(Object data) {

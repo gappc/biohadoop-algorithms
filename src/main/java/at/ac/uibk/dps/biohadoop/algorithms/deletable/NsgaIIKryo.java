@@ -1,9 +1,9 @@
-package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master;
+package at.ac.uibk.dps.biohadoop.algorithms.deletable;
 
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
-import at.ac.uibk.dps.biohadoop.communication.master.socket.SocketServer;
+import at.ac.uibk.dps.biohadoop.communication.master.kryo.KryoServer;
 
-public class NsgaIISocket extends SocketServer {
+public class NsgaIIKryo extends KryoServer {
 
 	@Override
 	public String getQueueName() {
@@ -14,4 +14,5 @@ public class NsgaIISocket extends SocketServer {
 	public Object getRegistrationObject() {
 		return null;
 	}
+
 }
