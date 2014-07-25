@@ -14,7 +14,10 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
 import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.ExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.KryoExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.RestExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.SocketExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.WebSocketExampleWorker;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.master.Master;
 import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
@@ -81,7 +84,10 @@ public class ExampleConfigWriter {
 		masters.add(ExampleMaster.class);
 
 		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
-		workers.put(ExampleWorker.class, 1);
+		workers.put(KryoExampleWorker.class, 1);
+		workers.put(RestExampleWorker.class, 1);
+		workers.put(SocketExampleWorker.class, 3);
+		workers.put(WebSocketExampleWorker.class, 1);
 
 		return new CommunicationConfiguration(masters, workers);
 	}

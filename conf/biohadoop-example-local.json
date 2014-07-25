@@ -11,11 +11,12 @@
     "handlerConfigurations" : null
   } ],
   "communicationConfiguration" : {
-    "masterEndpoints" : [ ],
     "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster" ],
-    "workerEndpoints" : { },
     "workers" : {
-      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.ExampleWorker" : 1
+      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.KryoExampleWorker" : 1,
+      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.WebSocketExampleWorker" : 1,
+      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.RestExampleWorker" : 1,
+      "at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.SocketExampleWorker" : 3
     }
   },
   "zooKeeperConfiguration" : {
