@@ -2,13 +2,13 @@ package at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.GaFitness;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaMaster;
-import at.ac.uibk.dps.biohadoop.communication.worker.RestWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RestWorkerAnnotation(master=GaMaster.class, receive=int[].class)
-public class RestGaWorker implements SuperWorker<int[], Double> {
+@RestWorker(master=GaMaster.class, receive=int[].class)
+public class RestGaWorker implements Worker<int[], Double> {
 
 	private double[][] distances;
 

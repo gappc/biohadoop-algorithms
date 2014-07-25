@@ -3,19 +3,19 @@ package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
 import java.util.Date;
 
 import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
-import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.RestWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorkerAnnotation;
+import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
+import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker;
 
-@KryoWorkerAnnotation(master=ExampleMaster.class)
-@LocalWorkerAnnotation(master=ExampleMaster.class)
-@RestWorkerAnnotation(master=ExampleMaster.class, receive=Integer.class)
-@SocketWorkerAnnotation(master=ExampleMaster.class)
-@WebSocketWorkerAnnotation(master=ExampleMaster.class)
-public class ExampleWorker implements SuperWorker<Integer, String> {
+@KryoWorker(master=ExampleMaster.class)
+@LocalWorker(master=ExampleMaster.class)
+@RestWorker(master=ExampleMaster.class, receive=Integer.class)
+@SocketWorker(master=ExampleMaster.class)
+@WebSocketWorker(master=ExampleMaster.class)
+public class ExampleWorker implements Worker<Integer, String> {
 
 	@Override
 	public void readRegistrationObject(Object data) {

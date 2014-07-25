@@ -14,12 +14,15 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.LocalNsgaIIWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.KryoNsgaIIWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.RestNsgaIIWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.SocketNsgaIIWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.WebSocketNsgaIIWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.master.Master;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -92,12 +95,14 @@ public class NsgaIIConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		List<Class<? extends Master>> masters = new ArrayList<>();
 		masters.add(NsgaIIMaster.class);
 
-		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
-//		workers.put(KryoNsgaIIWorker.class, 1);
-//		workers.put(LocalNsgaIIWorker.class, 1);
+		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
+		workers.put(KryoNsgaIIWorker.class, 1);
+		workers.put(RestNsgaIIWorker.class, 1);
+		workers.put(SocketNsgaIIWorker.class, 3);
+		workers.put(WebSocketNsgaIIWorker.class, 1);
 
 		return new CommunicationConfiguration(masters, workers);
 	}

@@ -18,8 +18,8 @@ import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.KryoMoeadW
 import at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.master.Master;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -92,10 +92,10 @@ public class MoeadConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		List<Class<? extends Master>> masters = new ArrayList<>();
 		masters.add(MoeadMaster.class);
 
-		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
+		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
 		workers.put(KryoMoeadWorker.class, 1);
 //		workers.put(LocalMoeadWorker.class, 1);
 

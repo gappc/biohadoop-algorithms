@@ -2,11 +2,11 @@ package at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.GaFitness;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaMaster;
-import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 
-@SocketWorkerAnnotation(master=GaMaster.class)
-public class SocketGaWorker implements SuperWorker<int[], Double> {
+@SocketWorker(master=GaMaster.class)
+public class SocketGaWorker implements Worker<int[], Double> {
 
 	private double[][] distances;
 

@@ -16,8 +16,8 @@ import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
 import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
 import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.ExampleWorker;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.rest2.SuperComputable;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.master.Master;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.ZooKeeperConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
@@ -77,10 +77,10 @@ public class ExampleConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends SuperComputable>> masters = new ArrayList<>();
+		List<Class<? extends Master>> masters = new ArrayList<>();
 		masters.add(ExampleMaster.class);
 
-		Map<Class<? extends SuperWorker<?, ?>>, Integer> workers = new HashMap<>();
+		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
 		workers.put(ExampleWorker.class, 1);
 
 		return new CommunicationConfiguration(masters, workers);

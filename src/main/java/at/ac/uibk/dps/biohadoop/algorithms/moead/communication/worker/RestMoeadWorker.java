@@ -2,11 +2,11 @@ package at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster;
-import at.ac.uibk.dps.biohadoop.communication.worker.RestWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 
-@RestWorkerAnnotation(master=MoeadMaster.class, receive=double[].class)
-public class RestMoeadWorker implements SuperWorker<double[], double[]> {
+@RestWorker(master=MoeadMaster.class, receive=double[].class)
+public class RestMoeadWorker implements Worker<double[], double[]> {
 	
 	@Override
 	public void readRegistrationObject(Object data) {

@@ -112,7 +112,12 @@
   } ],
   "communicationConfiguration" : {
     "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster" ],
-    "workers" : { }
+    "workers" : {
+      "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.RestNsgaIIWorker" : 1,
+      "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.WebSocketNsgaIIWorker" : 1,
+      "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.KryoNsgaIIWorker" : 1,
+      "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.SocketNsgaIIWorker" : 3
+    }
   },
   "zooKeeperConfiguration" : {
     "host" : "master",

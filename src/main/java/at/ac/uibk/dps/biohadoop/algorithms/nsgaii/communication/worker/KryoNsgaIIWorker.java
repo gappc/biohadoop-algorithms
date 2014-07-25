@@ -2,11 +2,11 @@ package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker;
 
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.Functions;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
-import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorkerAnnotation;
-import at.ac.uibk.dps.biohadoop.communication.worker.SuperWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 
-@KryoWorkerAnnotation(master=NsgaIIMaster.class)
-public class KryoNsgaIIWorker implements SuperWorker<double[], double[]> {
+@KryoWorker(master=NsgaIIMaster.class)
+public class KryoNsgaIIWorker implements Worker<double[], double[]> {
 
 	@Override
 	public void readRegistrationObject(Object data) {
