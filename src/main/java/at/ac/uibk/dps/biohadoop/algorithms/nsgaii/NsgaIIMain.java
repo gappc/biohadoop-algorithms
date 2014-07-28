@@ -16,7 +16,7 @@ import at.ac.uibk.dps.biohadoop.datastore.DataService;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationReader;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.SolverLauncher;
-import at.ac.uibk.dps.biohadoop.hadoop.launcher.EndpointLauncher;
+import at.ac.uibk.dps.biohadoop.hadoop.launcher.MasterLauncher;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 import at.ac.uibk.dps.biohadoop.solver.SolverService;
@@ -37,9 +37,9 @@ public class NsgaIIMain {
 			List<Future<SolverId>> algorithms = SolverLauncher
 					.launchSolver(biohadoopConfiguration);
 
-			EndpointLauncher endpointLauncher = new EndpointLauncher(
+			MasterLauncher masterLauncher = new MasterLauncher(
 					biohadoopConfiguration);
-			endpointLauncher.startMasterEndpoints();
+			masterLauncher.startMasterEndpoints();
 
 			SolverService solverService = SolverService.getInstance();
 			for (Future<SolverId> algorithm : algorithms) {
