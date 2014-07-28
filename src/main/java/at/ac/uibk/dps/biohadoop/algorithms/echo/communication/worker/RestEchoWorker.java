@@ -1,13 +1,13 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
+package at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker;
 
 import java.util.Date;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.master.EchoMaster;
 import at.ac.uibk.dps.biohadoop.communication.worker.RestWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 
-@RestWorker(master=ExampleMaster.class, receive=Integer.class)
-public class RestExampleWorker implements Worker<Integer, String> {
+@RestWorker(master=EchoMaster.class, receive=Integer.class)
+public class RestEchoWorker implements Worker<Integer, String> {
 
 	@Override
 	public void readRegistrationObject(Object data) {

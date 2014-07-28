@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.algorithm;
+package at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,25 +8,25 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.algorithms.example.config.ExampleAlgorithmConfig;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.config.EchoAlgorithmConfig;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class Example implements Algorithm<ExampleAlgorithmConfig, Integer> {
+public class Echo implements Algorithm<EchoAlgorithmConfig, Integer> {
 
-	public static final String EXAMPLE_QUEUE = "EXAMPLE_QUEUE";
+	public static final String ECHO_QUEUE = "ECHO_QUEUE";
 
-	private static final Logger LOG = LoggerFactory.getLogger(Example.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Echo.class);
 
 	@Override
-	public Integer compute(SolverId solverId, ExampleAlgorithmConfig config)
+	public Integer compute(SolverId solverId, EchoAlgorithmConfig config)
 			throws AlgorithmException {
 		// Get client to distribute work
 		TaskClient<Integer, String> taskClient = new TaskClientImpl<>(
-				EXAMPLE_QUEUE);
+				ECHO_QUEUE);
 
 		int size = config.getSize();
 		List<TaskFuture<String>> tasks = new ArrayList<>();

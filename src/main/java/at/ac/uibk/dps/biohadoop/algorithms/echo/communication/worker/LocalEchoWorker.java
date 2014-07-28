@@ -1,13 +1,13 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker;
+package at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker;
 
 import java.util.Date;
 
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
-import at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.master.EchoMaster;
+import at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
 
-@WebSocketWorker(master=ExampleMaster.class)
-public class WebSocketExampleWorker implements Worker<Integer, String> {
+@LocalWorker(master=EchoMaster.class)
+public class LocalEchoWorker implements Worker<Integer, String> {
 
 	@Override
 	public void readRegistrationObject(Object data) {

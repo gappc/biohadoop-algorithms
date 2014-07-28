@@ -1,8 +1,8 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.config;
+package at.ac.uibk.dps.biohadoop.algorithms.echo.config;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 
-public class ExampleAlgorithmConfig implements AlgorithmConfiguration {
+public class EchoAlgorithmConfig implements AlgorithmConfiguration {
 
 	private int size;
 

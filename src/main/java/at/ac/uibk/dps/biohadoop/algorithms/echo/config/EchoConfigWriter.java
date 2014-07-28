@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.example.config;
+package at.ac.uibk.dps.biohadoop.algorithms.echo.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
-import at.ac.uibk.dps.biohadoop.algorithms.example.algorithm.Example;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.master.ExampleMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.KryoExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.RestExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.SocketExampleWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.example.communication.worker.WebSocketExampleWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm.Echo;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.master.EchoMaster;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.KryoEchoWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.RestEchoWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.SocketEchoWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.WebSocketEchoWorker;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.master.Master;
 import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
@@ -28,13 +28,13 @@ import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class ExampleConfigWriter {
+public class EchoConfigWriter {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(ExampleConfigWriter.class);
+			.getLogger(EchoConfigWriter.class);
 
 	private static String CONF_OUTPUT_DIR = "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/conf";
-	private static String CONF_NAME = "biohadoop-example";
+	private static String CONF_NAME = "biohadoop-echo";
 	private static String LOCAL_OUTPUT_NAME = CONF_OUTPUT_DIR + "/" + CONF_NAME
 			+ "-local.json";
 	private static String REMOTE_OUTPUT_NAME = CONF_OUTPUT_DIR + "/"
@@ -45,7 +45,7 @@ public class ExampleConfigWriter {
 	private static String REMOTE_DISTRIBUTION_INFO_HOST = "master";
 	private static int REMOTE_DISTRIBUTION_INFO_PORT = 2181;
 
-	private ExampleConfigWriter() {
+	private EchoConfigWriter() {
 	}
 
 	public static void main(String[] args) throws IOException,
@@ -68,7 +68,7 @@ public class ExampleConfigWriter {
 			boolean local) {
 		List<String> includePaths = Arrays.asList("/biohadoop/lib/",
 				"/biohadoop/conf/");
-		SolverConfiguration solverConfig = buildSolverConfig("EXAMPLE-LOCAL-1",
+		SolverConfiguration solverConfig = buildSolverConfig("ECHO-LOCAL-1",
 				local);
 		CommunicationConfiguration communicationConfiguration = buildCommunicationConfiguration();
 		ZooKeeperConfiguration globalDistributionConfiguration = buildGlobalDistributionConfig(local);
@@ -80,13 +80,13 @@ public class ExampleConfigWriter {
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
 		List<Class<? extends Master>> masters = new ArrayList<>();
-		masters.add(ExampleMaster.class);
+		masters.add(EchoMaster.class);
 
 		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
-		workers.put(KryoExampleWorker.class, 1);
-		workers.put(RestExampleWorker.class, 1);
-		workers.put(SocketExampleWorker.class, 3);
-		workers.put(WebSocketExampleWorker.class, 1);
+		workers.put(KryoEchoWorker.class, 1);
+		workers.put(RestEchoWorker.class, 1);
+		workers.put(SocketEchoWorker.class, 3);
+		workers.put(WebSocketEchoWorker.class, 1);
 
 		return new CommunicationConfiguration(masters, workers);
 	}
@@ -107,11 +107,11 @@ public class ExampleConfigWriter {
 		// handlers.add(distributionConfiguration);
 
 		return new SolverConfiguration(name, algorithmConfiguration,
-				Example.class, null);
+				Echo.class, null);
 	}
 
 	private static AlgorithmConfiguration buildAlgorithmConfig(boolean local) {
-		ExampleAlgorithmConfig algorithmConfig = new ExampleAlgorithmConfig();
+		EchoAlgorithmConfig algorithmConfig = new EchoAlgorithmConfig();
 		algorithmConfig.setSize(1000);
 		return algorithmConfig;
 	}
