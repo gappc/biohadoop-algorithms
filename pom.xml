@@ -7,6 +7,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<biohadoop-version>0.0.5-SNAPSHOT</biohadoop-version>
 		<hadoop.version>2.4.1</hadoop.version>
 		<undertow.websocket.version>1.0.15.Final</undertow.websocket.version>
 		<resteasy.version>3.0.8.Final</resteasy.version>
@@ -53,7 +54,7 @@
 		<dependency>
 			<groupId>at.ac.uibk.dps</groupId>
 			<artifactId>biohadoop</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>${biohadoop-version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

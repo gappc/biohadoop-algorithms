@@ -54,7 +54,7 @@ public class ExampleConfigWriter {
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		
+
 		BiohadoopConfiguration biohadoopConfig = buildBiohadoopConfiguration(true);
 		mapper.writeValue(new File(LOCAL_OUTPUT_NAME), biohadoopConfig);
 
@@ -66,7 +66,6 @@ public class ExampleConfigWriter {
 
 	private static BiohadoopConfiguration buildBiohadoopConfiguration(
 			boolean local) {
-		String version = "0.1";
 		List<String> includePaths = Arrays.asList("/biohadoop/lib/",
 				"/biohadoop/conf/");
 		SolverConfiguration solverConfig = buildSolverConfig("EXAMPLE-LOCAL-1",
@@ -74,7 +73,7 @@ public class ExampleConfigWriter {
 		CommunicationConfiguration communicationConfiguration = buildCommunicationConfiguration();
 		ZooKeeperConfiguration globalDistributionConfiguration = buildGlobalDistributionConfig(local);
 
-		return new BiohadoopConfiguration(version, includePaths,
+		return new BiohadoopConfiguration(includePaths,
 				Arrays.asList(solverConfig), communicationConfiguration,
 				globalDistributionConfiguration);
 	}

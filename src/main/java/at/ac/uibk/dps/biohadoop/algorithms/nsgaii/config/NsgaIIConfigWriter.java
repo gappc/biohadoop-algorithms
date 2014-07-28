@@ -81,7 +81,6 @@ public class NsgaIIConfigWriter {
 
 	private static BiohadoopConfiguration buildBiohadoopConfiguration(
 			boolean local) {
-		String version = "0.1";
 		List<String> includePaths = Arrays.asList("/biohadoop/lib/",
 				"/biohadoop/conf/");
 		SolverConfiguration solverConfig = buildSolverConfig("MOEAD-LOCAL-1",
@@ -89,7 +88,7 @@ public class NsgaIIConfigWriter {
 		CommunicationConfiguration communicationConfiguration = buildCommunicationConfiguration();
 		ZooKeeperConfiguration globalDistributionConfiguration = buildGlobalDistributionConfig(local);
 
-		return new BiohadoopConfiguration(version, includePaths, Arrays.asList(
+		return new BiohadoopConfiguration(includePaths, Arrays.asList(
 				solverConfig, solverConfig, solverConfig, solverConfig),
 				communicationConfiguration, globalDistributionConfiguration);
 	}
