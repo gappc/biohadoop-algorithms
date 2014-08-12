@@ -13,13 +13,14 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.config.GaAlgorithmConfig;
+import at.ac.uibk.dps.biohadoop.algorithms.ga.remote.RemoteFitness;
 import at.ac.uibk.dps.biohadoop.datastore.DataClient;
 import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
 import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
+import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -36,7 +37,7 @@ public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
 	public int[] compute(SolverId solverId, GaAlgorithmConfig config)
 			throws AlgorithmException {
 		// Initialize used Biohadoop components
-		TaskClient<int[], Double> taskClient = new TaskClientImpl<>(GA_QUEUE);
+		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(RemoteFitness.class);
 		HandlerClient handlerClient = new HandlerClientImpl(solverId);
 		DataClient dataClient = new DataClientImpl(solverId);
 

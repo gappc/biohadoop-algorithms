@@ -1,5 +1,4 @@
 {
-  "version" : "0.1",
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
   "solverConfiguration" : [ {
     "name" : "GA-LOCAL-1",
@@ -107,13 +106,24 @@
     } ]
   } ],
   "communicationConfiguration" : {
-    "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaMaster" ],
-    "workers" : {
-      "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.RestGaWorker" : 1,
-      "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.WebSocketGaWorker" : 1,
-      "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.SocketGaWorker" : 3,
-      "at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.KryoGaWorker" : 1
-    }
+    "masters" : [ ],
+    "workerConfigurations" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    } ]
   },
   "zooKeeperConfiguration" : {
     "host" : "localhost",

@@ -1,5 +1,4 @@
 {
-  "version" : "0.1",
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
   "solverConfiguration" : [ {
     "name" : "MOEAD-LOCAL-1",
@@ -115,10 +114,24 @@
     } ]
   } ],
   "communicationConfiguration" : {
-    "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.master.MoeadMaster" ],
-    "workers" : {
-      "at.ac.uibk.dps.biohadoop.algorithms.moead.communication.worker.KryoMoeadWorker" : 1
-    }
+    "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue" ],
+    "workerConfigurations" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 3
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    } ]
   },
   "zooKeeperConfiguration" : {
     "host" : "master",

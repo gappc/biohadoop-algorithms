@@ -11,13 +11,14 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.config.MoeadAlgorithmConfig;
+import at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.datastore.DataClient;
 import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
 import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
+import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -36,8 +37,8 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig, double[][]> {
 	public double[][] compute(SolverId solverId,
 			MoeadAlgorithmConfig config) throws AlgorithmException {
 		// Initialize used Biohadoop components
-		TaskClient<double[], double[]> taskClient = new TaskClientImpl<>(
-				MOEAD_QUEUE);
+		TaskClient<double[], double[]> taskClient = new DefaultTaskClient<>(
+				RemoteFunctionValue.class);
 		HandlerClient handlerClient = new HandlerClientImpl(solverId);
 		DataClient dataClient = new DataClientImpl(solverId);
 

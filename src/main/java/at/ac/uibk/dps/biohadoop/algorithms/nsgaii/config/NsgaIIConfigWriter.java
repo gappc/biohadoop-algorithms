@@ -4,25 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.master.NsgaIIMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.KryoNsgaIIWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.RestNsgaIIWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.SocketNsgaIIWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.communication.worker.WebSocketNsgaIIWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.Master;
-import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
+import at.ac.uibk.dps.biohadoop.communication.WorkerConfiguration;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -33,6 +30,7 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadHandler;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveHandler;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.unifiedcommunication.RemoteExecutable;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -94,14 +92,15 @@ public class NsgaIIConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends Master>> masters = new ArrayList<>();
-		masters.add(NsgaIIMaster.class);
+		List<Class<? extends RemoteExecutable<?, ?, ?>>> masters = new ArrayList<>();
+		masters.add(RemoteFunctionValue.class);
 
-		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
-		workers.put(KryoNsgaIIWorker.class, 1);
-		workers.put(RestNsgaIIWorker.class, 1);
-		workers.put(SocketNsgaIIWorker.class, 3);
-		workers.put(WebSocketNsgaIIWorker.class, 1);
+		List<WorkerConfiguration> workers = new ArrayList<>();
+		workers.add(new WorkerConfiguration(UnifiedKryoWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(UnifiedRestWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(UnifiedWebSocketWorker.class, null,
+				1));
 
 		return new CommunicationConfiguration(masters, workers);
 	}

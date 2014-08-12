@@ -4,26 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm.Echo;
-import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.master.EchoMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.KryoEchoWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.RestEchoWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.SocketEchoWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.echo.communication.worker.WebSocketEchoWorker;
+import at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.Master;
-import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
+import at.ac.uibk.dps.biohadoop.communication.WorkerConfiguration;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.ZooKeeperConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.unifiedcommunication.RemoteExecutable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -79,14 +77,17 @@ public class EchoConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends Master>> masters = new ArrayList<>();
-		masters.add(EchoMaster.class);
+		List<Class<? extends RemoteExecutable<?, ?, ?>>> masters = new ArrayList<>();
+		masters.add(StringCommunication.class);
 
-		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
-		workers.put(KryoEchoWorker.class, 1);
-		workers.put(RestEchoWorker.class, 1);
-		workers.put(SocketEchoWorker.class, 3);
-		workers.put(WebSocketEchoWorker.class, 1);
+		List<WorkerConfiguration> workers = new ArrayList<>();
+		workers.add(new WorkerConfiguration(UnifiedKryoWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(UnifiedRestWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(UnifiedWebSocketWorker.class, null,
+				1));
+
+		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class, StringCommunication.class, 1));
 
 		return new CommunicationConfiguration(masters, workers);
 	}

@@ -13,13 +13,14 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.config.NsgaIIAlgorithmConfig;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.datastore.DataClient;
 import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
 import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
+import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -30,8 +31,8 @@ public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig, double[][]> {
 	private static final Logger LOG = LoggerFactory.getLogger(NsgaII.class);
 	private static final int LOG_STEPS = 100;
 
-	private TaskClient<double[], double[]> taskClient = new TaskClientImpl<>(
-			NSGAII_QUEUE);
+	private TaskClient<double[], double[]> taskClient = new DefaultTaskClient<>(
+			RemoteFunctionValue.class);
 
 	@Override
 	public double[][] compute(SolverId solverId, NsgaIIAlgorithmConfig config)

@@ -4,25 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.master.GaMaster;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.KryoGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.RestGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.SocketGaWorker;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.communication.worker.WebSocketGaWorker;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.master.Master;
-import at.ac.uibk.dps.biohadoop.communication.worker.Worker;
+import at.ac.uibk.dps.biohadoop.communication.WorkerConfiguration;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -33,6 +29,7 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadHandler;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveHandler;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.unifiedcommunication.RemoteExecutable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -93,14 +90,23 @@ public class GaConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends Master>> masters = new ArrayList<>();
-		masters.add(GaMaster.class);
+		List<Class<? extends RemoteExecutable<?, ?, ?>>> masters = new ArrayList<>();
+//		masters.add(RemoteFitness.class);
 
-		Map<Class<? extends Worker<?, ?>>, Integer> workers = new HashMap<>();
-		workers.put(KryoGaWorker.class, 1);
-		workers.put(RestGaWorker.class, 1);
-		workers.put(SocketGaWorker.class, 3);
-		workers.put(WebSocketGaWorker.class, 1);
+		List<WorkerConfiguration> workers = new ArrayList<>();
+		workers.add(new WorkerConfiguration(UnifiedKryoWorker.class, null, 1));
+//		workers.add(new WorkerConfiguration(UnifiedKryoWorker.class,
+//				RemoteFitness.class, 1));
+		workers.add(new WorkerConfiguration(UnifiedRestWorker.class, null, 1));
+//		workers.add(new WorkerConfiguration(UnifiedRestWorker.class,
+//				RemoteFitness.class, 1));
+		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class, null, 1));
+//		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class,
+//				RemoteFitness.class, 1));
+		workers.add(new WorkerConfiguration(UnifiedWebSocketWorker.class, null,
+				1));
+//		workers.add(new WorkerConfiguration(UnifiedWebSocketWorker.class,
+//				RemoteFitness.class, 1));
 
 		return new CommunicationConfiguration(masters, workers);
 	}

@@ -57,6 +57,7 @@
 			<version>${biohadoop-version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Only needed for local running (when invoking main() method -->
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-yarn-client</artifactId>
