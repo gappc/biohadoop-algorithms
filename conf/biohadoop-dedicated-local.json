@@ -1,0 +1,44 @@
+{
+  "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
+  "solverConfiguration" : [ {
+    "name" : "DEDICATED-LOCAL-1",
+    "algorithmConfiguration" : {
+      "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.config.DedicatedAlgorithmConfig"
+    },
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.algorithm.Dedicated",
+    "handlerConfigurations" : null
+  } ],
+  "communicationConfiguration" : {
+    "dedicatedMasters" : [ {
+      "master" : "at.ac.uibk.dps.biohadoop.communication.master.rest.DefaultRestEndpoint",
+      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication",
+      "annotation" : "at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedRest"
+    } ],
+    "workerConfigurations" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
+      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication",
+      "count" : 1
+    } ]
+  },
+  "zooKeeperConfiguration" : {
+    "host" : "localhost",
+    "port" : 2181
+  },
+  "properties" : null
+}
