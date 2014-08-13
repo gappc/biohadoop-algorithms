@@ -16,7 +16,7 @@ import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.MasterConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.WorkerConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedSocket;
-import at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketConnection;
+import at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketEndpoint;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker;
@@ -80,23 +80,16 @@ public class EchoConfigWriter {
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
 		List<MasterConfiguration> masters = new ArrayList<>();
-		masters.add(new MasterConfiguration(DefaultSocketConnection.class,
+		masters.add(new MasterConfiguration(DefaultSocketEndpoint.class,
 				StringCommunication.class, DedicatedSocket.class));
-//		masters.add(new MasterConfiguration(DefaultKryoServer.class,
-//				StringCommunication.class, DedicatedKryo.class));
-//		masters.add(new MasterConfiguration(DefaultLocalMasterEndpoint.class,
-//				StringCommunication.class, DedicatedLocal.class));
 
 		List<WorkerConfiguration> workers = new ArrayList<>();
-//		workers.add(new WorkerConfiguration(DefaultLocalWorker.class, StringCommunication.class, 2));
-//		workers.add(new WorkerConfiguration(DefaultLocalWorker.class, null, 2));
 		workers.add(new WorkerConfiguration(DefaultKryoWorker.class, null, 1));
 		workers.add(new WorkerConfiguration(DefaultRestWorker.class, null, 1));
 		workers.add(new WorkerConfiguration(DefaultSocketWorker.class, null, 1));
 		workers.add(new WorkerConfiguration(DefaultWebSocketWorker.class, null,
 				1));
 
-//		workers.add(new WorkerConfiguration(DefaultKryoWorker.class, StringCommunication.class, 1));
 		workers.add(new WorkerConfiguration(DefaultSocketWorker.class, StringCommunication.class, 1));
 
 		return new CommunicationConfiguration(masters, workers);

@@ -11,7 +11,7 @@
   } ],
   "communicationConfiguration" : {
     "dedicatedMasters" : [ {
-      "master" : "at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketConnection",
+      "master" : "at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketEndpoint",
       "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication",
       "annotation" : "at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedSocket"
     } ],
