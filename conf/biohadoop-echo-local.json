@@ -10,25 +10,29 @@
     "handlerConfigurations" : null
   } ],
   "communicationConfiguration" : {
-    "masters" : [ "at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication" ],
+    "dedicatedMasters" : [ {
+      "master" : "at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketConnection",
+      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication",
+      "annotation" : "at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedSocket"
+    } ],
     "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
       "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication",
       "count" : 1
     } ]

@@ -106,21 +106,25 @@
     } ]
   } ],
   "communicationConfiguration" : {
-    "masters" : [ ],
+    "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
       "remoteExecutable" : null,
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
+      "remoteExecutable" : null,
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
       "remoteExecutable" : null,
       "count" : 1
     } ]

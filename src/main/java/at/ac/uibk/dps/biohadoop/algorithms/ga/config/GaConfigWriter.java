@@ -14,11 +14,13 @@ import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
+import at.ac.uibk.dps.biohadoop.communication.MasterConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.WorkerConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedKryoWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedRestWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedSocketWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.UnifiedWebSocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker;
+import at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.HandlerConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionConfiguration;
@@ -29,7 +31,6 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadHandler;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveConfiguration;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveHandler;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
-import at.ac.uibk.dps.biohadoop.unifiedcommunication.RemoteExecutable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -90,23 +91,16 @@ public class GaConfigWriter {
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<Class<? extends RemoteExecutable<?, ?, ?>>> masters = new ArrayList<>();
-//		masters.add(RemoteFitness.class);
+		List<MasterConfiguration> masters = new ArrayList<>();
 
 		List<WorkerConfiguration> workers = new ArrayList<>();
-		workers.add(new WorkerConfiguration(UnifiedKryoWorker.class, null, 1));
-//		workers.add(new WorkerConfiguration(UnifiedKryoWorker.class,
-//				RemoteFitness.class, 1));
-		workers.add(new WorkerConfiguration(UnifiedRestWorker.class, null, 1));
-//		workers.add(new WorkerConfiguration(UnifiedRestWorker.class,
-//				RemoteFitness.class, 1));
-		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class, null, 1));
-//		workers.add(new WorkerConfiguration(UnifiedSocketWorker.class,
-//				RemoteFitness.class, 1));
-		workers.add(new WorkerConfiguration(UnifiedWebSocketWorker.class, null,
+		workers.add(new WorkerConfiguration(DefaultKryoWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(DefaultRestWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(DefaultSocketWorker.class, null, 1));
+		workers.add(new WorkerConfiguration(DefaultWebSocketWorker.class, null,
 				1));
-//		workers.add(new WorkerConfiguration(UnifiedWebSocketWorker.class,
-//				RemoteFitness.class, 1));
+		workers.add(new WorkerConfiguration(DefaultLocalWorker.class, null,
+				1));
 
 		return new CommunicationConfiguration(masters, workers);
 	}

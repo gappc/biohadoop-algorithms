@@ -1,7 +1,7 @@
 package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.remote;
 
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
-import at.ac.uibk.dps.biohadoop.unifiedcommunication.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 
 public class RemoteFunctionValue implements
 		RemoteExecutable<Object, double[], double[]> {

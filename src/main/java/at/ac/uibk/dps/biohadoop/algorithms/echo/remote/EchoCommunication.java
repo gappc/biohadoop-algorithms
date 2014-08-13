@@ -1,6 +1,6 @@
 package at.ac.uibk.dps.biohadoop.algorithms.echo.remote;
 
-import at.ac.uibk.dps.biohadoop.unifiedcommunication.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 
 
 public class EchoCommunication implements
