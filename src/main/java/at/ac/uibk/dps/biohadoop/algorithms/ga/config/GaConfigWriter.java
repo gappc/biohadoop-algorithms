@@ -87,7 +87,7 @@ public class GaConfigWriter {
 
 		return new BiohadoopConfiguration(includePaths, Arrays.asList(
 				solverConfig, solverConfig, solverConfig, solverConfig),
-				communicationConfiguration, globalDistributionConfiguration);
+				communicationConfiguration, globalDistributionConfiguration, null);
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
@@ -99,8 +99,8 @@ public class GaConfigWriter {
 		workers.add(new WorkerConfiguration(DefaultSocketWorker.class, null, 1));
 		workers.add(new WorkerConfiguration(DefaultWebSocketWorker.class, null,
 				1));
-		workers.add(new WorkerConfiguration(DefaultLocalWorker.class, null,
-				1));
+//		workers.add(new WorkerConfiguration(DefaultLocalWorker.class, null,
+//				1));
 
 		return new CommunicationConfiguration(masters, workers);
 	}

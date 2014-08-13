@@ -4,16 +4,16 @@ import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 
 
 public class EchoCommunication implements
-		RemoteExecutable<String, Integer, String> {
+		RemoteExecutable<String, String, String> {
 
 	@Override
 	public String getInitalData() {
-		return "FUCK";
+		return "Worker adds this string to result";
 	}
 
 	@Override
-	public String compute(Integer data, String registrationObject) {
-		return registrationObject + " --- " + data;
+	public String compute(String data, String initialData) {
+		return data + " (" + initialData + ")";
 	}
 
 }

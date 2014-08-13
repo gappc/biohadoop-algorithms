@@ -87,7 +87,7 @@ public class MoeadConfigWriter {
 
 		return new BiohadoopConfiguration(includePaths, Arrays.asList(
 				solverConfig, solverConfig, solverConfig, solverConfig),
-				communicationConfiguration, globalDistributionConfiguration);
+				communicationConfiguration, globalDistributionConfiguration, null);
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {

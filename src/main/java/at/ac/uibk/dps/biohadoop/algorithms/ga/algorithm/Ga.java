@@ -24,7 +24,7 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
+public class Ga implements Algorithm<GaAlgorithmConfig> {
 
 	public static final String GA_QUEUE = "GA_QUEUE";
 
@@ -34,10 +34,11 @@ public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
 	private final Random rand = new Random();
 
 	@Override
-	public int[] compute(SolverId solverId, GaAlgorithmConfig config)
+	public void compute(SolverId solverId, GaAlgorithmConfig config)
 			throws AlgorithmException {
 		// Initialize used Biohadoop components
-		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(RemoteFitness.class);
+		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(
+				RemoteFitness.class);
 		HandlerClient handlerClient = new HandlerClientImpl(solverId);
 		DataClient dataClient = new DataClientImpl(solverId);
 
@@ -51,7 +52,7 @@ public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
 		// Initialize population
 		int[][] population = null;
 		int iterationStart = 0;
-		
+
 		// If there is data from some where (e.g. loaded from handler), than use
 		// this
 		if (dataClient.getData(DataOptions.COMPUTATION_RESUMED, false)) {
@@ -97,8 +98,8 @@ public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
 					values[i] = taskFutures.get(i).get();
 				}
 			} catch (InterruptedException e) {
-				LOG.error("Error while remote task computation", e);
-				throw new AlgorithmException(e);
+				throw new AlgorithmException(
+						"Error while remote task computation", e);
 			}
 
 			// selection
@@ -138,9 +139,11 @@ public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
 
 			iteration++;
 
-			dataClient.setDefaultData(population, values[0], maxIterations, iteration);
+			dataClient.setDefaultData(population, values[0], maxIterations,
+					iteration);
 			handlerClient.invokeDefaultHandlers();
-			population = (int[][])dataClient.getData(DataOptions.DATA, population);
+			population = (int[][]) dataClient.getData(DataOptions.DATA,
+					population);
 
 			if (iteration == maxIterations) {
 				end = true;
@@ -155,16 +158,13 @@ public class Ga implements Algorithm<GaAlgorithmConfig, int[]> {
 				printGenome(tsp.getDistances(), population[0], citySize);
 			}
 		}
-
-		return population[0];
 	}
 
 	private Tsp readTspData(String dataFile) throws AlgorithmException {
 		try {
 			return TspFileReader.readFile(dataFile);
 		} catch (IOException e) {
-			LOG.error("Could not read TSP input file {}", dataFile);
-			throw new AlgorithmException(e);
+			throw new AlgorithmException("Could not read TSP input file " + dataFile);
 		}
 	}
 

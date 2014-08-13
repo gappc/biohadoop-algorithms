@@ -22,7 +22,7 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class Moead implements Algorithm<MoeadAlgorithmConfig, double[][]> {
+public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 
 	public static final String MOEAD_QUEUE = "MOEAD_QUEUE";
 
@@ -34,7 +34,7 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig, double[][]> {
 	private double minF2 = Double.MAX_VALUE;
 	private double maxF2 = -Double.MAX_VALUE;
 
-	public double[][] compute(SolverId solverId,
+	public void compute(SolverId solverId,
 			MoeadAlgorithmConfig config) throws AlgorithmException {
 		// Initialize used Biohadoop components
 		TaskClient<double[], double[]> taskClient = new DefaultTaskClient<>(
@@ -105,8 +105,7 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig, double[][]> {
 					// updateEP(EP, y, weightVectors[i], z);
 				}
 			} catch (InterruptedException e) {
-				LOG.error("Error while remote task computation", e);
-				throw new AlgorithmException(e);
+				throw new AlgorithmException("Error while remote task computation", e);
 			}
 
 			iteration++;
@@ -134,8 +133,6 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig, double[][]> {
 		for (double[] vals : result) {
 			LOG.info(vals[0] + " " + vals[1]);
 		}
-
-		return result;
 
 		// for (List<Double> l : EP) {
 		// double val1 = l.get(0);

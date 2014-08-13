@@ -24,7 +24,7 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig, double[][]> {
+public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig> {
 
 	public static final String NSGAII_QUEUE = "NSGAII_QUEUE";
 
@@ -35,7 +35,7 @@ public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig, double[][]> {
 			RemoteFunctionValue.class);
 
 	@Override
-	public double[][] compute(SolverId solverId, NsgaIIAlgorithmConfig config)
+	public void compute(SolverId solverId, NsgaIIAlgorithmConfig config)
 			throws AlgorithmException {
 		HandlerClient handlerClient = new HandlerClientImpl(solverId);
 		DataClient dataClient = new DataClientImpl(solverId);
@@ -130,8 +130,6 @@ public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig, double[][]> {
 				startTime = endTime;
 			}
 		}
-
-		return computeResult(populationSize, objectiveValues);
 	}
 
 	private double[][] convertToArray(Object input) {

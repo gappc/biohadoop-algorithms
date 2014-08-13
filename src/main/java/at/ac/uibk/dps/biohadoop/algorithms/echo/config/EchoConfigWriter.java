@@ -11,12 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm.Echo;
-import at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication;
 import at.ac.uibk.dps.biohadoop.communication.CommunicationConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.MasterConfiguration;
 import at.ac.uibk.dps.biohadoop.communication.WorkerConfiguration;
-import at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedSocket;
-import at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketEndpoint;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker;
@@ -75,13 +72,11 @@ public class EchoConfigWriter {
 
 		return new BiohadoopConfiguration(includePaths,
 				Arrays.asList(solverConfig), communicationConfiguration,
-				globalDistributionConfiguration);
+				globalDistributionConfiguration, null);
 	}
 
 	private static CommunicationConfiguration buildCommunicationConfiguration() {
-		List<MasterConfiguration> masters = new ArrayList<>();
-		masters.add(new MasterConfiguration(DefaultSocketEndpoint.class,
-				StringCommunication.class, DedicatedSocket.class));
+		List<MasterConfiguration> dedicatedMasters = new ArrayList<>();
 
 		List<WorkerConfiguration> workers = new ArrayList<>();
 		workers.add(new WorkerConfiguration(DefaultKryoWorker.class, null, 1));
@@ -90,26 +85,12 @@ public class EchoConfigWriter {
 		workers.add(new WorkerConfiguration(DefaultWebSocketWorker.class, null,
 				1));
 
-		workers.add(new WorkerConfiguration(DefaultSocketWorker.class, StringCommunication.class, 1));
-
-		return new CommunicationConfiguration(masters, workers);
+		return new CommunicationConfiguration(dedicatedMasters, workers);
 	}
 
 	private static SolverConfiguration buildSolverConfig(String name,
 			boolean local) {
 		AlgorithmConfiguration algorithmConfiguration = buildAlgorithmConfig(local);
-
-		// FileSaveConfiguration fileSaveConfiguration =
-		// buildFileSaveConfig(local);
-		// FileLoadConfiguration fileLoadConfiguration =
-		// buildFileLoadConfig(local);
-		// DistributionConfiguration distributionConfiguration =
-		// buildDistributionConfig();
-		// List<HandlerConfiguration> handlers = new ArrayList<>();
-		// handlers.add(fileSaveConfiguration);
-		// handlers.add(fileLoadConfiguration);
-		// handlers.add(distributionConfiguration);
-
 		return new SolverConfiguration(name, algorithmConfiguration,
 				Echo.class, null);
 	}

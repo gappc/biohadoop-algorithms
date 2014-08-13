@@ -123,14 +123,11 @@
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
       "remoteExecutable" : null,
       "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
-      "remoteExecutable" : null,
-      "count" : 1
     } ]
   },
   "zooKeeperConfiguration" : {
     "host" : "localhost",
     "port" : 2181
-  }
+  },
+  "properties" : null
 }

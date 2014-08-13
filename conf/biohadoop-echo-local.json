@@ -10,11 +10,7 @@
     "handlerConfigurations" : null
   } ],
   "communicationConfiguration" : {
-    "dedicatedMasters" : [ {
-      "master" : "at.ac.uibk.dps.biohadoop.communication.master.socket.DefaultSocketEndpoint",
-      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication",
-      "annotation" : "at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedSocket"
-    } ],
+    "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
       "remoteExecutable" : null,
@@ -31,14 +27,11 @@
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
       "remoteExecutable" : null,
       "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.echo.remote.StringCommunication",
-      "count" : 1
     } ]
   },
   "zooKeeperConfiguration" : {
     "host" : "localhost",
     "port" : 2181
-  }
+  },
+  "properties" : null
 }
