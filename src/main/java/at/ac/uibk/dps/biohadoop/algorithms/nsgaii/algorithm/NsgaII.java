@@ -21,6 +21,7 @@ import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
 import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -298,7 +299,7 @@ public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig> {
 				objectiveValues[i] = taskFutures.get(i).get();
 			}
 			return objectiveValues;
-		} catch (InterruptedException e) {
+		} catch (TaskException e) {
 			LOG.error("Error while remote task computation", e);
 			throw new AlgorithmException(e);
 		}

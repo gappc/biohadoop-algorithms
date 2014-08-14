@@ -20,6 +20,7 @@ import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.StringCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.ComplexObject;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -39,12 +40,12 @@ public class TypeTest implements Algorithm<TypeTestAlgorithmConfig> {
 			testObject();
 			testString();
 			ProgressService.setProgress(solverId, 1.0f);
-		} catch (InterruptedException e) {
+		} catch (TaskException e) {
 			throw new AlgorithmException("Error while running", e);
 		}
 	}
 
-	private void testArrays() throws InterruptedException {
+	private void testArrays() throws TaskException {
 		TaskClient<double[], String[]> client = new DefaultTaskClient<>(
 				ArrayCommunication.class);
 		Random rand = new Random();
@@ -57,7 +58,7 @@ public class TypeTest implements Algorithm<TypeTestAlgorithmConfig> {
 		LOG.info("Array received: {}", ArrayUtils.toString(result));
 	}
 
-	private void testComplexObject() throws InterruptedException {
+	private void testComplexObject() throws TaskException {
 		TaskClient<ComplexObject, ComplexObject> client = new DefaultTaskClient<>(
 				ComplexObjectCommunication.class);
 		ComplexObject data = ComplexObject.buildRandom();
@@ -68,7 +69,7 @@ public class TypeTest implements Algorithm<TypeTestAlgorithmConfig> {
 		LOG.info("ComplexObject received: {}", result);
 	}
 
-	private void testList() throws InterruptedException {
+	private void testList() throws TaskException {
 		TaskClient<List<Double>, List<String>> client = new DefaultTaskClient<>(
 				ListCommunication.class);
 		Random rand = new Random();
@@ -83,7 +84,7 @@ public class TypeTest implements Algorithm<TypeTestAlgorithmConfig> {
 		LOG.info("List received: {}", ArrayUtils.toString(result));
 	}
 
-	private void testObject() throws InterruptedException {
+	private void testObject() throws TaskException {
 		TaskClient<Date, String> client = new DefaultTaskClient<>(
 				ObjectCommunication.class);
 		Date data = new Date();
@@ -94,7 +95,7 @@ public class TypeTest implements Algorithm<TypeTestAlgorithmConfig> {
 		LOG.info("Object received: {}", result);
 	}
 
-	private void testString() throws InterruptedException {
+	private void testString() throws TaskException {
 		TaskClient<String, String> client = new DefaultTaskClient<>(
 				StringCommunication.class);
 		Random rand = new Random();

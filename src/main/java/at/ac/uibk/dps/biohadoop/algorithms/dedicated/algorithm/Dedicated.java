@@ -10,6 +10,7 @@ import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunicati
 import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.SharedCommunication;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -41,7 +42,7 @@ public class Dedicated implements Algorithm<DedicatedAlgorithmConfig> {
 
 			LOG.info("Got result from shared endpoint: {}", sharedResult);
 			LOG.info("Got result from dedicated endpoint: {}", dedicatedResult);
-		} catch (InterruptedException e) {
+		} catch (TaskException e) {
 			throw new AlgorithmException("Got interrupted while computing task");
 		}
 

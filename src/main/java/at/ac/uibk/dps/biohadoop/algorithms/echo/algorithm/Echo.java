@@ -9,6 +9,7 @@ import at.ac.uibk.dps.biohadoop.algorithms.echo.config.EchoAlgorithmConfig;
 import at.ac.uibk.dps.biohadoop.algorithms.echo.remote.EchoCommunication;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -34,7 +35,7 @@ public class Echo implements Algorithm<EchoAlgorithmConfig> {
 
 			LOG.info(result);
 
-		} catch (InterruptedException e) {
+		} catch (TaskException e) {
 			throw new AlgorithmException("Got interrupted while computing task");
 		}
 
