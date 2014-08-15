@@ -23,6 +23,7 @@ import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -174,6 +175,11 @@ public class NsgaII implements Algorithm {
 				}
 			}
 
+			// By setting the progress here, we inform Biohadoop and Hadoop
+			// about the current progress
+			ProgressService.setProgress(solverId, (float)iteration / maxIterations);
+
+			// Check for end condition
 			if (iteration >= maxIterations) {
 				end = true;
 			}

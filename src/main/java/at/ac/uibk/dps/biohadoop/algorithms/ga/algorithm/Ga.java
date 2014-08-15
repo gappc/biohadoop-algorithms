@@ -211,7 +211,7 @@ public class Ga implements Algorithm {
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
-			ProgressService.setProgress(solverId, iteration / maxIterations);
+			ProgressService.setProgress(solverId, (float)iteration / maxIterations);
 
 			// Check for end condition
 			if (iteration == maxIterations) {
