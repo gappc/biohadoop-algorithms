@@ -1,22 +1,22 @@
 package at.ac.uibk.dps.biohadoop.algorithms.nsgaii.remote;
 
-import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Functions;
 import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.functions.Function;
+import at.ac.uibk.dps.biohadoop.functions.FunctionProvider;
 
 public class RemoteFunctionValue implements
-		RemoteExecutable<Object, double[], double[]> {
+		RemoteExecutable<Function, double[], double[]> {
 
 	@Override
-	public Object getInitalData() {
-		// No initial object for MOEAD
-		return null;
+	public Function getInitalData() {
+		return FunctionProvider.getFunction();
 	}
-
+	
 	@Override
-	public double[] compute(double[] data, Object initialData) {
+	public double[] compute(double[] data, Function initialData) {
 		double[] result = new double[2];
-		result[0] = Functions.f1(data);
-		result[1] = Functions.f2(data);
+		result[0] = initialData.f1(data);
+		result[1] = initialData.f2(data);
 		return result;
 	}
 

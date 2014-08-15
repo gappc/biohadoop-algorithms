@@ -1,7 +1,5 @@
 package at.ac.uibk.dps.biohadoop.algorithms.typetest.remote;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.ArrayUtils;

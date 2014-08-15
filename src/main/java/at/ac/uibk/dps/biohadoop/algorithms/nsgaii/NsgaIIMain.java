@@ -10,16 +10,13 @@ import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.config.NsgaIIAlgorithmConfig;
 import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
 import at.ac.uibk.dps.biohadoop.datastore.DataService;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
-import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationReader;
-import at.ac.uibk.dps.biohadoop.hadoop.launcher.SolverLauncher;
+import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.MasterLauncher;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.hadoop.launcher.SolverLauncher;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
-import at.ac.uibk.dps.biohadoop.solver.SolverService;
 
 public class NsgaIIMain {
 
@@ -31,8 +28,8 @@ public class NsgaIIMain {
 	public static void main(String[] args) {
 		try {
 			YarnConfiguration yarnConfiguration = new YarnConfiguration();
-			BiohadoopConfiguration biohadoopConfiguration = BiohadoopConfigurationReader
-					.readBiohadoopConfiguration(yarnConfiguration, args[0]);
+			BiohadoopConfiguration biohadoopConfiguration = BiohadoopConfigurationUtil
+					.read(yarnConfiguration, args[0]);
 
 			List<Future<SolverId>> algorithms = SolverLauncher
 					.launchSolver(biohadoopConfiguration);
@@ -41,7 +38,6 @@ public class NsgaIIMain {
 					biohadoopConfiguration);
 			masterLauncher.startMasterEndpoints();
 
-			SolverService solverService = SolverService.getInstance();
 			for (Future<SolverId> algorithm : algorithms) {
 				SolverId solverId = algorithm.get();
 				LOG.info("{} finished", solverId);
@@ -49,11 +45,9 @@ public class NsgaIIMain {
 				@SuppressWarnings("unchecked")
 				List<List<Double>> solution = (List<List<Double>>) DataService
 						.getInstance().getData(solverId, DataOptions.DATA);
-				SolverConfiguration solverConfiguration = solverService
-						.getSolverConfiguration(solverId);
-				String outputFilename = ((NsgaIIAlgorithmConfig) solverConfiguration
-						.getAlgorithmConfiguration()).getOutputFile();
-				saveToFile(outputFilename, solution);
+//				String outputFilename = ((NsgaIIAlgorithmConfig) solverConfiguration
+//						.getAlgorithmConfiguration()).getOutputFile();
+				saveToFile("/tmp/nsgaii-sol.txt", solution);
 			}
 		} catch (Exception e) {
 			LOG.error("Exception while running NsgaIIMain", e);

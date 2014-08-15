@@ -12,7 +12,7 @@ public class ObjectCommunication implements
 	public UUID getInitalData() {
 		return UUID.randomUUID();
 	}
-
+	
 	@Override
 	public String compute(Date data, UUID initialData) {
 		return  "initialData: " + initialData + " Data:" + data;

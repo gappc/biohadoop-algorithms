@@ -10,7 +10,7 @@ public class RemoteFitness implements RemoteExecutable<double[][], int[], Double
 	public double[][] getInitalData() {
 		return DistancesGlobal.getDistances();
 	}
-
+	
 	@Override
 	public Double compute(int[] data, double[][] initialData) {
 		return GaFitness.computeFitness(initialData, data);

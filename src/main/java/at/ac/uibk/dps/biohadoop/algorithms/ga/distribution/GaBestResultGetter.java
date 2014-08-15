@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import at.ac.uibk.dps.biohadoop.handler.distribution.DistributionException;
+import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModelException;
 import at.ac.uibk.dps.biohadoop.handler.distribution.RemoteDataLoader;
 import at.ac.uibk.dps.biohadoop.handler.distribution.RemoteResultGetter;
 import at.ac.uibk.dps.biohadoop.handler.distribution.zookeeper.NodeData;
@@ -15,7 +15,7 @@ public class GaBestResultGetter implements RemoteResultGetter {
 	private final RemoteDataLoader remoteDataLoader = new RemoteDataLoader();
 	
 	@Override
-	public Object getBestRemoteResult(List<NodeData> nodesData) throws DistributionException {
+	public Object getBestRemoteResult(List<NodeData> nodesData) throws IslandModelException {
 		if (nodesData == null || nodesData.isEmpty()) {
 			return null;
 		}

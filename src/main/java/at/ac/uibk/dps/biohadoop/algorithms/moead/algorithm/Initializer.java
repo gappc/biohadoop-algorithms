@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import at.ac.uibk.dps.biohadoop.functions.Function;
+import at.ac.uibk.dps.biohadoop.functions.Zdt3;
+
 public class Initializer {
 
 	public static double[][] generateWeightVectors(int N) {
@@ -45,9 +48,11 @@ public class Initializer {
 
 	public static double[][] computeFunctionValues(double[][] population) {
 		double[][] values = new double[population.length][2];
+		// TODO make configurable
+		Function functions = new Zdt3();
 		for (int i = 0; i < population.length; i++) {
-			values[i][0] = Functions.f1(population[i]);
-			values[i][1] = Functions.f2(population[i]);
+			values[i][0] = functions.f1(population[i]);
+			values[i][1] = functions.f2(population[i]);
 		}
 		return values;
 	}

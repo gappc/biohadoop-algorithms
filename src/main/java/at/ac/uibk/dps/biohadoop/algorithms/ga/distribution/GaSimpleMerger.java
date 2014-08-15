@@ -1,16 +1,25 @@
 package at.ac.uibk.dps.biohadoop.algorithms.ga.distribution;
 
-import at.ac.uibk.dps.biohadoop.handler.distribution.DataMergeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.uibk.dps.biohadoop.handler.distribution.DataMerger;
+import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModelException;
 
 public class GaSimpleMerger implements DataMerger<int[][]> {
 
+	private static Logger LOG = LoggerFactory.getLogger(GaSimpleMerger.class);
+	
 	@Override
-	public int[][] merge(int[][] o1, int[][] o2) throws DataMergeException {
-		if (o1 == null || o2 == null) {
-			throw new DataMergeException(
-					"Could not merge data because at least one of merging objects was null: o1="
-							+ o1 + ", o2=" + o2);
+	public int[][] merge(int[][] o1, int[][] o2) throws IslandModelException {
+		if (o1 == null) {
+			throw new IslandModelException(
+					"Could not merge data because local data was null: o1="
+							+ o1);
+		}
+		if (o2 == null) {
+			LOG.warn("Could not merge local with remote data because rmeote data is null. Returning local data");
+			return o1;
 		}
 
 		int length1 = o1.length;

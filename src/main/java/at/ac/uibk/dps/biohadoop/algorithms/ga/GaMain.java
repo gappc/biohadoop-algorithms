@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
-import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationReader;
+import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.SolverLauncher;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.MasterLauncher;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -23,8 +23,8 @@ public class GaMain {
 	public static void main(String[] args) {
 		try {
 			YarnConfiguration yarnConfiguration = new YarnConfiguration();
-			BiohadoopConfiguration biohadoopConfiguration = BiohadoopConfigurationReader
-					.readBiohadoopConfiguration(yarnConfiguration, args[0]);
+			BiohadoopConfiguration biohadoopConfiguration = BiohadoopConfigurationUtil
+					.read(yarnConfiguration, args[0]);
 
 			List<Future<SolverId>> algorithms = SolverLauncher
 					.launchSolver(biohadoopConfiguration);

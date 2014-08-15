@@ -8,9 +8,10 @@ public class SharedCommunication implements
 
 	@Override
 	public String getInitalData() {
+		// No initial object
 		return null;
 	}
-
+	
 	@Override
 	public String compute(String data, String initialData) {
 		return data + " (passed shared worker computation)";
