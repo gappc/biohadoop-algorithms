@@ -12,22 +12,29 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
-import at.ac.uibk.dps.biohadoop.algorithms.ga.config.GaAlgorithmConfig;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.remote.RemoteFitness;
 import at.ac.uibk.dps.biohadoop.datastore.DataClient;
-import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
 import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
+import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModel;
+import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModelException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.solver.ProgressService;
+import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class Ga implements Algorithm<GaAlgorithmConfig> {
+public class Ga implements Algorithm {
 
-	public static final String GA_QUEUE = "GA_QUEUE";
+	public static final String DATA_PATH = "DATA_PATH";
+	public static final String MAX_ITERATIONS = "MAX_ITERATIONS";
+	public static final String POPULATION_SIZE = "POPULATION_SIZE";
 
 	private static final Logger LOG = LoggerFactory.getLogger(Ga.class);
 	private static final int LOG_STEPS = 1000;
@@ -35,41 +42,68 @@ public class Ga implements Algorithm<GaAlgorithmConfig> {
 	private final Random rand = new Random();
 
 	@Override
-	public void compute(SolverId solverId, GaAlgorithmConfig config)
-			throws AlgorithmException {
-		// Initialize used Biohadoop components
-		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(
-				RemoteFitness.class);
-		HandlerClient handlerClient = new HandlerClientImpl(solverId);
-		DataClient dataClient = new DataClientImpl(solverId);
-
-		// Set data from configuration
-		Tsp tsp = readTspData(config.getDataFile());
-		int populationSize = config.getPopulationSize();
-		int maxIterations = config.getMaxIterations();
+	public void compute(SolverId solverId,
+			SolverConfiguration solverConfiguration) throws AlgorithmException {
+		// Read algorithm settings from configuration
+		String dataPath = solverConfiguration.getProperties().get(DATA_PATH);
+		Tsp tsp = readTspData(dataPath);
+		String populationSizeProperty = solverConfiguration.getProperties()
+				.get(POPULATION_SIZE);
+		int populationSize = Integer.parseInt(populationSizeProperty);
+		String maxIterationsProperty = solverConfiguration.getProperties().get(
+				MAX_ITERATIONS);
+		int maxIterations = Integer.parseInt(maxIterationsProperty);
 		DistancesGlobal.setDistances(tsp.getDistances());
 		int citySize = tsp.getCities().length;
+
+		// Read persistence settings from configuration
+		String saveAfterIterationProperty = solverConfiguration.getProperties()
+				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
+		Integer saveAfterIteration = null;
+		if (saveAfterIterationProperty != null) {
+			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
+		}
+		String savePath = solverConfiguration.getProperties().get(
+				FileSaver.FILE_SAVE_PATH);
+
+		// Read island model settings from configuration
+		String mergeAfterIterationProperty = solverConfiguration
+				.getProperties().get(FileSaver.FILE_SAVE_AFTER_ITERATION);
+		Integer mergeAfterIteration = null;
+		if (mergeAfterIterationProperty != null) {
+			mergeAfterIteration = Integer.parseInt(mergeAfterIterationProperty);
+		}
+
+		// Load old snapshot from file if possible
+		SolverData<?> solverData = null;
+		try {
+			solverData = FileLoader.load(solverId, solverConfiguration);
+		} catch (FileLoadException e) {
+			throw new AlgorithmException(e);
+		}
 
 		// Initialize population
 		int[][] population = null;
 		int iterationStart = 0;
-
-		// If there is data from some where (e.g. loaded from handler), than use
-		// this
-		if (dataClient.getData(DataOptions.COMPUTATION_RESUMED, false)) {
-			population = convertToArray(dataClient.getData(DataOptions.DATA));
-			iterationStart = dataClient.getData(DataOptions.ITERATION_START);
+		if (solverData != null) {
+			population = convertToArray(solverData.getData());
+			iterationStart = solverData.getIteration();
 			LOG.info("Resuming from iteration {}", iterationStart);
 		} else {
 			population = initPopulation(populationSize, citySize);
 		}
 
+		// Initialize queue for remote computation
+		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(
+				RemoteFitness.class);
+
+		// Start algorithm
 		boolean end = false;
 		int iteration = 0;
 		long startTime = System.currentTimeMillis();
 
 		while (!end) {
-			// recombination
+			// Recombination
 			int[][] offsprings = new int[populationSize][citySize];
 			for (int i = 0; i < populationSize; i++) {
 				int indexParent1 = rand.nextInt(populationSize);
@@ -79,22 +113,25 @@ public class Ga implements Algorithm<GaAlgorithmConfig> {
 						population[indexParent2]);
 			}
 
-			// mutation
+			// Mutation
 			int[][] mutated = new int[populationSize][citySize];
 			for (int i = 0; i < populationSize; i++) {
 				mutated[i] = mutation(offsprings[i]);
 			}
 
-			// evaluation
+			// Evaluation
 			double[] values = new double[populationSize * 2];
 			try {
+				// Submit tasks for remote clients
 				List<TaskFuture<Double>> taskFutures = taskClient
 						.addAll(population);
 
+				// Submit tasks for remote clients
 				for (int i = 0; i < populationSize; i++) {
 					taskFutures.add(taskClient.add(mutated[i]));
 				}
 
+				// Wait for all tasks to complete
 				for (int i = 0; i < taskFutures.size(); i++) {
 					values[i] = taskFutures.get(i).get();
 				}
@@ -103,7 +140,7 @@ public class Ga implements Algorithm<GaAlgorithmConfig> {
 						"Error while remote task computation", e);
 			}
 
-			// selection
+			// Selection
 			for (int i = 0; i < populationSize * 2; i++) {
 				for (int j = i + 1; j < populationSize * 2; j++) {
 					if (values[j] < values[i]) {
@@ -137,18 +174,51 @@ public class Ga implements Algorithm<GaAlgorithmConfig> {
 					}
 				}
 			}
+			// End algorithm
 
 			iteration++;
 
-			dataClient.setDefaultData(population, values[0], maxIterations,
-					iteration);
-			handlerClient.invokeDefaultHandlers();
-			population = (int[][]) dataClient.getData(DataOptions.DATA,
-					population);
+			solverData = new SolverData<>(population, values[0], iteration);
 
+			// Set this to enable data sharing with other islands
+			// (parallelization using island model)
+			DataClient.setData(solverId, DataOptions.SOLVER_DATA, solverData);
+
+			// Handle merging of data from other islands (parallelization using
+			// island model)
+			if (mergeAfterIteration != null
+					&& iteration % mergeAfterIteration == 0) {
+				try {
+					population = (int[][]) IslandModel.merge(solverId,
+							solverConfiguration, solverData);
+				} catch (IslandModelException e) {
+					throw new AlgorithmException(
+							"Error while trying to merge island data", e);
+				}
+			}
+
+			// Handle saving of results to file
+			if (saveAfterIteration != null
+					&& iteration % saveAfterIteration == 0) {
+				try {
+					FileSaver.save(solverId, solverConfiguration, solverData);
+				} catch (FileSaveException e) {
+					throw new AlgorithmException(
+							"Error while trying to save data to file "
+									+ savePath, e);
+				}
+			}
+
+			// By setting the progress here, we inform Biohadoop and Hadoop
+			// about the current progress
+			ProgressService.setProgress(solverId, iteration / maxIterations);
+
+			// Check for end condition
 			if (iteration == maxIterations) {
 				end = true;
 			}
+
+			// Some LOG output
 			if (iteration % LOG_STEPS == 0 || iteration < 10) {
 				long endTime = System.currentTimeMillis();
 				LOG.info(
@@ -165,7 +235,8 @@ public class Ga implements Algorithm<GaAlgorithmConfig> {
 		try {
 			return TspFileReader.readFile(dataFile);
 		} catch (IOException e) {
-			throw new AlgorithmException("Could not read TSP input file " + dataFile);
+			throw new AlgorithmException("Could not read TSP input file "
+					+ dataFile);
 		}
 	}
 

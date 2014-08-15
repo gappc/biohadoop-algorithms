@@ -12,54 +12,100 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.config.NsgaIIAlgorithmConfig;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.remote.RemoteFunctionValue;
-import at.ac.uibk.dps.biohadoop.datastore.DataClient;
-import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
-import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
+import at.ac.uibk.dps.biohadoop.functions.Function;
+import at.ac.uibk.dps.biohadoop.functions.FunctionProvider;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig> {
+public class NsgaII implements Algorithm {
 
-	public static final String NSGAII_QUEUE = "NSGAII_QUEUE";
+	public static final String GENOME_SIZE = "GENOME_SIZE";
+	public static final String MAX_ITERATIONS = "MAX_ITERATIONS";
+	public static final String POPULATION_SIZE = "POPULATION_SIZE";
+	public static final String FUNCTION_CLASS = "FUNCTION_CLASS";
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsgaII.class);
 	private static final int LOG_STEPS = 100;
 
-	private TaskClient<double[], double[]> taskClient = new DefaultTaskClient<>(
-			RemoteFunctionValue.class);
+	private TaskClient<double[], double[]> taskClient;
 
 	@Override
-	public void compute(SolverId solverId, NsgaIIAlgorithmConfig config)
-			throws AlgorithmException {
-		HandlerClient handlerClient = new HandlerClientImpl(solverId);
-		DataClient dataClient = new DataClientImpl(solverId);
-
-		int genomeSize = config.getGenomeSize();
-		int maxIterations = config.getMaxIterations();
-		int populationSize = config.getPopulationSize();
-
+	public void compute(SolverId solverId,
+			SolverConfiguration solverConfiguration) throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
+
+		// Read algorithm settings from configuration
+		String genomeSizeProperty = solverConfiguration.getProperties().get(
+				GENOME_SIZE);
+		int genomeSize = Integer.parseInt(genomeSizeProperty);
+		String maxIterationsProperty = solverConfiguration.getProperties().get(
+				MAX_ITERATIONS);
+		int maxIterations = Integer.parseInt(maxIterationsProperty);
+		String populationSizeProperty = solverConfiguration.getProperties()
+				.get(POPULATION_SIZE);
+		int populationSize = Integer.parseInt(populationSizeProperty);
+		String functionClassName = solverConfiguration.getProperties().get(
+				FUNCTION_CLASS);
+		try {
+			Class<Function> functionClass = (Class<Function>) Class.forName(functionClassName);
+			Function function = functionClass.newInstance();
+			FunctionProvider.setFunction(function);
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException e1) {
+			throw new AlgorithmException("Could not build object "
+					+ functionClassName);
+		}
+		// Read persistence settings from configuration
+		String saveAfterIterationProperty = solverConfiguration.getProperties()
+				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
+		Integer saveAfterIteration = null;
+		if (saveAfterIterationProperty != null) {
+			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
+		}
+		String savePath = solverConfiguration.getProperties().get(
+				FileSaver.FILE_SAVE_PATH);
+
+		// Load old snapshot from file if possible
+		SolverData<?> solverData = null;
+		try {
+			solverData = FileLoader.load(solverId, solverConfiguration);
+		} catch (FileLoadException e) {
+			throw new AlgorithmException(e);
+		}
 
 		double[][] population = null;
 		int persitedIteration = 0;
-		if (dataClient.getData(DataOptions.COMPUTATION_RESUMED, false)) {
-			population = convertToArray(dataClient.getData(DataOptions.DATA));
-			persitedIteration = dataClient.getData(DataOptions.ITERATION_START);
+
+		if (solverData != null) {
+			population = convertToArray(solverData.getData());
+			persitedIteration = solverData.getIteration();
 			LOG.info("Resuming from iteration {}", persitedIteration);
 		} else {
 			population = initializePopulation(populationSize * 2, genomeSize);
 		}
 
+		// Initialize queue for remote computation
+		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class);
+		
 		double[][] objectiveValues = new double[populationSize * 2][2];
 		computeObjectiveValues(population, objectiveValues, 0, populationSize);
 
+		// Initialization finished
+		LOG.info("Initialisation took {}ms", System.currentTimeMillis()
+				- startTime);
+		startTime = System.currentTimeMillis();
+
+		// Start algorithm
 		int iteration = 0;
 		boolean end = false;
 		while (!end) {
@@ -114,11 +160,19 @@ public class NsgaII implements Algorithm<NsgaIIAlgorithmConfig> {
 			iteration++;
 
 			double[][] result = computeResult(populationSize, objectiveValues);
+			solverData = new SolverData<>(result, 0, iteration);
 
-			dataClient.setDefaultData(result, 0, maxIterations, iteration);
-			handlerClient.invokeDefaultHandlers();
-			objectiveValues = (double[][]) dataClient.getData(DataOptions.DATA,
-					objectiveValues);
+			// Handle saving of results to file
+			if (saveAfterIteration != null
+					&& iteration % saveAfterIteration == 0) {
+				try {
+					FileSaver.save(solverId, solverConfiguration, solverData);
+				} catch (FileSaveException e) {
+					throw new AlgorithmException(
+							"Error while trying to save data to file "
+									+ savePath, e);
+				}
+			}
 
 			if (iteration >= maxIterations) {
 				end = true;

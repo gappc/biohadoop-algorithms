@@ -10,25 +10,33 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.algorithms.moead.config.MoeadAlgorithmConfig;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue;
-import at.ac.uibk.dps.biohadoop.datastore.DataClient;
-import at.ac.uibk.dps.biohadoop.datastore.DataClientImpl;
-import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClient;
-import at.ac.uibk.dps.biohadoop.handler.HandlerClientImpl;
+import at.ac.uibk.dps.biohadoop.functions.Function;
+import at.ac.uibk.dps.biohadoop.functions.FunctionProvider;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
+import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
-public class Moead implements Algorithm<MoeadAlgorithmConfig> {
+public class Moead implements Algorithm {
 
-	public static final String MOEAD_QUEUE = "MOEAD_QUEUE";
+	public static final String MAX_ITERATIONS = "MAX_ITERATIONS";
+	public static final String POPULATION_SIZE = "POPULATION_SIZE";
+	public static final String GENOME_SIZE = "GENOME_SIZE";
+	public static final String NEIGHBOR_SIZE = "NEIGHBOR_SIZE";
+	public static final String FUNCTION_CLASS = "FUNCTION_CLASS";
 
 	private static final Logger LOG = LoggerFactory.getLogger(Moead.class);
 	private static final int LOG_STEPS = 100;
+
+	private TaskClient<double[], double[]> taskClient;
 
 	private double minF1 = Double.MAX_VALUE;
 	private double maxF1 = -Double.MAX_VALUE;
@@ -36,21 +44,43 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 	private double maxF2 = -Double.MAX_VALUE;
 
 	public void compute(SolverId solverId,
-			MoeadAlgorithmConfig config) throws AlgorithmException {
-		// Initialize used Biohadoop components
-		TaskClient<double[], double[]> taskClient = new DefaultTaskClient<>(
-				RemoteFunctionValue.class);
-		HandlerClient handlerClient = new HandlerClientImpl(solverId);
-		DataClient dataClient = new DataClientImpl(solverId);
-
-		int maxIterations = config.getMaxIterations();
-		int N = config.getPopulationSize();
-		int neighborSize = config.getNeighborSize();
-		int genomeSize = config.getGenomeSize();
-
+			SolverConfiguration solverConfiguration) throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 
-		double[][] weightVectors = Initializer.generateWeightVectors(N);
+		// Read algorithm settings from configuration
+		String maxIterationsProperty = solverConfiguration.getProperties().get(
+				MAX_ITERATIONS);
+		int maxIterations = Integer.parseInt(maxIterationsProperty);
+		String NProperty = solverConfiguration.getProperties().get(
+				POPULATION_SIZE);
+		int N = Integer.parseInt(NProperty);
+		String neighborSizeProperty = solverConfiguration.getProperties().get(
+				NEIGHBOR_SIZE);
+		int neighborSize = Integer.parseInt(neighborSizeProperty);
+		String genomeSizeProperty = solverConfiguration.getProperties().get(
+				GENOME_SIZE);
+		int genomeSize = Integer.parseInt(genomeSizeProperty);
+		String functionClassName = solverConfiguration.getProperties().get(
+				FUNCTION_CLASS);
+		try {
+			Class<Function> functionClass = (Class<Function>) Class.forName(functionClassName);
+			Function function = functionClass.newInstance();
+			FunctionProvider.setFunction(function);
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException e1) {
+			throw new AlgorithmException("Could not build object "
+					+ functionClassName);
+		}
+
+		// Read persistence settings from configuration
+		String saveAfterIterationProperty = solverConfiguration.getProperties()
+				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
+		Integer saveAfterIteration = null;
+		if (saveAfterIterationProperty != null) {
+			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
+		}
+		String savePath = solverConfiguration.getProperties().get(
+				FileSaver.FILE_SAVE_PATH);
 
 		// 1.1
 		// Dosen't work as expected, so was commented out
@@ -58,27 +88,43 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 		// List<List<Double>> EP = new ArrayList<List<Double>>(); // external
 		// population
 		// 1.2
+		double[][] weightVectors = Initializer.generateWeightVectors(N);
 		int[][] B = Initializer.getNeighbors(weightVectors, neighborSize); // neighbors
 
 		// 1.3
 		double[][] population = null;
 		int persitedIteration = 0;
-		if (dataClient.getData(DataOptions.COMPUTATION_RESUMED, false)) {
-			population = convertToArray(dataClient.getData(DataOptions.DATA));
-			persitedIteration = dataClient.getData(DataOptions.ITERATION_START);
+
+		// Load old snapshot from file if possible
+		SolverData<?> solverData = null;
+		try {
+			solverData = FileLoader.load(solverId, solverConfiguration);
+		} catch (FileLoadException e) {
+			throw new AlgorithmException(e);
+		}
+		if (solverData != null) {
+			population = convertToArray(solverData.getData());
+			persitedIteration = solverData.getIteration();
 			LOG.info("Resuming from iteration {}", persitedIteration);
 		} else {
 			population = Initializer.getRandomPopulation(N, genomeSize);
 		}
+
 		double[][] functionValues = Initializer
 				.computeFunctionValues(population);
 		// 1.4
 		double[] z = Initializer.getReferencePoint(functionValues); // reference
 																	// point
+
+		// Initialize queue for remote computation
+		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class);
+
+		// Initialization finished
 		LOG.info("Initialisation took {}ms", System.currentTimeMillis()
 				- startTime);
 		startTime = System.currentTimeMillis();
 
+		// Start algorithm
 		int iteration = 0;
 		boolean end = false;
 		while (!end) {
@@ -93,6 +139,7 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 
 			try {
 				List<TaskFuture<double[]>> futures = taskClient.addAll(y);
+
 				for (int i = 0; i < N; i++) {
 					double[] fValues = futures.get(i).get();
 					// 2.2 - no repair needed
@@ -106,15 +153,26 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 					// updateEP(EP, y, weightVectors[i], z);
 				}
 			} catch (TaskException e) {
-				throw new AlgorithmException("Error while remote task computation", e);
+				throw new AlgorithmException(
+						"Error while remote task computation", e);
 			}
 
 			iteration++;
 
 			double[][] result = computeResult(functionValues, z);
-			dataClient.setDefaultData(result, 0, maxIterations, iteration);
-			handlerClient.invokeDefaultHandlers();
-			functionValues = (double[][])dataClient.getData(DataOptions.DATA, functionValues);
+			solverData = new SolverData<>(result, 0, iteration);
+
+			// Handle saving of results to file
+			if (saveAfterIteration != null
+					&& iteration % saveAfterIteration == 0) {
+				try {
+					FileSaver.save(solverId, solverConfiguration, solverData);
+				} catch (FileSaveException e) {
+					throw new AlgorithmException(
+							"Error while trying to save data to file "
+									+ savePath, e);
+				}
+			}
 
 			if (iteration >= maxIterations) {
 				end = true;
@@ -202,9 +260,15 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 		return newSolution;
 	}
 
-	private void updateReferencePoint(double[] z, double[] y) {
-		double f1Value = Functions.f1(y);
-		double f2Value = Functions.f2(y);
+	private void updateReferencePoint(double[] z, double[] y)
+			throws TaskException {
+		TaskFuture<double[]> taskFuture = taskClient.add(y);
+		double f1Value = taskFuture.get()[0];
+		double f2Value = taskFuture.get()[1];
+		// TODO make remote
+		// Function functions = FunctionProvider.getFunction();
+		// double f1Value = functions.f1(y);
+		// double f2Value = functions.f2(y);
 		z[0] = Math.min(z[0], f1Value);
 		z[1] = Math.min(z[1], f2Value);
 	}
@@ -264,8 +328,7 @@ public class Moead implements Algorithm<MoeadAlgorithmConfig> {
 		// - z[1]) / (maxF2 - minF2) * weightVector[1]);
 	}
 
-	private double[][] computeResult(double[][] functionValues,
-			double[] z) {
+	private double[][] computeResult(double[][] functionValues, double[] z) {
 		double[][] result = new double[functionValues.length][functionValues[0].length];
 		for (int i = 0; i < functionValues.length; i++) {
 			// TODO check if normalization should be done
