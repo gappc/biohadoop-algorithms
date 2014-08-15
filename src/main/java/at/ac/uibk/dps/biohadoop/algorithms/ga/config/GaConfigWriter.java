@@ -43,7 +43,7 @@ public class GaConfigWriter {
 	private static String HADOOP_DISTRIBUTION_INFO_PORT = "2181";
 
 	private static String LOCAL_DATA_PATH = "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp";
-	private static String HADOOP_DATA_PATH = "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp";
+	private static String HADOOP_DATA_PATH = "/biohadoop/data/att48.tsp";
 	private static String MAX_ITERATIONS = "10000";
 	private static String POPULATION_SIZE = "10";
 	private static String FILE_SAVE_AFTER_ITERATION = "1000";

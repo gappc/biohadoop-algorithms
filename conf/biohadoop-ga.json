@@ -28,7 +28,7 @@
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp",
       "FILE_LOAD_ON_STARTUP" : "false",
       "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
       "FILE_SAVE_AFTER_ITERATION" : "1000",
@@ -42,7 +42,7 @@
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp",
       "FILE_LOAD_ON_STARTUP" : "false",
       "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
       "FILE_SAVE_AFTER_ITERATION" : "1000",
@@ -56,7 +56,7 @@
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp",
       "FILE_LOAD_ON_STARTUP" : "false",
       "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
       "FILE_SAVE_AFTER_ITERATION" : "1000",
@@ -70,7 +70,7 @@
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/sdb/studium/master-thesis/code/git/biohadoop-algorithms/data/att48.tsp",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp",
       "FILE_LOAD_ON_STARTUP" : "false",
       "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
       "FILE_SAVE_AFTER_ITERATION" : "1000",
