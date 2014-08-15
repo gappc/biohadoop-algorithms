@@ -1,38 +1,15 @@
 {
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
-  "solverConfiguration" : [ {
-    "name" : "TYPETEST-LOCAL-1",
-    "algorithmConfiguration" : {
-      "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.typetest.config.TypeTestAlgorithmConfig"
-    },
-    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.typetest.algorithm.TypeTest",
-    "handlerConfigurations" : null
-  } ],
   "communicationConfiguration" : {
     "dedicatedMasters" : [ ],
-    "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "remoteExecutable" : null,
-      "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "remoteExecutable" : null,
-      "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "remoteExecutable" : null,
-      "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "remoteExecutable" : null,
-      "count" : 1
-    } ]
+    "workerConfigurations" : [ ]
   },
-  "zooKeeperConfiguration" : {
-    "host" : "master",
-    "port" : 2181
-  },
-  "properties" : {
+  "globalProperties" : {
     "KRYO_REGISTRATOR" : "at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.kryo.KryoObjects"
-  }
+  },
+  "solverConfigurations" : [ {
+    "name" : "TYPETEST",
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.typetest.algorithm.TypeTest",
+    "properties" : { }
+  } ]
 }

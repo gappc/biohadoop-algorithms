@@ -1,14 +1,5 @@
 {
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
-  "solverConfiguration" : [ {
-    "name" : "ECHO-LOCAL-1",
-    "algorithmConfiguration" : {
-      "@algorithmConfigClass" : "at.ac.uibk.dps.biohadoop.algorithms.echo.config.EchoAlgorithmConfig",
-      "size" : 1000
-    },
-    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm.Echo",
-    "handlerConfigurations" : null
-  } ],
   "communicationConfiguration" : {
     "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
@@ -29,9 +20,10 @@
       "count" : 1
     } ]
   },
-  "zooKeeperConfiguration" : {
-    "host" : "master",
-    "port" : 2181
-  },
-  "properties" : null
+  "globalProperties" : { },
+  "solverConfigurations" : [ {
+    "name" : "ECHO",
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm.Echo",
+    "properties" : { }
+  } ]
 }
