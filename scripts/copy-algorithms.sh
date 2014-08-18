@@ -49,7 +49,7 @@ function copyLibRemote {
 
   echo "Copying libs from remote FS to remote HDFS"
   ssh $DEST_USER@$DEST_IP "/opt/hadoop/current/bin/hdfs dfs -mkdir -p $LIB_HDFS_DIR"
-  ssh $DEST_USER@$DEST_IP "/opt/hadoop/current/bin/hdfs dfs -copyFromLocal -f $LIB_TMP_DIR/$BIOHADOOP_ALGORITHMS_CURRENT $LIB_HDFS_DIR/$BIOHADOOP_ALGORITHMS_CURRENT"
+  ssh $DEST_USER@$DEST_IP "/opt/hadoop/current/bin/hdfs dfs -copyFromLocal -f $LIB_TMP_DIR/$BIOHADOOP_ALGORITHMS_CURRENT $LIB_HDFS_DIR/"
   echo "Copying libs from remote FS to remote HDFS - OK"
 }
 
