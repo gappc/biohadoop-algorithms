@@ -21,6 +21,7 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
+import at.ac.uibk.dps.biohadoop.metrics.Metrics;
 import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
@@ -29,6 +30,10 @@ import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
+
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
 
 public class Ga implements Algorithm {
 
@@ -97,6 +102,11 @@ public class Ga implements Algorithm {
 		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(
 				RemoteFitness.class);
 
+		// Initialize metrics
+		Counter iterationCounter = Metrics.getInstance().counter(
+				MetricRegistry.name(Ga.class, solverId + "-iteration-size"));
+		Meter tasksPerSeconds = null;
+
 		// Start algorithm
 		boolean end = false;
 		int iteration = 0;
@@ -122,6 +132,11 @@ public class Ga implements Algorithm {
 			// Evaluation
 			double[] values = new double[populationSize * 2];
 			try {
+				if (tasksPerSeconds == null) {
+					tasksPerSeconds = Metrics.getInstance().meter(
+							MetricRegistry.name(Ga.class, solverId
+									+ "tasks-per-second"));
+				}
 				// Submit tasks for remote clients
 				List<TaskFuture<Double>> taskFutures = taskClient
 						.addAll(population);
@@ -134,6 +149,7 @@ public class Ga implements Algorithm {
 				// Wait for all tasks to complete
 				for (int i = 0; i < taskFutures.size(); i++) {
 					values[i] = taskFutures.get(i).get();
+					// asyncMetric.tick();
 				}
 			} catch (TaskException e) {
 				throw new AlgorithmException(
@@ -211,7 +227,12 @@ public class Ga implements Algorithm {
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
-			ProgressService.setProgress(solverId, (float)iteration / maxIterations);
+			ProgressService.setProgress(solverId, (float) iteration
+					/ maxIterations);
+
+			// Produce metrics
+			iterationCounter.inc();
+			tasksPerSeconds.mark(populationSize * 2);
 
 			// Check for end condition
 			if (iteration == maxIterations) {
