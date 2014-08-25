@@ -1,7 +1,5 @@
 package at.ac.uibk.dps.biohadoop.algorithms.typetest.remote;
 
-import java.util.Random;
-
 import org.apache.commons.lang.ArrayUtils;
 
 import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
@@ -9,17 +7,17 @@ import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 public class ArrayCommunication implements
 		RemoteExecutable<int[], double[], String[]> {
 
-	@Override
-	public int[] getInitalData() {
-		int length = 5;
-		Random rand = new Random();
-		
-		int[] initialData = new int[length];
-		for (int i = 0; i < length; i++) {
-			initialData[i] = rand.nextInt();
-		}
-		return initialData;
-	}
+//	@Override
+//	public int[] getInitalData() {
+//		int length = 5;
+//		Random rand = new Random();
+//		
+//		int[] initialData = new int[length];
+//		for (int i = 0; i < length; i++) {
+//			initialData[i] = rand.nextInt();
+//		}
+//		return initialData;
+//	}
 
 	@Override
 	public String[] compute(double[] data, int[] initialData) {

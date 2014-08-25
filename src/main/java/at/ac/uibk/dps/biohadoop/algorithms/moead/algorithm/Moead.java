@@ -12,7 +12,6 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.functions.Function;
-import at.ac.uibk.dps.biohadoop.functions.FunctionProvider;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
@@ -63,10 +62,12 @@ public class Moead implements Algorithm {
 		int genomeSize = Integer.parseInt(genomeSizeProperty);
 		String functionClassName = solverConfiguration.getProperties().get(
 				FUNCTION_CLASS);
+		
+		Function function = null;
 		try {
-			Class<Function> functionClass = (Class<Function>) Class.forName(functionClassName);
-			Function function = functionClass.newInstance();
-			FunctionProvider.setFunction(function);
+			Class<Function> functionClass = (Class<Function>) Class
+					.forName(functionClassName);
+			function = functionClass.newInstance();
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException e1) {
 			throw new AlgorithmException("Could not build object "
@@ -118,7 +119,8 @@ public class Moead implements Algorithm {
 																	// point
 
 		// Initialize queue for remote computation
-		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class);
+		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class,
+				function);
 
 		// Initialization finished
 		LOG.info("Initialisation took {}ms", System.currentTimeMillis()
@@ -177,7 +179,8 @@ public class Moead implements Algorithm {
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
-			ProgressService.setProgress(solverId, (float)iteration / maxIterations);
+			ProgressService.setProgress(solverId, (float) iteration
+					/ maxIterations);
 
 			// Check for end condition
 			if (iteration >= maxIterations) {

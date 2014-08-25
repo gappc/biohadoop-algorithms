@@ -8,10 +8,10 @@ import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 public class ObjectCommunication implements
 		RemoteExecutable<UUID, Date, String> {
 
-	@Override
-	public UUID getInitalData() {
-		return UUID.randomUUID();
-	}
+//	@Override
+//	public UUID getInitalData() {
+//		return UUID.randomUUID();
+//	}
 	
 	@Override
 	public String compute(Date data, UUID initialData) {

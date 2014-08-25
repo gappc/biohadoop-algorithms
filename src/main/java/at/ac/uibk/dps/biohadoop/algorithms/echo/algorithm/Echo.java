@@ -24,8 +24,9 @@ public class Echo implements Algorithm {
 	public void compute(SolverId solverId,
 			SolverConfiguration solverConfiguration) throws AlgorithmException {
 		// Get client to distribute work
+		String initialData = "Worker adds this string to result";
 		TaskClient<String, String> taskClient = new DefaultTaskClient<>(
-				EchoCommunication.class);
+				EchoCommunication.class, initialData);
 
 		String helloWorld = "Hello World";
 

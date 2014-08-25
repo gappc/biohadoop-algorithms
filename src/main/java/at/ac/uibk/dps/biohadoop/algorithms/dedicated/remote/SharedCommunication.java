@@ -6,11 +6,11 @@ import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 public class SharedCommunication implements
 		RemoteExecutable<String, String, String> {
 
-	@Override
-	public String getInitalData() {
-		// No initial object
-		return null;
-	}
+//	@Override
+//	public String getInitalData() {
+//		// No initial object
+//		return null;
+//	}
 	
 	@Override
 	public String compute(String data, String initialData) {

@@ -14,7 +14,6 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.functions.Function;
-import at.ac.uibk.dps.biohadoop.functions.FunctionProvider;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
@@ -57,10 +56,11 @@ public class NsgaII implements Algorithm {
 		int populationSize = Integer.parseInt(populationSizeProperty);
 		String functionClassName = solverConfiguration.getProperties().get(
 				FUNCTION_CLASS);
+		
+		Function function = null;
 		try {
 			Class<Function> functionClass = (Class<Function>) Class.forName(functionClassName);
-			Function function = functionClass.newInstance();
-			FunctionProvider.setFunction(function);
+			function = functionClass.newInstance();
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException e1) {
 			throw new AlgorithmException("Could not build object "
@@ -96,7 +96,7 @@ public class NsgaII implements Algorithm {
 		}
 
 		// Initialize queue for remote computation
-		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class);
+		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class, function);
 		
 		double[][] objectiveValues = new double[populationSize * 2][2];
 		computeObjectiveValues(population, objectiveValues, 0, populationSize);

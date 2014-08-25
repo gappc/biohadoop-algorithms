@@ -2,15 +2,14 @@ package at.ac.uibk.dps.biohadoop.algorithms.moead.remote;
 
 import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 import at.ac.uibk.dps.biohadoop.functions.Function;
-import at.ac.uibk.dps.biohadoop.functions.FunctionProvider;
 
 public class RemoteFunctionValue implements
 		RemoteExecutable<Function, double[], double[]> {
 
-	@Override
-	public Function getInitalData() {
-		return FunctionProvider.getFunction();
-	}
+//	@Override
+//	public Function getInitalData() {
+//		return FunctionProvider.getFunction();
+//	}
 	
 	@Override
 	public double[] compute(double[] data, Function initialData) {

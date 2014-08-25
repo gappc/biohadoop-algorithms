@@ -78,6 +78,14 @@ public class Ga implements Algorithm {
 		if (mergeAfterIterationProperty != null) {
 			mergeAfterIteration = Integer.parseInt(mergeAfterIterationProperty);
 		}
+		// Initialize island model
+		try {
+			IslandModel.initialize(solverId);
+		} catch (IslandModelException e) {
+			throw new AlgorithmException(
+					"Could not initialize island model for solver " + solverId,
+					e);
+		}
 
 		// Load old snapshot from file if possible
 		SolverData<?> solverData = null;
@@ -100,7 +108,7 @@ public class Ga implements Algorithm {
 
 		// Initialize queue for remote computation
 		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(
-				RemoteFitness.class);
+				RemoteFitness.class, DistancesGlobal.getDistances());
 
 		// Initialize metrics
 		Counter iterationCounter = Metrics.getInstance().counter(

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
@@ -46,8 +47,9 @@ public class TypeTest implements Algorithm {
 	}
 
 	private void testArrays() throws TaskException {
+		int[] initialData = getArrayInitalData();
 		TaskClient<double[], String[]> client = new DefaultTaskClient<>(
-				ArrayCommunication.class);
+				ArrayCommunication.class, initialData);
 		Random rand = new Random();
 		double[] data = new double[] { rand.nextDouble(), rand.nextDouble(),
 				rand.nextDouble() };
@@ -57,10 +59,22 @@ public class TypeTest implements Algorithm {
 		String[] result = future.get();
 		LOG.info("Array received: {}", ArrayUtils.toString(result));
 	}
+	
+	public int[] getArrayInitalData() {
+		int length = 5;
+		Random rand = new Random();
+		
+		int[] initialData = new int[length];
+		for (int i = 0; i < length; i++) {
+			initialData[i] = rand.nextInt();
+		}
+		return initialData;
+	}
 
 	private void testComplexObject() throws TaskException {
+		ComplexObject initialData = getComplexObjectInitalData();
 		TaskClient<ComplexObject, ComplexObject> client = new DefaultTaskClient<>(
-				ComplexObjectCommunication.class);
+				ComplexObjectCommunication.class, initialData);
 		ComplexObject data = ComplexObject.buildRandom();
 		TaskFuture<ComplexObject> future = client.add(data);
 		LOG.info("ComplexObject send: {}", data);
@@ -68,10 +82,15 @@ public class TypeTest implements Algorithm {
 		ComplexObject result = future.get();
 		LOG.info("ComplexObject received: {}", result);
 	}
+	
+	public ComplexObject getComplexObjectInitalData() {
+		return ComplexObject.buildRandom();
+	}
 
 	private void testList() throws TaskException {
+		List<Integer> initialData = getListInitalData();
 		TaskClient<List<Double>, List<String>> client = new DefaultTaskClient<>(
-				ListCommunication.class);
+				ListCommunication.class, initialData);
 		Random rand = new Random();
 		List<Double> data = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
@@ -83,10 +102,20 @@ public class TypeTest implements Algorithm {
 		List<String> result = future.get();
 		LOG.info("List received: {}", ArrayUtils.toString(result));
 	}
+	
+	public List<Integer> getListInitalData() {
+		Random rand = new Random();
+		List<Integer> initialData = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			initialData.add(rand.nextInt());
+		}
+		return initialData;
+	}
 
 	private void testObject() throws TaskException {
+		UUID initialData = getObjectInitalData();
 		TaskClient<Date, String> client = new DefaultTaskClient<>(
-				ObjectCommunication.class);
+				ObjectCommunication.class, initialData);
 		Date data = new Date();
 		TaskFuture<String> future = client.add(data);
 		LOG.info("Object send: {}", data);
@@ -94,10 +123,15 @@ public class TypeTest implements Algorithm {
 		String result = future.get();
 		LOG.info("Object received: {}", result);
 	}
+	
+	public UUID getObjectInitalData() {
+		return UUID.randomUUID();
+	}
 
 	private void testString() throws TaskException {
+		String initialData = getStringInitalData();
 		TaskClient<String, String> client = new DefaultTaskClient<>(
-				StringCommunication.class);
+				StringCommunication.class, initialData);
 		Random rand = new Random();
 		String data = "Custom data_" + rand.nextInt();
 		TaskFuture<String> future = client.add(data);
@@ -105,6 +139,10 @@ public class TypeTest implements Algorithm {
 
 		String result = future.get();
 		LOG.info("String received: {}", result);
+	}
+	
+	public String getStringInitalData() {
+		return "Worker adds this string to result";
 	}
 
 }

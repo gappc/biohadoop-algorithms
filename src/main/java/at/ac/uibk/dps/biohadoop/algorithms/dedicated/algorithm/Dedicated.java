@@ -27,7 +27,7 @@ public class Dedicated implements Algorithm {
 		TaskClient<String, String> sharedClient = new DefaultTaskClient<>(
 				SharedCommunication.class);
 		TaskClient<String, String> dedicatedClient = new DefaultTaskClient<>(
-				DedicatedCommunication.class, DEDICATED_QUEUE);
+				DedicatedCommunication.class, DEDICATED_QUEUE, null);
 
 		String sharedString = "This string is send using shared endpoints";
 		String dedicatedString = "This string is send using a dedicated endpoint, which uses internally the queue with name "

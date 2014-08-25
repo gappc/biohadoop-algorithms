@@ -10,10 +10,10 @@ import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 public class ComplexObjectCommunication implements
 		RemoteExecutable<ComplexObject, ComplexObject, ComplexObject> {
 
-	@Override
-	public ComplexObject getInitalData() {
-		return ComplexObject.buildRandom();
-	}
+//	@Override
+//	public ComplexObject getInitalData() {
+//		return ComplexObject.buildRandom();
+//	}
 
 	@Override
 	public ComplexObject compute(ComplexObject data, ComplexObject initalData) {
