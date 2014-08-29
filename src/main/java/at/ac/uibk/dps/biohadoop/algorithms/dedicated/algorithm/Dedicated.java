@@ -1,5 +1,7 @@
 package at.ac.uibk.dps.biohadoop.algorithms.dedicated.algorithm;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,6 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
 public class Dedicated implements Algorithm {
@@ -22,7 +23,7 @@ public class Dedicated implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(Dedicated.class);
 
 	@Override
-	public void compute(SolverId solverId, SolverConfiguration solverConfiguration)
+	public void compute(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		TaskClient<String, String> sharedClient = new DefaultTaskClient<>(
 				SharedCommunication.class);

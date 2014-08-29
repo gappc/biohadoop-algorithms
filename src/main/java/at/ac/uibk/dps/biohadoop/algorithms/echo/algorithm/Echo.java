@@ -1,5 +1,7 @@
 package at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +13,6 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
 public class Echo implements Algorithm {
@@ -21,8 +22,8 @@ public class Echo implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(Echo.class);
 
 	@Override
-	public void compute(SolverId solverId,
-			SolverConfiguration solverConfiguration) throws AlgorithmException {
+	public void compute(SolverId solverId, Map<String, String> properties)
+			throws AlgorithmException {
 		// Get client to distribute work
 		String initialData = "Worker adds this string to result";
 		TaskClient<String, String> taskClient = new DefaultTaskClient<>(

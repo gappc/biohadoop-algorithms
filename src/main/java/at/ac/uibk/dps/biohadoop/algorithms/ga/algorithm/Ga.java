@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -27,7 +28,6 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -47,33 +47,30 @@ public class Ga implements Algorithm {
 	private final Random rand = new Random();
 
 	@Override
-	public void compute(SolverId solverId,
-			SolverConfiguration solverConfiguration) throws AlgorithmException {
+	public void compute(SolverId solverId, Map<String, String> properties)
+			throws AlgorithmException {
 		// Read algorithm settings from configuration
-		String dataPath = solverConfiguration.getProperties().get(DATA_PATH);
+		String dataPath = properties.get(DATA_PATH);
 		Tsp tsp = readTspData(dataPath);
-		String populationSizeProperty = solverConfiguration.getProperties()
-				.get(POPULATION_SIZE);
+		String populationSizeProperty = properties.get(POPULATION_SIZE);
 		int populationSize = Integer.parseInt(populationSizeProperty);
-		String maxIterationsProperty = solverConfiguration.getProperties().get(
-				MAX_ITERATIONS);
+		String maxIterationsProperty = properties.get(MAX_ITERATIONS);
 		int maxIterations = Integer.parseInt(maxIterationsProperty);
 		DistancesGlobal.setDistances(tsp.getDistances());
 		int citySize = tsp.getCities().length;
 
 		// Read persistence settings from configuration
-		String saveAfterIterationProperty = solverConfiguration.getProperties()
+		String saveAfterIterationProperty = properties
 				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
 		Integer saveAfterIteration = null;
 		if (saveAfterIterationProperty != null) {
 			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
 		}
-		String savePath = solverConfiguration.getProperties().get(
-				FileSaver.FILE_SAVE_PATH);
+		String savePath = properties.get(FileSaver.FILE_SAVE_PATH);
 
 		// Read island model settings from configuration
-		String mergeAfterIterationProperty = solverConfiguration
-				.getProperties().get(FileSaver.FILE_SAVE_AFTER_ITERATION);
+		String mergeAfterIterationProperty = properties
+				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
 		Integer mergeAfterIteration = null;
 		if (mergeAfterIterationProperty != null) {
 			mergeAfterIteration = Integer.parseInt(mergeAfterIterationProperty);
@@ -90,7 +87,7 @@ public class Ga implements Algorithm {
 		// Load old snapshot from file if possible
 		SolverData<?> solverData = null;
 		try {
-			solverData = FileLoader.load(solverId, solverConfiguration);
+			solverData = FileLoader.load(solverId, properties);
 		} catch (FileLoadException e) {
 			throw new AlgorithmException(e);
 		}
@@ -214,7 +211,7 @@ public class Ga implements Algorithm {
 					&& iteration % mergeAfterIteration == 0) {
 				try {
 					population = (int[][]) IslandModel.merge(solverId,
-							solverConfiguration, solverData);
+							properties, solverData);
 				} catch (IslandModelException e) {
 					throw new AlgorithmException(
 							"Error while trying to merge island data", e);
@@ -225,7 +222,7 @@ public class Ga implements Algorithm {
 			if (saveAfterIteration != null
 					&& iteration % saveAfterIteration == 0) {
 				try {
-					FileSaver.save(solverId, solverConfiguration, solverData);
+					FileSaver.save(solverId, properties, solverData);
 				} catch (FileSaveException e) {
 					throw new AlgorithmException(
 							"Error while trying to save data to file "

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -23,7 +24,6 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -40,21 +40,20 @@ public class NsgaII implements Algorithm {
 	private TaskClient<double[], double[]> taskClient;
 
 	@Override
-	public void compute(SolverId solverId,
-			SolverConfiguration solverConfiguration) throws AlgorithmException {
+	public void compute(SolverId solverId, Map<String, String> properties) throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 
 		// Read algorithm settings from configuration
-		String genomeSizeProperty = solverConfiguration.getProperties().get(
+		String genomeSizeProperty = properties.get(
 				GENOME_SIZE);
 		int genomeSize = Integer.parseInt(genomeSizeProperty);
-		String maxIterationsProperty = solverConfiguration.getProperties().get(
+		String maxIterationsProperty = properties.get(
 				MAX_ITERATIONS);
 		int maxIterations = Integer.parseInt(maxIterationsProperty);
-		String populationSizeProperty = solverConfiguration.getProperties()
+		String populationSizeProperty = properties
 				.get(POPULATION_SIZE);
 		int populationSize = Integer.parseInt(populationSizeProperty);
-		String functionClassName = solverConfiguration.getProperties().get(
+		String functionClassName = properties.get(
 				FUNCTION_CLASS);
 		
 		Function function = null;
@@ -67,19 +66,19 @@ public class NsgaII implements Algorithm {
 					+ functionClassName);
 		}
 		// Read persistence settings from configuration
-		String saveAfterIterationProperty = solverConfiguration.getProperties()
+		String saveAfterIterationProperty = properties
 				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
 		Integer saveAfterIteration = null;
 		if (saveAfterIterationProperty != null) {
 			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
 		}
-		String savePath = solverConfiguration.getProperties().get(
+		String savePath = properties.get(
 				FileSaver.FILE_SAVE_PATH);
 
 		// Load old snapshot from file if possible
 		SolverData<?> solverData = null;
 		try {
-			solverData = FileLoader.load(solverId, solverConfiguration);
+			solverData = FileLoader.load(solverId, properties);
 		} catch (FileLoadException e) {
 			throw new AlgorithmException(e);
 		}
@@ -167,7 +166,7 @@ public class NsgaII implements Algorithm {
 			if (saveAfterIteration != null
 					&& iteration % saveAfterIteration == 0) {
 				try {
-					FileSaver.save(solverId, solverConfiguration, solverData);
+					FileSaver.save(solverId, properties, solverData);
 				} catch (FileSaveException e) {
 					throw new AlgorithmException(
 							"Error while trying to save data to file "

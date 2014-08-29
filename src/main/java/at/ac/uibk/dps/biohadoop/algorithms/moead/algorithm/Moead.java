@@ -3,6 +3,7 @@ package at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -21,7 +22,6 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -43,26 +43,21 @@ public class Moead implements Algorithm {
 	private double minF2 = Double.MAX_VALUE;
 	private double maxF2 = -Double.MAX_VALUE;
 
-	public void compute(SolverId solverId,
-			SolverConfiguration solverConfiguration) throws AlgorithmException {
+	public void compute(SolverId solverId, Map<String, String> properties)
+			throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 
 		// Read algorithm settings from configuration
-		String maxIterationsProperty = solverConfiguration.getProperties().get(
-				MAX_ITERATIONS);
+		String maxIterationsProperty = properties.get(MAX_ITERATIONS);
 		int maxIterations = Integer.parseInt(maxIterationsProperty);
-		String NProperty = solverConfiguration.getProperties().get(
-				POPULATION_SIZE);
+		String NProperty = properties.get(POPULATION_SIZE);
 		int N = Integer.parseInt(NProperty);
-		String neighborSizeProperty = solverConfiguration.getProperties().get(
-				NEIGHBOR_SIZE);
+		String neighborSizeProperty = properties.get(NEIGHBOR_SIZE);
 		int neighborSize = Integer.parseInt(neighborSizeProperty);
-		String genomeSizeProperty = solverConfiguration.getProperties().get(
-				GENOME_SIZE);
+		String genomeSizeProperty = properties.get(GENOME_SIZE);
 		int genomeSize = Integer.parseInt(genomeSizeProperty);
-		String functionClassName = solverConfiguration.getProperties().get(
-				FUNCTION_CLASS);
-		
+		String functionClassName = properties.get(FUNCTION_CLASS);
+
 		Function function = null;
 		try {
 			Class<Function> functionClass = (Class<Function>) Class
@@ -75,14 +70,13 @@ public class Moead implements Algorithm {
 		}
 
 		// Read persistence settings from configuration
-		String saveAfterIterationProperty = solverConfiguration.getProperties()
+		String saveAfterIterationProperty = properties
 				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
 		Integer saveAfterIteration = null;
 		if (saveAfterIterationProperty != null) {
 			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
 		}
-		String savePath = solverConfiguration.getProperties().get(
-				FileSaver.FILE_SAVE_PATH);
+		String savePath = properties.get(FileSaver.FILE_SAVE_PATH);
 
 		// 1.1
 		// Dosen't work as expected, so was commented out
@@ -100,7 +94,7 @@ public class Moead implements Algorithm {
 		// Load old snapshot from file if possible
 		SolverData<?> solverData = null;
 		try {
-			solverData = FileLoader.load(solverId, solverConfiguration);
+			solverData = FileLoader.load(solverId, properties);
 		} catch (FileLoadException e) {
 			throw new AlgorithmException(e);
 		}
@@ -169,7 +163,7 @@ public class Moead implements Algorithm {
 			if (saveAfterIteration != null
 					&& iteration % saveAfterIteration == 0) {
 				try {
-					FileSaver.save(solverId, solverConfiguration, solverData);
+					FileSaver.save(solverId, properties, solverData);
 				} catch (FileSaveException e) {
 					throw new AlgorithmException(
 							"Error while trying to save data to file "

@@ -3,6 +3,7 @@ package at.ac.uibk.dps.biohadoop.algorithms.typetest.algorithm;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -23,7 +24,6 @@ import at.ac.uibk.dps.biohadoop.queue.TaskClient;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
 public class TypeTest implements Algorithm {
@@ -31,8 +31,8 @@ public class TypeTest implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(TypeTest.class);
 
 	@Override
-	public void compute(SolverId solverId,
-			SolverConfiguration solverConfiguration) throws AlgorithmException {
+	public void compute(SolverId solverId, Map<String, String> properties)
+			throws AlgorithmException {
 		// Get client to distribute work
 		try {
 			testArrays();
@@ -59,11 +59,11 @@ public class TypeTest implements Algorithm {
 		String[] result = future.get();
 		LOG.info("Array received: {}", ArrayUtils.toString(result));
 	}
-	
+
 	public int[] getArrayInitalData() {
 		int length = 5;
 		Random rand = new Random();
-		
+
 		int[] initialData = new int[length];
 		for (int i = 0; i < length; i++) {
 			initialData[i] = rand.nextInt();
@@ -82,7 +82,7 @@ public class TypeTest implements Algorithm {
 		ComplexObject result = future.get();
 		LOG.info("ComplexObject received: {}", result);
 	}
-	
+
 	public ComplexObject getComplexObjectInitalData() {
 		return ComplexObject.buildRandom();
 	}
@@ -102,7 +102,7 @@ public class TypeTest implements Algorithm {
 		List<String> result = future.get();
 		LOG.info("List received: {}", ArrayUtils.toString(result));
 	}
-	
+
 	public List<Integer> getListInitalData() {
 		Random rand = new Random();
 		List<Integer> initialData = new ArrayList<>();
@@ -123,7 +123,7 @@ public class TypeTest implements Algorithm {
 		String result = future.get();
 		LOG.info("Object received: {}", result);
 	}
-	
+
 	public UUID getObjectInitalData() {
 		return UUID.randomUUID();
 	}
@@ -140,7 +140,7 @@ public class TypeTest implements Algorithm {
 		String result = future.get();
 		LOG.info("String received: {}", result);
 	}
-	
+
 	public String getStringInitalData() {
 		return "Worker adds this string to result";
 	}
