@@ -23,8 +23,8 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
 import at.ac.uibk.dps.biohadoop.metrics.Metrics;
-import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
@@ -104,7 +104,7 @@ public class Ga implements Algorithm {
 		}
 
 		// Initialize queue for remote computation
-		TaskClient<int[], Double> taskClient = new DefaultTaskClient<>(
+		TaskSubmitter<int[], Double> taskClient = new SimpleTaskSubmitter<>(
 				RemoteFitness.class, DistancesGlobal.getDistances());
 
 		// Initialize metrics

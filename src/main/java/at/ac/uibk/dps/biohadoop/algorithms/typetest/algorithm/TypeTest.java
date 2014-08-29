@@ -19,8 +19,8 @@ import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.ListCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.ObjectCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.StringCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.ComplexObject;
-import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
@@ -48,7 +48,7 @@ public class TypeTest implements Algorithm {
 
 	private void testArrays() throws TaskException {
 		int[] initialData = getArrayInitalData();
-		TaskClient<double[], String[]> client = new DefaultTaskClient<>(
+		TaskSubmitter<double[], String[]> client = new SimpleTaskSubmitter<>(
 				ArrayCommunication.class, initialData);
 		Random rand = new Random();
 		double[] data = new double[] { rand.nextDouble(), rand.nextDouble(),
@@ -73,7 +73,7 @@ public class TypeTest implements Algorithm {
 
 	private void testComplexObject() throws TaskException {
 		ComplexObject initialData = getComplexObjectInitalData();
-		TaskClient<ComplexObject, ComplexObject> client = new DefaultTaskClient<>(
+		TaskSubmitter<ComplexObject, ComplexObject> client = new SimpleTaskSubmitter<>(
 				ComplexObjectCommunication.class, initialData);
 		ComplexObject data = ComplexObject.buildRandom();
 		TaskFuture<ComplexObject> future = client.add(data);
@@ -89,7 +89,7 @@ public class TypeTest implements Algorithm {
 
 	private void testList() throws TaskException {
 		List<Integer> initialData = getListInitalData();
-		TaskClient<List<Double>, List<String>> client = new DefaultTaskClient<>(
+		TaskSubmitter<List<Double>, List<String>> client = new SimpleTaskSubmitter<>(
 				ListCommunication.class, initialData);
 		Random rand = new Random();
 		List<Double> data = new ArrayList<>();
@@ -114,7 +114,7 @@ public class TypeTest implements Algorithm {
 
 	private void testObject() throws TaskException {
 		UUID initialData = getObjectInitalData();
-		TaskClient<Date, String> client = new DefaultTaskClient<>(
+		TaskSubmitter<Date, String> client = new SimpleTaskSubmitter<>(
 				ObjectCommunication.class, initialData);
 		Date data = new Date();
 		TaskFuture<String> future = client.add(data);
@@ -130,7 +130,7 @@ public class TypeTest implements Algorithm {
 
 	private void testString() throws TaskException {
 		String initialData = getStringInitalData();
-		TaskClient<String, String> client = new DefaultTaskClient<>(
+		TaskSubmitter<String, String> client = new SimpleTaskSubmitter<>(
 				StringCommunication.class, initialData);
 		Random rand = new Random();
 		String data = "Custom data_" + rand.nextInt();

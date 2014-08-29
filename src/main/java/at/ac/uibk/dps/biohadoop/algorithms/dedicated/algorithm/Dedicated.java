@@ -9,8 +9,8 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.SharedCommunication;
-import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
@@ -25,9 +25,9 @@ public class Dedicated implements Algorithm {
 	@Override
 	public void compute(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
-		TaskClient<String, String> sharedClient = new DefaultTaskClient<>(
+		TaskSubmitter<String, String> sharedClient = new SimpleTaskSubmitter<>(
 				SharedCommunication.class);
-		TaskClient<String, String> dedicatedClient = new DefaultTaskClient<>(
+		TaskSubmitter<String, String> dedicatedClient = new SimpleTaskSubmitter<>(
 				DedicatedCommunication.class, DEDICATED_QUEUE, null);
 
 		String sharedString = "This string is send using shared endpoints";

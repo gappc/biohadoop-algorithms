@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.echo.remote.EchoCommunication;
-import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
@@ -26,7 +26,7 @@ public class Echo implements Algorithm {
 			throws AlgorithmException {
 		// Get client to distribute work
 		String initialData = "Worker adds this string to result";
-		TaskClient<String, String> taskClient = new DefaultTaskClient<>(
+		TaskSubmitter<String, String> taskClient = new SimpleTaskSubmitter<>(
 				EchoCommunication.class, initialData);
 
 		String helloWorld = "Hello World";

@@ -17,8 +17,8 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
-import at.ac.uibk.dps.biohadoop.queue.DefaultTaskClient;
-import at.ac.uibk.dps.biohadoop.queue.TaskClient;
+import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
@@ -36,7 +36,7 @@ public class Moead implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(Moead.class);
 	private static final int LOG_STEPS = 100;
 
-	private TaskClient<double[], double[]> taskClient;
+	private TaskSubmitter<double[], double[]> taskClient;
 
 	private double minF1 = Double.MAX_VALUE;
 	private double maxF1 = -Double.MAX_VALUE;
@@ -113,7 +113,7 @@ public class Moead implements Algorithm {
 																	// point
 
 		// Initialize queue for remote computation
-		taskClient = new DefaultTaskClient<>(RemoteFunctionValue.class,
+		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class,
 				function);
 
 		// Initialization finished
