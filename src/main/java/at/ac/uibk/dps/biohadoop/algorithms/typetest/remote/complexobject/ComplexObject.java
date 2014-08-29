@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import at.ac.uibk.dps.biohadoop.communication.master.kryo.KryoObjectRegistration;
-
 public class ComplexObject implements Serializable {
 
 	private static final long serialVersionUID = -6185201906103139533L;
