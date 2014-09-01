@@ -4,19 +4,19 @@
     "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     } ]
   },

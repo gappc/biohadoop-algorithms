@@ -4,27 +4,27 @@
     "dedicatedMasters" : [ {
       "master" : "at.ac.uibk.dps.biohadoop.communication.master.websocket.DefaultWebSocketEndpoint",
       "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication",
-      "annotation" : "at.ac.uibk.dps.biohadoop.communication.annotation.DedicatedWebSocket"
+      "queueName" : "DEDICATED_QUEUE"
     } ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication",
+      "queueName" : "DEDICATED_QUEUE",
       "count" : 1
     } ]
   },

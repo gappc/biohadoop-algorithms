@@ -4,19 +4,19 @@
     "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     } ]
   },
@@ -29,7 +29,7 @@
       "FILE_LOAD_PATH" : "/biohadoop/persistence/moead",
       "FILE_SAVE_AFTER_ITERATION" : "100",
       "FILE_SAVE_PATH" : "/biohadoop/persistence/moead",
-      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt1",
+      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
       "GENOME_SIZE" : "10",
       "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter",

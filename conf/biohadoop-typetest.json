@@ -2,7 +2,23 @@
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
   "communicationConfiguration" : {
     "dedicatedMasters" : [ ],
-    "workerConfigurations" : [ ]
+    "workerConfigurations" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
+      "queueName" : "UNIFIED_QUEUE",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
+      "queueName" : "UNIFIED_QUEUE",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
+      "queueName" : "UNIFIED_QUEUE",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
+      "queueName" : "UNIFIED_QUEUE",
+      "count" : 1
+    } ]
   },
   "globalProperties" : {
     "KRYO_REGISTRATOR" : "at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.kryo.KryoObjects"

@@ -4,23 +4,23 @@
     "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "remoteExecutable" : null,
+      "queueName" : "UNIFIED_QUEUE",
       "count" : 1
     } ]
   },
@@ -33,7 +33,7 @@
       "FILE_LOAD_PATH" : "/tmp/biohadoop/moead/MOEAD-LOCAL-1/2087724778",
       "FILE_SAVE_AFTER_ITERATION" : "100",
       "FILE_SAVE_PATH" : "/tmp/biohadoop/moead",
-      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
+      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt1",
       "GENOME_SIZE" : "10",
       "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadBestResultGetter",
