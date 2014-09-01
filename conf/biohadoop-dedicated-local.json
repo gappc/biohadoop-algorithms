@@ -8,19 +8,19 @@
     } ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "queueName" : "UNIFIED_QUEUE",
+      "queueName" : "SHARED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "queueName" : "UNIFIED_QUEUE",
+      "queueName" : "SHARED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "queueName" : "UNIFIED_QUEUE",
+      "queueName" : "SHARED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "queueName" : "UNIFIED_QUEUE",
+      "queueName" : "SHARED_QUEUE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
