@@ -6,11 +6,6 @@ import at.ac.uibk.dps.biohadoop.functions.Function;
 public class RemoteFunctionValue implements
 		RemoteExecutable<Function, double[], double[]> {
 
-//	@Override
-//	public Function getInitalData() {
-//		return FunctionProvider.getFunction();
-//	}
-	
 	@Override
 	public double[] compute(double[] data, Function initialData) {
 		double[] result = new double[2];
