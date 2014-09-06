@@ -112,7 +112,7 @@ public class Moead implements Algorithm {
 		double[] z = Initializer.getReferencePoint(functionValues); // reference
 																	// point
 
-		// Initialize queue for remote computation
+		// Initialize default task setting for remote computation
 		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class,
 				function);
 

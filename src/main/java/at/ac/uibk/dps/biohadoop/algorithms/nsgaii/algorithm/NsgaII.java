@@ -20,9 +20,9 @@ import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
 import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
-import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -94,7 +94,7 @@ public class NsgaII implements Algorithm {
 			population = initializePopulation(populationSize * 2, genomeSize);
 		}
 
-		// Initialize queue for remote computation
+		// Initialize default task setting for remote computation
 		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class, function);
 		
 		double[][] objectiveValues = new double[populationSize * 2][2];

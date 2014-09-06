@@ -103,7 +103,7 @@ public class Ga implements Algorithm {
 			population = initPopulation(populationSize, citySize);
 		}
 
-		// Initialize queue for remote computation
+		// Initialize deafult task setting for remote computation
 		TaskSubmitter<int[], Double> taskClient = new SimpleTaskSubmitter<>(
 				RemoteFitness.class, DistancesGlobal.getDistances());
 
