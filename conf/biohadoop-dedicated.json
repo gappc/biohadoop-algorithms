@@ -4,33 +4,33 @@
     "dedicatedMasters" : [ {
       "master" : "at.ac.uibk.dps.biohadoop.communication.master.websocket.DefaultWebSocketEndpoint",
       "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication",
-      "queueName" : "DEDICATED_QUEUE"
+      "settingName" : "EXAMPLE_DEDICATED_SETTING"
     } ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "queueName" : "DEDICATED_QUEUE",
+      "settingName" : "EXAMPLE_DEDICATED_SETTING",
       "count" : 1
     } ]
   },
   "globalProperties" : { },
   "solverConfigurations" : [ {
-    "name" : "DEDICATED",
+    "name" : "DEDICATED_ALGORITHM",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.algorithm.Dedicated",
     "properties" : { }
   } ]

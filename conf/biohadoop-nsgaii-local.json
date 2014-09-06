@@ -4,23 +4,23 @@
     "dedicatedMasters" : [ ],
     "workerConfigurations" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "queueName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "queueName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "queueName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "queueName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "queueName" : "DEFAULT_QUEUE",
+      "queueName" : "DEFAULT_SETTING",
       "count" : 1
     } ]
   },
