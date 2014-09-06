@@ -36,7 +36,7 @@ public class DedicatedConfigWriter {
 			IllegalAccessException {
 
 		SolverConfiguration solverConfiguration = new SolverConfiguration.Builder(
-				"DEDICATED", Dedicated.class).build();
+				"DEDICATED_ALGORITHM", Dedicated.class).build();
 		BiohadoopConfiguration biohadoopConfiguration = new BiohadoopConfiguration.Builder()
 				.addLibPath("/biohadoop/lib/")
 				.addLibPath("/biohadoop/conf/")
