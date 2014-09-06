@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithms.dedicated.algorithm.Dedicated;
-import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication;
 import at.ac.uibk.dps.biohadoop.communication.master.websocket.DefaultWebSocketEndpoint;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
 import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
@@ -46,7 +45,7 @@ public class DedicatedConfigWriter {
 				.addWorker(DefaultSocketWorker.class, 1)
 				.addWorker(DefaultWebSocketWorker.class, 1)
 				.addDedicatedMaster(DefaultWebSocketEndpoint.class,
-						DedicatedCommunication.class, Dedicated.DEDICATED_SETTING)
+						Dedicated.DEDICATED_SETTING)
 				.addDedicatedWorker(DefaultWebSocketWorker.class,
 						Dedicated.DEDICATED_SETTING, 1).build();
 

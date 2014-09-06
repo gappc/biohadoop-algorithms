@@ -3,7 +3,6 @@
   "communicationConfiguration" : {
     "dedicatedMasters" : [ {
       "master" : "at.ac.uibk.dps.biohadoop.communication.master.websocket.DefaultWebSocketEndpoint",
-      "remoteExecutable" : "at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication",
       "settingName" : "EXAMPLE_DEDICATED_SETTING"
     } ],
     "workerConfigurations" : [ {
