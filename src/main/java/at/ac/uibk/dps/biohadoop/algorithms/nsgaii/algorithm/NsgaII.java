@@ -40,30 +40,25 @@ public class NsgaII implements Algorithm {
 	private TaskSubmitter<double[], double[]> taskClient;
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties) throws AlgorithmException {
+	public void compute(SolverId solverId, Map<String, String> properties)
+			throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 
 		// Read algorithm settings from configuration
-		String genomeSizeProperty = properties.get(
-				GENOME_SIZE);
+		String genomeSizeProperty = properties.get(GENOME_SIZE);
 		int genomeSize = Integer.parseInt(genomeSizeProperty);
-		String maxIterationsProperty = properties.get(
-				MAX_ITERATIONS);
+		String maxIterationsProperty = properties.get(MAX_ITERATIONS);
 		int maxIterations = Integer.parseInt(maxIterationsProperty);
-		String populationSizeProperty = properties
-				.get(POPULATION_SIZE);
+		String populationSizeProperty = properties.get(POPULATION_SIZE);
 		int populationSize = Integer.parseInt(populationSizeProperty);
-		String functionClassName = properties.get(
-				FUNCTION_CLASS);
-		
-		Function function = null;
+		String functionClassName = properties.get(FUNCTION_CLASS);
+
+		Class<Function> functionClass = null;
 		try {
-			Class<Function> functionClass = (Class<Function>) Class.forName(functionClassName);
-			function = functionClass.newInstance();
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException e1) {
+			functionClass = (Class<Function>) Class.forName(functionClassName);
+		} catch (ClassNotFoundException e) {
 			throw new AlgorithmException("Could not build object "
-					+ functionClassName);
+					+ functionClassName, e);
 		}
 		// Read persistence settings from configuration
 		String saveAfterIterationProperty = properties
@@ -72,8 +67,7 @@ public class NsgaII implements Algorithm {
 		if (saveAfterIterationProperty != null) {
 			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
 		}
-		String savePath = properties.get(
-				FileSaver.FILE_SAVE_PATH);
+		String savePath = properties.get(FileSaver.FILE_SAVE_PATH);
 
 		// Load old snapshot from file if possible
 		SolverData<?> solverData = null;
@@ -95,8 +89,9 @@ public class NsgaII implements Algorithm {
 		}
 
 		// Initialize default task setting for remote computation
-		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class, function);
-		
+		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class,
+				functionClass);
+
 		double[][] objectiveValues = new double[populationSize * 2][2];
 		computeObjectiveValues(population, objectiveValues, 0, populationSize);
 
@@ -176,7 +171,8 @@ public class NsgaII implements Algorithm {
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
-			ProgressService.setProgress(solverId, (float)iteration / maxIterations);
+			ProgressService.setProgress(solverId, (float) iteration
+					/ maxIterations);
 
 			// Check for end condition
 			if (iteration >= maxIterations) {

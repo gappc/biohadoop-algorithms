@@ -13,14 +13,15 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.functions.Function;
+import at.ac.uibk.dps.biohadoop.functions.Zdt1;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoadException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaveException;
 import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
 import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
-import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
@@ -58,15 +59,12 @@ public class Moead implements Algorithm {
 		int genomeSize = Integer.parseInt(genomeSizeProperty);
 		String functionClassName = properties.get(FUNCTION_CLASS);
 
-		Function function = null;
+		Class<Function> functionClass = null;
 		try {
-			Class<Function> functionClass = (Class<Function>) Class
-					.forName(functionClassName);
-			function = functionClass.newInstance();
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException e1) {
+			functionClass = (Class<Function>) Class.forName(functionClassName);
+		} catch (ClassNotFoundException e) {
 			throw new AlgorithmException("Could not build object "
-					+ functionClassName);
+					+ functionClassName, e);
 		}
 
 		// Read persistence settings from configuration
@@ -114,7 +112,7 @@ public class Moead implements Algorithm {
 
 		// Initialize default task setting for remote computation
 		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class,
-				function);
+				functionClass);
 
 		// Initialization finished
 		LOG.info("Initialisation took {}ms", System.currentTimeMillis()
