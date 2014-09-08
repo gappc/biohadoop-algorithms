@@ -28,9 +28,6 @@ public class KryoObjects implements KryoRegistrator {
 	@Override
 	public Map<Class<? extends Object>, Serializer<?>> getRegistrationObjectsWithSerializer() {
 		return null;
-//		Map<Class<? extends Object>, Serializer<?>> result = new HashMap<>();
-//		result.put(Arrays.asList().getClass(), new ArraysAsListSerializer());
-//		return result;
 	}
 
 }
