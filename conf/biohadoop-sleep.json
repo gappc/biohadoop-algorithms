@@ -1,0 +1,37 @@
+{
+  "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
+  "communicationConfiguration" : {
+    "dedicatedMasters" : [ ],
+    "workerConfigurations" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
+      "settingName" : "DEFAULT_SETTING",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
+      "settingName" : "DEFAULT_SETTING",
+      "count" : 0
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
+      "settingName" : "DEFAULT_SETTING",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
+      "settingName" : "DEFAULT_SETTING",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
+      "settingName" : "DEFAULT_SETTING",
+      "count" : 1
+    } ]
+  },
+  "globalProperties" : { },
+  "solverConfigurations" : [ {
+    "name" : "SLEEP",
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.sleep.SleepAlgorithm",
+    "properties" : {
+      "ITERATIONS" : "10000",
+      "SLEEP_MILLISECONDS" : "10",
+      "WAIT_BEFORE_SUBMIT_MILLISECONDS" : "10000"
+    }
+  } ]
+}
