@@ -95,7 +95,7 @@ public class NsgaIIConfigWriter {
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
 				.addWorker(DefaultKryoWorker.class, 1)
-				.addWorker(DefaultLocalWorker.class, 1)
+				.addWorker(DefaultLocalWorker.class, 0)
 				.addWorker(DefaultRestWorker.class, 1)
 				.addWorker(DefaultSocketWorker.class, 1)
 				.addWorker(DefaultWebSocketWorker.class, 1).build();

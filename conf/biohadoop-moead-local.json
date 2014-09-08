@@ -9,7 +9,7 @@
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
       "settingName" : "DEFAULT_SETTING",
-      "count" : 1
+      "count" : 0
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
       "settingName" : "DEFAULT_SETTING",
