@@ -45,9 +45,9 @@ public class DedicatedConfigWriter {
 				.addWorker(SocketWorker.class, 1)
 				.addWorker(WebSocketWorker.class, 1)
 				.addDedicatedAdapter(WebSocketAdapter.class,
-						Dedicated.DEDICATED_SETTING)
+						Dedicated.DEDICATED_PIPELINE)
 				.addDedicatedWorker(WebSocketWorker.class,
-						Dedicated.DEDICATED_SETTING, 1).build();
+						Dedicated.DEDICATED_PIPELINE, 1).build();
 
 		BiohadoopConfigurationUtil.saveLocal(biohadoopConfiguration,
 				LOCAL_CONFIG_NAME);

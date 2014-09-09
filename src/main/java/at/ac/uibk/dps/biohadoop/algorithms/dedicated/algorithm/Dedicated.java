@@ -18,7 +18,7 @@ import at.ac.uibk.dps.biohadoop.tasksystem.submitter.TaskSubmitter;
 
 public class Dedicated implements Algorithm {
 
-	public static final String DEDICATED_SETTING = "EXAMPLE_DEDICATED_SETTING";
+	public static final String DEDICATED_PIPELINE = "EXAMPLE_DEDICATED_PIPELINE";
 
 	private static final Logger LOG = LoggerFactory.getLogger(Dedicated.class);
 
@@ -28,11 +28,11 @@ public class Dedicated implements Algorithm {
 		TaskSubmitter<String, String> sharedClient = new SimpleTaskSubmitter<>(
 				SharedCommunication.class);
 		TaskSubmitter<String, String> dedicatedClient = new SimpleTaskSubmitter<>(
-				DedicatedCommunication.class, DEDICATED_SETTING, null);
+				DedicatedCommunication.class, DEDICATED_PIPELINE, null);
 
 		String sharedString = "This string is send using the default task setting";
 		String dedicatedString = "This string is send using a dedicated task setting, which uses internally the queue with name "
-				+ DEDICATED_SETTING;
+				+ DEDICATED_PIPELINE;
 
 		try {
 			TaskFuture<String> sharedFuture = sharedClient.add(sharedString);

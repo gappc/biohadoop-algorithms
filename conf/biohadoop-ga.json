@@ -3,20 +3,20 @@
   "communicationConfiguration" : {
     "dedicatedAdapters" : [ ],
     "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.RestWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     } ]
   },
