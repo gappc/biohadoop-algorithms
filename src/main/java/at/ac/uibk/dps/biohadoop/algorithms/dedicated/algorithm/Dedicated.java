@@ -9,12 +9,12 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.DedicatedCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.dedicated.remote.SharedCommunication;
-import at.ac.uibk.dps.biohadoop.queue.SimpleTaskSubmitter;
-import at.ac.uibk.dps.biohadoop.queue.TaskSubmitter;
-import at.ac.uibk.dps.biohadoop.queue.TaskException;
-import at.ac.uibk.dps.biohadoop.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
+import at.ac.uibk.dps.biohadoop.tasksystem.submitter.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.tasksystem.submitter.TaskSubmitter;
 
 public class Dedicated implements Algorithm {
 

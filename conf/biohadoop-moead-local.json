@@ -1,25 +1,25 @@
 {
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
   "communicationConfiguration" : {
-    "dedicatedMasters" : [ ],
+    "dedicatedAdapters" : [ ],
     "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.KryoWorker",
       "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.LocalWorker",
       "settingName" : "DEFAULT_SETTING",
       "count" : 0
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.RestWorker",
       "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.SocketWorker",
       "settingName" : "DEFAULT_SETTING",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.WebSocketWorker",
       "settingName" : "DEFAULT_SETTING",
       "count" : 1
     } ]

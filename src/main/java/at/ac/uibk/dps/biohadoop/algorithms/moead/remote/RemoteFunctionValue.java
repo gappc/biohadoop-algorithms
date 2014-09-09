@@ -1,8 +1,8 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.remote;
 
-import at.ac.uibk.dps.biohadoop.communication.ComputeException;
-import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
 import at.ac.uibk.dps.biohadoop.functions.Function;
+import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
+import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
 
 public class RemoteFunctionValue implements
 		RemoteExecutable<Class<? extends Function>, double[], double[]> {

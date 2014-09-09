@@ -5,8 +5,8 @@ import java.util.List;
 
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.Address;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.ComplexObject;
-import at.ac.uibk.dps.biohadoop.communication.ComputeException;
-import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
+import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
 
 public class ComplexObjectCommunication implements
 		RemoteExecutable<ComplexObject, ComplexObject, ComplexObject> {

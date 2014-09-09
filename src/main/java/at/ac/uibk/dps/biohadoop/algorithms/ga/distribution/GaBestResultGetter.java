@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModelException;
-import at.ac.uibk.dps.biohadoop.handler.distribution.RemoteDataLoader;
-import at.ac.uibk.dps.biohadoop.handler.distribution.RemoteResultGetter;
-import at.ac.uibk.dps.biohadoop.handler.distribution.zookeeper.NodeData;
+import at.ac.uibk.dps.biohadoop.islandmodel.IslandModelException;
+import at.ac.uibk.dps.biohadoop.islandmodel.RemoteDataLoader;
+import at.ac.uibk.dps.biohadoop.islandmodel.RemoteResultGetter;
+import at.ac.uibk.dps.biohadoop.islandmodel.zookeeper.NodeData;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 
 public class GaBestResultGetter implements RemoteResultGetter {

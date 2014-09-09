@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import at.ac.uibk.dps.biohadoop.communication.ComputeException;
-import at.ac.uibk.dps.biohadoop.communication.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
+import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
 
 public class ListCommunication implements
 		RemoteExecutable<List<Integer>, List<Double>, List<String>> {

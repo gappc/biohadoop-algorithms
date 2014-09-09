@@ -9,18 +9,18 @@ import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.functions.Zdt1;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModel;
-import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
-import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
+import at.ac.uibk.dps.biohadoop.islandmodel.IslandModel;
+import at.ac.uibk.dps.biohadoop.persistence.FileLoader;
+import at.ac.uibk.dps.biohadoop.persistence.FileSaver;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
 
 public class NsgaIIConfigWriter {
 
@@ -94,11 +94,11 @@ public class NsgaIIConfigWriter {
 		return new BiohadoopConfiguration.Builder()
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
-				.addWorker(DefaultKryoWorker.class, 1)
-				.addWorker(DefaultLocalWorker.class, 0)
-				.addWorker(DefaultRestWorker.class, 1)
-				.addWorker(DefaultSocketWorker.class, 1)
-				.addWorker(DefaultWebSocketWorker.class, 1).build();
+				.addWorker(KryoWorker.class, 1)
+				.addWorker(LocalWorker.class, 0)
+				.addWorker(RestWorker.class, 1)
+				.addWorker(SocketWorker.class, 1)
+				.addWorker(WebSocketWorker.class, 1).build();
 	}
 
 	private static BiohadoopConfiguration makeHadoopConfiguration() {
@@ -127,9 +127,9 @@ public class NsgaIIConfigWriter {
 		return new BiohadoopConfiguration.Builder()
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
-				.addWorker(DefaultKryoWorker.class, 1)
-				.addWorker(DefaultRestWorker.class, 1)
-				.addWorker(DefaultSocketWorker.class, 1)
-				.addWorker(DefaultWebSocketWorker.class, 1).build();
+				.addWorker(KryoWorker.class, 1)
+				.addWorker(RestWorker.class, 1)
+				.addWorker(SocketWorker.class, 1)
+				.addWorker(WebSocketWorker.class, 1).build();
 	}
 }

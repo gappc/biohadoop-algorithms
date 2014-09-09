@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.algorithm.TypeTest;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.kryo.KryoObjects;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
 import at.ac.uibk.dps.biohadoop.utils.KryoRegistrator;
 
 public class TypeTestConfigWriter {
@@ -41,10 +41,10 @@ public class TypeTestConfigWriter {
 				.addLibPath("/biohadoop/lib/")
 				.addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
-				.addWorker(DefaultKryoWorker.class, 1)
-				.addWorker(DefaultRestWorker.class, 1)
-				.addWorker(DefaultSocketWorker.class, 1)
-				.addWorker(DefaultWebSocketWorker.class, 1)
+				.addWorker(KryoWorker.class, 1)
+				.addWorker(RestWorker.class, 1)
+				.addWorker(SocketWorker.class, 1)
+				.addWorker(WebSocketWorker.class, 1)
 				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
 						KryoObjects.class.getCanonicalName()).build();
 

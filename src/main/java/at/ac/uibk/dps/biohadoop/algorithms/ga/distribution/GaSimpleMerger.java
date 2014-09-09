@@ -3,8 +3,8 @@ package at.ac.uibk.dps.biohadoop.algorithms.ga.distribution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.handler.distribution.DataMerger;
-import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModelException;
+import at.ac.uibk.dps.biohadoop.islandmodel.DataMerger;
+import at.ac.uibk.dps.biohadoop.islandmodel.IslandModelException;
 
 public class GaSimpleMerger implements DataMerger<int[][]> {
 

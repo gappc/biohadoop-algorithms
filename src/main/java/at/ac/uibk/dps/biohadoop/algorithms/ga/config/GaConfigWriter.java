@@ -8,17 +8,17 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker;
-import at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModel;
-import at.ac.uibk.dps.biohadoop.handler.distribution.zookeeper.ZooKeeperController;
-import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileLoader;
-import at.ac.uibk.dps.biohadoop.handler.persistence.file.FileSaver;
+import at.ac.uibk.dps.biohadoop.islandmodel.IslandModel;
+import at.ac.uibk.dps.biohadoop.islandmodel.zookeeper.ZooKeeperController;
+import at.ac.uibk.dps.biohadoop.persistence.FileLoader;
+import at.ac.uibk.dps.biohadoop.persistence.FileSaver;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
 
 public class GaConfigWriter {
 
@@ -99,10 +99,10 @@ public class GaConfigWriter {
 				.addSolver(solverConfiguration)
 				.addSolver(solverConfiguration)
 				.addSolver(solverConfiguration)
-				.addWorker(DefaultKryoWorker.class, 1)
-				.addWorker(DefaultRestWorker.class, 1)
-				.addWorker(DefaultSocketWorker.class, 1)
-				.addWorker(DefaultWebSocketWorker.class, 1)
+				.addWorker(KryoWorker.class, 1)
+				.addWorker(RestWorker.class, 1)
+				.addWorker(SocketWorker.class, 1)
+				.addWorker(WebSocketWorker.class, 1)
 				.addGobalProperty(ZooKeeperController.ZOOKEEPER_HOSTNAME,
 						LOCAL_DISTRIBUTION_INFO_HOST)
 				.addGobalProperty(ZooKeeperController.ZOOKEEPER_PORT,
@@ -137,10 +137,10 @@ public class GaConfigWriter {
 				.addSolver(solverConfiguration)
 				.addSolver(solverConfiguration)
 				.addSolver(solverConfiguration)
-				.addWorker(DefaultKryoWorker.class, 1)
-				.addWorker(DefaultRestWorker.class, 1)
-				.addWorker(DefaultSocketWorker.class, 1)
-				.addWorker(DefaultWebSocketWorker.class, 1)
+				.addWorker(KryoWorker.class, 1)
+				.addWorker(RestWorker.class, 1)
+				.addWorker(SocketWorker.class, 1)
+				.addWorker(WebSocketWorker.class, 1)
 				.addGobalProperty(ZooKeeperController.ZOOKEEPER_HOSTNAME,
 						HADOOP_DISTRIBUTION_INFO_HOST)
 				.addGobalProperty(ZooKeeperController.ZOOKEEPER_PORT,

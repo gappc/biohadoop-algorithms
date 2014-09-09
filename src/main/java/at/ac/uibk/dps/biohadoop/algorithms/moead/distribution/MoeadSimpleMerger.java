@@ -1,7 +1,7 @@
 package at.ac.uibk.dps.biohadoop.algorithms.moead.distribution;
 
-import at.ac.uibk.dps.biohadoop.handler.distribution.DataMerger;
-import at.ac.uibk.dps.biohadoop.handler.distribution.IslandModelException;
+import at.ac.uibk.dps.biohadoop.islandmodel.DataMerger;
+import at.ac.uibk.dps.biohadoop.islandmodel.IslandModelException;
 
 public class MoeadSimpleMerger implements DataMerger<double[][]> {
 

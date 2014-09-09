@@ -14,7 +14,7 @@ import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
 import at.ac.uibk.dps.biohadoop.datastore.DataService;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.hadoop.launcher.MasterLauncher;
+import at.ac.uibk.dps.biohadoop.hadoop.launcher.AdapterLauncher;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.SolverLauncher;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 
@@ -34,9 +34,9 @@ public class MoeadMain {
 			List<Future<SolverId>> algorithms = SolverLauncher
 					.launchSolver(biohadoopConfiguration);
 
-			MasterLauncher masterLauncher = new MasterLauncher(
+			AdapterLauncher masterLauncher = new AdapterLauncher(
 					biohadoopConfiguration);
-			masterLauncher.startMasterEndpoints();
+			masterLauncher.startAdapters();
 
 			for (Future<SolverId> algorithm : algorithms) {
 				SolverId solverId = algorithm.get();
