@@ -7,6 +7,8 @@ Example algorithms for the [Biohadoop](https://github.com/gappc/biohadoop) frame
 * GA: Implementation of a genetic algorithm, that tries to solve the Traveling salesman problem
 * MOEAD: Implementation of [MOEAD](http://dces.essex.ac.uk/staff/qzhang/papers/moead.pdf), that tries to solve multi-objective optimization problems
 * NSGA-II: Implementation of [NSGA-II](http://www.iitk.ac.in/kangal/Deb_NSGA-II.pdf), that tries to solve multi-objective optimization problems
+* Sleep: An algorithm that can be used to simulate workloads
+* Sum: Simple example, that sums the values of an integer value
 * TypeTest: Sending and receiving different Java types
 
 ## Installation
