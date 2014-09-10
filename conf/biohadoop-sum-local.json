@@ -1,0 +1,36 @@
+{
+  "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
+  "communicationConfiguration" : {
+    "dedicatedAdapters" : [ ],
+    "workerConfigurations" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 0
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 1
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 0
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 0
+    }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 0
+    } ]
+  },
+  "globalProperties" : { },
+  "solverConfigurations" : [ {
+    "name" : "SUM",
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.sum.SumAlgorithm",
+    "properties" : {
+      "CHUNKS" : "20",
+      "CHUNK_SIZE" : "10"
+    }
+  } ]
+}
