@@ -1,26 +1,26 @@
 {
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
   "communicationConfiguration" : {
-    "dedicatedMasters" : [ ],
+    "dedicatedAdapters" : [ ],
     "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultKryoWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultLocalWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 0
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultRestWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultSocketWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.communication.worker.DefaultWebSocketWorker",
-      "settingName" : "DEFAULT_SETTING",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     } ]
   },
