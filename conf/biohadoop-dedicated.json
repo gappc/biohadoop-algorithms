@@ -10,6 +10,10 @@
       "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 0
+    }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1

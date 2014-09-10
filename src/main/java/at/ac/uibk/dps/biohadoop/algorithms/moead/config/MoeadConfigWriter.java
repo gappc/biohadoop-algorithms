@@ -5,11 +5,11 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger;
+import at.ac.uibk.dps.biohadoop.functions.KryoFunctionObjects;
 import at.ac.uibk.dps.biohadoop.functions.Zdt1;
 import at.ac.uibk.dps.biohadoop.functions.Zdt3;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
@@ -23,6 +23,7 @@ import at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.utils.KryoRegistrator;
 
 public class MoeadConfigWriter {
 
@@ -96,19 +97,22 @@ public class MoeadConfigWriter {
 		SolverConfiguration solverConfiguration = builder.build();
 
 		return new BiohadoopConfiguration.Builder()
-				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
+				.addLibPath("/biohadoop/lib/")
+				.addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
 				.addWorker(LocalWorker.class, 0)
 				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 1)
-				.addWorker(WebSocketWorker.class, 1).build();
+				.addWorker(SocketWorker.class, 3)
+				.addWorker(WebSocketWorker.class, 1)
+				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
+						KryoFunctionObjects.class.getCanonicalName()).build();
 	}
 
 	private static BiohadoopConfiguration makeHadoopConfiguration() {
 		SolverConfiguration.Builder builder = new SolverConfiguration.Builder(
 				"MOEAD", Moead.class);
-		
+
 		builder.addProperty(Moead.FUNCTION_CLASS, Zdt3.class.getCanonicalName());
 		builder.addProperty(Moead.GENOME_SIZE, GENOME_SIZE);
 		builder.addProperty(Moead.MAX_ITERATIONS, MAX_ITERATIONS);
@@ -119,9 +123,9 @@ public class MoeadConfigWriter {
 		builder.addProperty(FileLoader.FILE_LOAD_ON_STARTUP,
 				FILE_LOAD_ON_STARTUP);
 		builder.addProperty(IslandModel.ISLAND_DATA_MERGER,
-				GaSimpleMerger.class.getCanonicalName());
+				MoeadSimpleMerger.class.getCanonicalName());
 		builder.addProperty(IslandModel.ISLAND_DATA_REMOTE_RESULT_GETTER,
-				GaBestResultGetter.class.getCanonicalName());
+				MoeadBestResultGetter.class.getCanonicalName());
 		builder.addProperty(FileSaver.FILE_SAVE_PATH,
 				HADOOP_PERSISTENCE_SAVE_PATH);
 		builder.addProperty(FileLoader.FILE_LOAD_PATH,
@@ -130,11 +134,15 @@ public class MoeadConfigWriter {
 		SolverConfiguration solverConfiguration = builder.build();
 
 		return new BiohadoopConfiguration.Builder()
-				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
+				.addLibPath("/biohadoop/lib/")
+				.addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
+				.addWorker(LocalWorker.class, 0)
 				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 1)
-				.addWorker(WebSocketWorker.class, 1).build();
+				.addWorker(SocketWorker.class, 3)
+				.addWorker(WebSocketWorker.class, 1)
+				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
+						KryoFunctionObjects.class.getCanonicalName()).build();
 	}
 }

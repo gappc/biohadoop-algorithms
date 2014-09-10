@@ -1,6 +1,5 @@
 package at.ac.uibk.dps.biohadoop.algorithms.sleep;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
@@ -62,8 +62,10 @@ public class SleepAlgorithm implements Algorithm {
 		long start = System.currentTimeMillis();
 		try {
 			List<TaskFuture<Object>> futures = taskSubmitter.addAll(emptyData);
-			for (TaskFuture<Object> future : futures) {
+			for (int i = 0; i < futures.size(); i++) {
+				TaskFuture<Object> future = futures.get(i);
 				future.get();
+				ProgressService.setProgress(solverId, (float) i / iterations);
 			}
 		} catch (TaskException e) {
 			throw new AlgorithmException("Error while running tasks", e);

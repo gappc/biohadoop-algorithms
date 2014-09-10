@@ -17,14 +17,16 @@
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
+      "count" : 3
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     } ]
   },
-  "globalProperties" : { },
+  "globalProperties" : {
+    "KRYO_REGISTRATOR" : "at.ac.uibk.dps.biohadoop.functions.KryoFunctionObjects"
+  },
   "solverConfigurations" : [ {
     "name" : "NSGA-II",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII",

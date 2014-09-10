@@ -7,20 +7,26 @@
       "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker",
+      "pipelineName" : "DEFAULT_PIPELINE",
+      "count" : 0
+    }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
+      "count" : 3
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
       "count" : 1
     } ]
   },
-  "globalProperties" : { },
+  "globalProperties" : {
+    "KRYO_REGISTRATOR" : "at.ac.uibk.dps.biohadoop.functions.KryoFunctionObjects"
+  },
   "solverConfigurations" : [ {
     "name" : "MOEAD",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead",
@@ -31,8 +37,8 @@
       "FILE_SAVE_PATH" : "/biohadoop/persistence/moead",
       "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
       "GENOME_SIZE" : "10",
-      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
-      "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter",
+      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger",
+      "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadBestResultGetter",
       "MAX_ITERATIONS" : "1000",
       "NEIGHBOR_SIZE" : "290",
       "POPULATION_SIZE" : "300"

@@ -9,6 +9,7 @@ import at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger;
+import at.ac.uibk.dps.biohadoop.functions.KryoFunctionObjects;
 import at.ac.uibk.dps.biohadoop.functions.Zdt1;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
@@ -21,6 +22,7 @@ import at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.utils.KryoRegistrator;
 
 public class NsgaIIConfigWriter {
 
@@ -92,19 +94,22 @@ public class NsgaIIConfigWriter {
 		SolverConfiguration solverConfiguration = builder.build();
 
 		return new BiohadoopConfiguration.Builder()
-				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
+				.addLibPath("/biohadoop/lib/")
+				.addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
 				.addWorker(LocalWorker.class, 0)
 				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 1)
-				.addWorker(WebSocketWorker.class, 1).build();
+				.addWorker(SocketWorker.class, 3)
+				.addWorker(WebSocketWorker.class, 1)
+				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
+						KryoFunctionObjects.class.getCanonicalName()).build();
 	}
 
 	private static BiohadoopConfiguration makeHadoopConfiguration() {
 		SolverConfiguration.Builder builder = new SolverConfiguration.Builder(
 				"NSGA-II", NsgaII.class);
-		
+
 		builder.addProperty(Moead.FUNCTION_CLASS, Zdt1.class.getCanonicalName());
 		builder.addProperty(NsgaII.GENOME_SIZE, GENOME_SIZE);
 		builder.addProperty(NsgaII.MAX_ITERATIONS, MAX_ITERATIONS);
@@ -125,11 +130,15 @@ public class NsgaIIConfigWriter {
 		SolverConfiguration solverConfiguration = builder.build();
 
 		return new BiohadoopConfiguration.Builder()
-				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
+				.addLibPath("/biohadoop/lib/")
+				.addLibPath("/biohadoop/conf/")
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
+				.addWorker(LocalWorker.class, 0)
 				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 1)
-				.addWorker(WebSocketWorker.class, 1).build();
+				.addWorker(SocketWorker.class, 3)
+				.addWorker(WebSocketWorker.class, 1)
+				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
+						KryoFunctionObjects.class.getCanonicalName()).build();
 	}
 }
