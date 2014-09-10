@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
 
 public class ObjectCommunication implements
-		RemoteExecutable<UUID, Date, String> {
+		AsyncComputable<UUID, Date, String> {
 
 	@Override
 	public String compute(Date data, UUID initialData) throws ComputeException {

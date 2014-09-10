@@ -6,10 +6,10 @@ import java.util.List;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.Address;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.ComplexObject;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
 
 public class ComplexObjectCommunication implements
-		RemoteExecutable<ComplexObject, ComplexObject, ComplexObject> {
+		AsyncComputable<ComplexObject, ComplexObject, ComplexObject> {
 
 	@Override
 	public ComplexObject compute(ComplexObject data, ComplexObject initalData)

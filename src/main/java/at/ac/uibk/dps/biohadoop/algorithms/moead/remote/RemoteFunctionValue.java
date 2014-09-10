@@ -2,10 +2,10 @@ package at.ac.uibk.dps.biohadoop.algorithms.moead.remote;
 
 import at.ac.uibk.dps.biohadoop.functions.Function;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
 
 public class RemoteFunctionValue implements
-		RemoteExecutable<Class<? extends Function>, double[], double[]> {
+		AsyncComputable<Class<? extends Function>, double[], double[]> {
 
 	private Function function = null;
 

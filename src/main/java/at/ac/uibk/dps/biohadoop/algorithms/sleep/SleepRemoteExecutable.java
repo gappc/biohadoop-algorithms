@@ -1,10 +1,10 @@
 package at.ac.uibk.dps.biohadoop.algorithms.sleep;
 
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.RemoteExecutable;
+import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
 
 public class SleepRemoteExecutable implements
-		RemoteExecutable<Long, Object, Object> {
+		AsyncComputable<Long, Object, Object> {
 
 	@Override
 	public Object compute(Object data, Long initialData)
