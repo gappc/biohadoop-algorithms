@@ -39,12 +39,7 @@ public class SumAlgorithm implements Algorithm {
 		int chunkSize = getPropertyAsInt(properties, CHUNK_SIZE);
 
 		// Prepare sample data
-		int[][] data = new int[chunks][chunkSize];
-		for (int i = 0; i < chunks; i++) {
-			for (int j = 0; j < chunkSize; j++) {
-				data[i][j] = i * chunkSize + j;
-			}
-		}
+		int[][] data = buildData(chunks, chunkSize);
 
 		// Get a task submitter for default pipeline. Declare
 		// AsyncSumComputation as class that should be run by the workers to
@@ -96,5 +91,30 @@ public class SumAlgorithm implements Algorithm {
 			throw new AlgorithmException("Could not convert property " + key
 					+ " to long, value was " + value, e);
 		}
+	}
+
+	/**
+	 * Builds <tt>chunks</tt> number of integer arrays, each one of size
+	 * <tt>chunkSize</tt>. The arrays are filled with consecutive numbers,
+	 * starting from 0. The consecutive numbers continue between the boundaries
+	 * of adjacent arrays. For example, array0=[0,1,2], array1=[3,4,5], ...
+	 * 
+	 * @param chunks
+	 *            number of integer arrays
+	 * @param chunkSize
+	 *            size of each integer array
+	 * @return <tt>chunk</tt> number of integer arrays, each one of size
+	 *         <tt>chunkSize</tt>. The arrays are filled with consecutive
+	 *         numbers, starting from 0. The consecutive numbers continue
+	 *         between the boundaries of adjacent arrays
+	 */
+	private int[][] buildData(int chunks, int chunkSize) {
+		int[][] data = new int[chunks][chunkSize];
+		for (int i = 0; i < chunks; i++) {
+			for (int j = 0; j < chunkSize; j++) {
+				data[i][j] = i * chunkSize + j;
+			}
+		}
+		return data;
 	}
 }
