@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import at.ac.uibk.dps.biohadoop.utils.KryoRegistrator;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.kryo.KryoRegistrator;
 
 import com.esotericsoftware.kryo.Serializer;
 

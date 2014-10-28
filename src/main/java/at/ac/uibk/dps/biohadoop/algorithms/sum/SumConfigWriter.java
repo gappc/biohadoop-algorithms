@@ -8,11 +8,9 @@ import org.slf4j.LoggerFactory;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker;
 
 public class SumConfigWriter {
 
@@ -59,8 +57,6 @@ public class SumConfigWriter {
 				// instance of it is started
 				.addWorker(KryoWorker.class, 0)
 				.addWorker(LocalWorker.class, 1)
-				.addWorker(RestWorker.class, 0)
-				.addWorker(SocketWorker.class, 0)
 				.addWorker(WebSocketWorker.class, 0).build();
 
 		// Save configuration file for Biohadoop running in a local environment

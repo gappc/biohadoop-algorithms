@@ -9,11 +9,9 @@ import at.ac.uibk.dps.biohadoop.algorithms.echo.algorithm.Echo;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker;
 
 public class EchoConfigWriter {
 
@@ -40,8 +38,6 @@ public class EchoConfigWriter {
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
 				.addWorker(LocalWorker.class, 0)
-				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 1)
 				.addWorker(WebSocketWorker.class, 1).build();
 
 		BiohadoopConfigurationUtil.saveLocal(biohadoopConfiguration,

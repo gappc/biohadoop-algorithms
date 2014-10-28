@@ -6,9 +6,9 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.tasksystem.submitter.SimpleTaskSubmitter;
-import at.ac.uibk.dps.biohadoop.tasksystem.submitter.TaskSubmitter;
+import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.utils.PropertyConverter;
 
 public class Preparation {

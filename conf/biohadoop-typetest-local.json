@@ -3,9 +3,9 @@
   "communicationConfiguration" : {
     "dedicatedAdapters" : [ ],
     "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
+      "count" : 0
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
@@ -13,15 +13,15 @@
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
+      "count" : 0
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
+      "count" : 0
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
       "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
+      "count" : 0
     } ]
   },
   "globalProperties" : {

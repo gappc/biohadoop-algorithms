@@ -13,9 +13,10 @@
     "name" : "TILED-MATRIX-MUL",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.tiledmatrixmul.TiledMulAlgorithm",
     "properties" : {
+      "MATRIX_LAYOUT" : "LAYOUT_COL",
       "MAX_BLOCK_SIZE" : "128",
       "ITERATIONS" : "1000",
-      "MUTATION_FACTOR" : "32",
+      "MUTATION_FACTOR" : "100",
       "MATRIX_SIZE" : "128",
       "POP_SIZE" : "50"
     }

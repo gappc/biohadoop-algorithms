@@ -9,11 +9,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.functions.Function;
-import at.ac.uibk.dps.biohadoop.functions.Zdt1;
 import at.ac.uibk.dps.biohadoop.persistence.FileLoadException;
 import at.ac.uibk.dps.biohadoop.persistence.FileLoader;
 import at.ac.uibk.dps.biohadoop.persistence.FileSaveException;
@@ -21,10 +18,12 @@ import at.ac.uibk.dps.biohadoop.persistence.FileSaver;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverData;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
+import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
-import at.ac.uibk.dps.biohadoop.tasksystem.submitter.SimpleTaskSubmitter;
-import at.ac.uibk.dps.biohadoop.tasksystem.submitter.TaskSubmitter;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 
 public class Moead implements Algorithm {
 

@@ -32,57 +32,57 @@
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/biohadoop/data/att48.tsp",
-      "FILE_LOAD_ON_STARTUP" : "false",
-      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
-      "FILE_SAVE_AFTER_ITERATION" : "1000",
-      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
-      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "POPULATION_SIZE" : "10",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter",
+      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
+      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
       "MAX_ITERATIONS" : "10000",
-      "POPULATION_SIZE" : "10"
+      "FILE_LOAD_ON_STARTUP" : "false",
+      "FILE_SAVE_AFTER_ITERATION" : "1000",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp"
     }
   }, {
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/biohadoop/data/att48.tsp",
-      "FILE_LOAD_ON_STARTUP" : "false",
-      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
-      "FILE_SAVE_AFTER_ITERATION" : "1000",
-      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
-      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "POPULATION_SIZE" : "10",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter",
+      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
+      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
       "MAX_ITERATIONS" : "10000",
-      "POPULATION_SIZE" : "10"
+      "FILE_LOAD_ON_STARTUP" : "false",
+      "FILE_SAVE_AFTER_ITERATION" : "1000",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp"
     }
   }, {
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/biohadoop/data/att48.tsp",
-      "FILE_LOAD_ON_STARTUP" : "false",
-      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
-      "FILE_SAVE_AFTER_ITERATION" : "1000",
-      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
-      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "POPULATION_SIZE" : "10",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter",
+      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
+      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
       "MAX_ITERATIONS" : "10000",
-      "POPULATION_SIZE" : "10"
+      "FILE_LOAD_ON_STARTUP" : "false",
+      "FILE_SAVE_AFTER_ITERATION" : "1000",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp"
     }
   }, {
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {
-      "DATA_PATH" : "/biohadoop/data/att48.tsp",
-      "FILE_LOAD_ON_STARTUP" : "false",
-      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
-      "FILE_SAVE_AFTER_ITERATION" : "1000",
-      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
-      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "POPULATION_SIZE" : "10",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaBestResultGetter",
+      "FILE_LOAD_PATH" : "/biohadoop/persistence/ga",
+      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaSimpleMerger",
+      "FILE_SAVE_PATH" : "/biohadoop/persistence/ga",
       "MAX_ITERATIONS" : "10000",
-      "POPULATION_SIZE" : "10"
+      "FILE_LOAD_ON_STARTUP" : "false",
+      "FILE_SAVE_AFTER_ITERATION" : "1000",
+      "DATA_PATH" : "/biohadoop/data/att48.tsp"
     }
   } ]
 }

@@ -44,9 +44,10 @@ public class TiledMulConfigWriter {
 				// Add properties that are private to this algorithm instance,
 				// and that are provided as arguments when the algorithm is
 				// started
+				.addProperty(TiledMulAlgorithm.MATRIX_LAYOUT, TiledMulAlgorithm.LAYOUT_COL)
 				.addProperty(TiledMulAlgorithm.MATRIX_SIZE, "128")
 				.addProperty(TiledMulAlgorithm.MAX_BLOCK_SIZE, "128")
-				.addProperty(TiledMulAlgorithm.MUTATION_FACTOR, "32")
+				.addProperty(TiledMulAlgorithm.MUTATION_FACTOR, "100")
 				.addProperty(TiledMulAlgorithm.POP_SIZE, "50")
 				.addProperty(TiledMulAlgorithm.ITERATIONS, "1000").build();
 

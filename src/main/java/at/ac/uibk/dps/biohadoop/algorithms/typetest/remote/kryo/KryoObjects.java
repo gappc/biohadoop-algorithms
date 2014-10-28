@@ -8,7 +8,7 @@ import java.util.Map;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.Address;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.ComplexObject;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.Country;
-import at.ac.uibk.dps.biohadoop.utils.KryoRegistrator;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.kryo.KryoRegistrator;
 
 import com.esotericsoftware.kryo.Serializer;
 

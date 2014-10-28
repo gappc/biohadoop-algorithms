@@ -5,15 +5,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.echo.remote.EchoCommunication;
 import at.ac.uibk.dps.biohadoop.solver.ProgressService;
 import at.ac.uibk.dps.biohadoop.solver.SolverId;
+import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
-import at.ac.uibk.dps.biohadoop.tasksystem.submitter.SimpleTaskSubmitter;
-import at.ac.uibk.dps.biohadoop.tasksystem.submitter.TaskSubmitter;
+import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 
 public class Echo implements Algorithm {
 

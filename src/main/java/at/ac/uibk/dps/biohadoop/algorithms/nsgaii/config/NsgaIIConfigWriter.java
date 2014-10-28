@@ -17,12 +17,10 @@ import at.ac.uibk.dps.biohadoop.islandmodel.IslandModel;
 import at.ac.uibk.dps.biohadoop.persistence.FileLoader;
 import at.ac.uibk.dps.biohadoop.persistence.FileSaver;
 import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker;
-import at.ac.uibk.dps.biohadoop.utils.KryoRegistrator;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.kryo.KryoRegistrator;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.LocalWorker;
+import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker;
 
 public class NsgaIIConfigWriter {
 
@@ -99,8 +97,6 @@ public class NsgaIIConfigWriter {
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
 				.addWorker(LocalWorker.class, 0)
-				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 3)
 				.addWorker(WebSocketWorker.class, 1)
 				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
 						KryoFunctionObjects.class.getCanonicalName()).build();
@@ -135,8 +131,6 @@ public class NsgaIIConfigWriter {
 				.addSolver(solverConfiguration)
 				.addWorker(KryoWorker.class, 1)
 				.addWorker(LocalWorker.class, 0)
-				.addWorker(RestWorker.class, 1)
-				.addWorker(SocketWorker.class, 3)
 				.addWorker(WebSocketWorker.class, 1)
 				.addGobalProperty(KryoRegistrator.KRYO_REGISTRATOR,
 						KryoFunctionObjects.class.getCanonicalName()).build();
