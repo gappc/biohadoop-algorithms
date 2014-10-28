@@ -17,18 +17,22 @@ public class Preparation {
 			.getLogger(Preparation.class);
 
 	private final int popSize;
-	private final int mutationFactor;
+	private final double mutationFactor;
+	private final String matrixLayout;
 	private final int matrixSize;
 	private final int maxBlockSize;
 	private final int iterations;
-	private final TaskSubmitter<Integer, Long> taskSubmitter;
+	private final TaskSubmitter<int[], Long> taskSubmitter;
 
 	public Preparation(Map<String, String> properties)
 			throws AlgorithmException {
 		// Read and parse configuration
-		popSize = PropertyConverter.toInt(properties, TiledMulAlgorithm.POP_SIZE);
-		mutationFactor = PropertyConverter.toInt(properties,
+		popSize = PropertyConverter.toInt(properties,
+				TiledMulAlgorithm.POP_SIZE);
+		mutationFactor = PropertyConverter.toDouble(properties,
 				TiledMulAlgorithm.MUTATION_FACTOR);
+		matrixLayout = PropertyConverter.toString(properties,
+				TiledMulAlgorithm.MATRIX_LAYOUT, new String[] { TiledMulAlgorithm.LAYOUT_ROW, TiledMulAlgorithm.LAYOUT_COL });
 		matrixSize = PropertyConverter.toInt(properties,
 				TiledMulAlgorithm.MATRIX_SIZE);
 		maxBlockSize = PropertyConverter.toInt(properties,
@@ -43,9 +47,19 @@ public class Preparation {
 		double[][] matrixA = generateMatrix(rand, matrixSize);
 		double[][] matrixB = generateMatrix(rand, matrixSize);
 
-		// Instanciate TaskSystem
-		taskSubmitter = new SimpleTaskSubmitter<Matrices, Integer, Long>(
-				AsyncTiledMul.class, new Matrices(matrixA, matrixB));
+		if (TiledMulAlgorithm.LAYOUT_ROW.equals(matrixLayout)) {
+			// Instanciate TaskSystem
+			taskSubmitter = new SimpleTaskSubmitter<Matrices, int[], Long>(
+					AsyncTiledMul.class, new Matrices(matrixA, matrixB));
+		} else if (TiledMulAlgorithm.LAYOUT_COL.equals(matrixLayout)) {
+			double[][] matrixBColLayout = makeCol(matrixB);
+			taskSubmitter = new SimpleTaskSubmitter<Matrices, int[], Long>(
+					AsyncTiledMulWithColLayout.class, new Matrices(matrixA,
+							matrixBColLayout));
+		}
+		else {
+			throw new AlgorithmException("Unknown matrix layout: " + matrixLayout);
+		}
 	}
 
 	private double[][] generateMatrix(Random rand, int size) {
@@ -58,11 +72,22 @@ public class Preparation {
 		return m;
 	}
 
+	private double[][] makeCol(double[][] matrix) {
+		int size = matrix.length;
+		double[][] matrixCol = new double[size][size];
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				matrixCol[i][j] = matrix[j][i];
+			}
+		}
+		return matrixCol;
+	}
+
 	public int getPopSize() {
 		return popSize;
 	}
 
-	public int getMutationFactor() {
+	public double getMutationFactor() {
 		return mutationFactor;
 	}
 
@@ -78,7 +103,7 @@ public class Preparation {
 		return iterations;
 	}
 
-	public TaskSubmitter<Integer, Long> getTaskSubmitter() {
+	public TaskSubmitter<int[], Long> getTaskSubmitter() {
 		return taskSubmitter;
 	}
 
