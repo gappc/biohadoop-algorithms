@@ -10,13 +10,13 @@ import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
  * @author Christian Gapp
  *
  */
-public class AsyncTiledMul implements AsyncComputable<Matrices, Integer, Long> {
+public class AsyncTiledMul implements AsyncComputable<Matrices, int[], Long> {
 
 	@Override
-	public Long compute(Integer blockSize, Matrices matrices)
+	public Long compute(int[] blocks, Matrices matrices)
 			throws ComputeException {
 		long start = System.nanoTime();
-		MatrixMul.tiledMul(matrices.getMatrixA(), matrices.getMatrixB(), blockSize);
+		MatrixMul.tiledMul(matrices.getMatrixA(), matrices.getMatrixB(), blocks);
 		return System.nanoTime() - start;
 	}
 

@@ -13,14 +13,14 @@ import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
  */
 
 public class AsyncTiledMulWithColLayout implements
-		AsyncComputable<Matrices, Integer, Long> {
+		AsyncComputable<Matrices, int[], Long> {
 
 	@Override
-	public Long compute(Integer blockSize, Matrices matrices)
+	public Long compute(int[] blocks, Matrices matrices)
 			throws ComputeException {
 		long start = System.nanoTime();
 		MatrixMul.tiledMulWithColLayout(matrices.getMatrixA(),
-				matrices.getMatrixB(), blockSize);
+				matrices.getMatrixB(), blocks);
 		return System.nanoTime() - start;
 	}
 
