@@ -52,6 +52,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>at.ac.uibk.dps</groupId>
 			<artifactId>biohadoop</artifactId>
 			<version>${biohadoop-version}</version>
@@ -64,5 +70,13 @@
 			<version>${hadoop.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Only needed for ConfigWriters, to be able to read input after writing -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>3.6.2.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		
 	</dependencies>
 </project>
