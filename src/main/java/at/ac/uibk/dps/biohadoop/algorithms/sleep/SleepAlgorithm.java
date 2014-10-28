@@ -25,7 +25,7 @@ public class SleepAlgorithm implements Algorithm {
 			.getLogger(SleepAlgorithm.class);
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Read configuration data
 		long iterations = getPropertyAsLong(properties, ITERATIONS);

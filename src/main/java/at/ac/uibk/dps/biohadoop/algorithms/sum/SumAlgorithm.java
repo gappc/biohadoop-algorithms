@@ -32,7 +32,7 @@ public class SumAlgorithm implements Algorithm {
 	public static final String CHUNK_SIZE = "CHUNK_SIZE";
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Read properties from configuration file
 		int chunks = getPropertyAsInt(properties, CHUNKS);

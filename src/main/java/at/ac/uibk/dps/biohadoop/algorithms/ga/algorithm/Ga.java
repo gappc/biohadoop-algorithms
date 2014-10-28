@@ -47,7 +47,7 @@ public class Ga implements Algorithm {
 	private final Random rand = new Random();
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Read algorithm settings from configuration
 		String dataPath = properties.get(DATA_PATH);
@@ -207,28 +207,28 @@ public class Ga implements Algorithm {
 
 			// Handle merging of data from other islands (parallelization using
 			// island model)
-			if (mergeAfterIteration != null
-					&& iteration % mergeAfterIteration == 0) {
-				try {
-					population = (int[][]) IslandModel.merge(solverId,
-							properties, solverData);
-				} catch (IslandModelException e) {
-					throw new AlgorithmException(
-							"Error while trying to merge island data", e);
-				}
-			}
+//			if (mergeAfterIteration != null
+//					&& iteration % mergeAfterIteration == 0) {
+//				try {
+//					population = (int[][]) IslandModel.merge(solverId,
+//							properties, solverData);
+//				} catch (IslandModelException e) {
+//					throw new AlgorithmException(
+//							"Error while trying to merge island data", e);
+//				}
+//			}
 
 			// Handle saving of results to file
-			if (saveAfterIteration != null
-					&& iteration % saveAfterIteration == 0) {
-				try {
-					FileSaver.save(solverId, properties, solverData);
-				} catch (FileSaveException e) {
-					throw new AlgorithmException(
-							"Error while trying to save data to file "
-									+ savePath, e);
-				}
-			}
+//			if (saveAfterIteration != null
+//					&& iteration % saveAfterIteration == 0) {
+//				try {
+//					FileSaver.save(solverId, properties, solverData);
+//				} catch (FileSaveException e) {
+//					throw new AlgorithmException(
+//							"Error while trying to save data to file "
+//									+ savePath, e);
+//				}
+//			}
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress

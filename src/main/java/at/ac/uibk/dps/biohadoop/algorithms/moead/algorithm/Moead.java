@@ -44,7 +44,7 @@ public class Moead implements Algorithm {
 	private double minF2 = Double.MAX_VALUE;
 	private double maxF2 = -Double.MAX_VALUE;
 
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 

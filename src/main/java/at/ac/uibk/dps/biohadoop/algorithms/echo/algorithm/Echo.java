@@ -22,7 +22,7 @@ public class Echo implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(Echo.class);
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Get client to distribute work
 		String initialData = "Worker adds this string to result";

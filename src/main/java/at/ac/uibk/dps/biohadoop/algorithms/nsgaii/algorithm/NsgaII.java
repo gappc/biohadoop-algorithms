@@ -40,7 +40,7 @@ public class NsgaII implements Algorithm {
 	private TaskSubmitter<double[], double[]> taskClient;
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 

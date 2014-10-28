@@ -23,7 +23,7 @@ public class Dedicated implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(Dedicated.class);
 
 	@Override
-	public void compute(SolverId solverId, Map<String, String> properties)
+	public void run(SolverId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		TaskSubmitter<String, String> sharedClient = new SimpleTaskSubmitter<>(
 				SharedCommunication.class);
