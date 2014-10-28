@@ -64,7 +64,7 @@ public class TiledMulAlgorithm implements Algorithm {
 		while (count < prep.getIterations()) {
 			long start = System.nanoTime();
 
-			futures.clear();
+			// Recombination and mutation
 			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
 				int[] child = recombinePopulation(population, fitness,
 						prep.getMaxBlockSize());
@@ -73,11 +73,14 @@ public class TiledMulAlgorithm implements Algorithm {
 				population[i] = mutatedChild;
 			}
 
+			// Send data to workers
+			futures.clear();
 			long remoteStart = System.nanoTime();
 			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
 				futures.add(submitFitnessComputation(prep.getTaskSubmitter(),
 						population[i]));
 			}
+			// Wait for worker results
 			for (int i = 0; i < prep.getPopSize(); i++) {
 				fitness[i + prep.getPopSize()] = futures.get(i).get();
 			}
