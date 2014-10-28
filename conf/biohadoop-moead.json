@@ -31,17 +31,17 @@
     "name" : "MOEAD",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.moead.algorithm.Moead",
     "properties" : {
-      "FILE_LOAD_ON_STARTUP" : "false",
-      "FILE_LOAD_PATH" : "/biohadoop/persistence/moead",
-      "FILE_SAVE_AFTER_ITERATION" : "100",
-      "FILE_SAVE_PATH" : "/biohadoop/persistence/moead",
-      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
-      "GENOME_SIZE" : "10",
-      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger",
+      "POPULATION_SIZE" : "300",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadBestResultGetter",
-      "MAX_ITERATIONS" : "1000",
+      "FILE_LOAD_PATH" : "/biohadoop/persistence/moead",
+      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
+      "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.moead.distribution.MoeadSimpleMerger",
+      "GENOME_SIZE" : "10",
+      "FILE_SAVE_PATH" : "/biohadoop/persistence/moead",
       "NEIGHBOR_SIZE" : "290",
-      "POPULATION_SIZE" : "300"
+      "MAX_ITERATIONS" : "1000",
+      "FILE_LOAD_ON_STARTUP" : "false",
+      "FILE_SAVE_AFTER_ITERATION" : "100"
     }
   } ]
 }
