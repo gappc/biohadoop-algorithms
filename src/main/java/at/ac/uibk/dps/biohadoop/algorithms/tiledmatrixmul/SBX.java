@@ -18,8 +18,12 @@ import java.util.Random;
 public class SBX {
 
 	private static final Random rand = new Random();
+	private static final double EPS = 1e-14;
 
 	public static int[] unbounded(double nc, int x1, int x2) {
+		if (Math.abs(x1 - x2) < EPS) {
+			return new int[] { x1, x2 };
+		}
 		double u = rand.nextDouble();
 		double beta;
 		if (u <= 0.5) {
@@ -35,6 +39,9 @@ public class SBX {
 	}
 
 	public static int[] bounded(double nc, int p1, int p2, int lower, int upper) {
+		if (Math.abs(p1 - p2) < EPS) {
+			return new int[] { p1, p2 };
+		}
 		double u = rand.nextDouble();
 
 		int x1 = p1;
