@@ -20,7 +20,7 @@ Build and copy the examples to the Hadoop environment. The configuration for the
 $ ./biohadoop/scripts/copy-algorithms.sh
 ```
 ## Usage
-To start Biohadoop in a Hadoop environment, provide the full path to the Biohadoop JAR file, set at.ac.uibk.dps.biohadoop.hadoop.BiohadoopClient as the class to start, and provide a valid location to a configuration file. The example builds on the Quickstart tutorial, where all libraries and configration files are placed in the right position. This example uses biohadoop-0.3.0-SNAPSHOT.jar:
+To start Biohadoop in a Hadoop environment, provide the full path to the Biohadoop JAR file, set at.ac.uibk.dps.biohadoop.hadoop.BiohadoopClient as the class to start, and provide a valid location to a configuration file. The example builds on the Quickstart tutorial, where all libraries and configration files are placed in the right position. This example uses biohadoop-0.4.0-SNAPSHOT.jar:
 ```
-yarn jar $PATH_TO_BIOHADOOP/biohadoop-0.3.0-SNAPSHOT.jar at.ac.uibk.dps.biohadoop.hadoop.BiohadoopClient /biohadoop/conf/biohadoop-echo.json
+yarn jar $PATH_TO_BIOHADOOP/biohadoop-0.4.0-SNAPSHOT.jar at.ac.uibk.dps.biohadoop.hadoop.BiohadoopClient /biohadoop/conf/biohadoop-echo.json
 ```
