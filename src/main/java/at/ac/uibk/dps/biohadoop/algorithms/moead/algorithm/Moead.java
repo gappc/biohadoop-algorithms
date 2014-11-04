@@ -160,7 +160,7 @@ public class Moead implements Algorithm {
 			if (saveAfterIteration != null
 					&& iteration % saveAfterIteration == 0) {
 				try {
-					FileSaver.save(solverId, properties, solverData);
+					FileSaver.saveRollingJson(solverId, properties, solverData);
 				} catch (FileSaveException e) {
 					throw new AlgorithmException(
 							"Error while trying to save data to file "
