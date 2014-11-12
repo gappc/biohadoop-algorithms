@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker;
 
 public class TiledMulConfigWriter {
@@ -39,7 +39,7 @@ public class TiledMulConfigWriter {
 			ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		// Build solver configuration
-		SolverConfiguration solverConfiguration = new SolverConfiguration.Builder(
+		AlgorithmConfiguration solverConfiguration = new AlgorithmConfiguration.Builder(
 				"TILED-MATRIX-MUL", TiledMulAlgorithm.class)
 				// Add properties that are private to this algorithm instance,
 				// and that are provided as arguments when the algorithm is
@@ -47,6 +47,7 @@ public class TiledMulConfigWriter {
 				.addProperty(TiledMulAlgorithm.MATRIX_LAYOUT, TiledMulAlgorithm.LAYOUT_COL)
 				.addProperty(TiledMulAlgorithm.MATRIX_SIZE, "128")
 				.addProperty(TiledMulAlgorithm.MAX_BLOCK_SIZE, "128")
+				.addProperty(TiledMulAlgorithm.SBX_DISTRIBUTION_FACTOR, "1")
 				.addProperty(TiledMulAlgorithm.MUTATION_FACTOR, "100")
 				.addProperty(TiledMulAlgorithm.POP_SIZE, "50")
 				.addProperty(TiledMulAlgorithm.ITERATIONS, "1000").build();
@@ -54,7 +55,8 @@ public class TiledMulConfigWriter {
 		// Build Biohadoop configuration
 		BiohadoopConfiguration biohadoopConfiguration = new BiohadoopConfiguration.Builder()
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
-				.addSolver(solverConfiguration).addWorker(KryoWorker.class, 2)
+				.addDefaultEndpoints()
+				.addAlgorithm(solverConfiguration).addWorker(KryoWorker.class, 2)
 				.build();
 
 		// Save configuration file for Biohadoop running in a local environment
@@ -68,7 +70,8 @@ public class TiledMulConfigWriter {
 		biohadoopConfiguration = new BiohadoopConfiguration.Builder()
 				.addLibPath("/user/hadoop/biohadoop/lib/")
 				.addLibPath("/user/hadoop/biohadoop/conf/")
-				.addSolver(solverConfiguration).addWorker(KryoWorker.class, 2)
+				.addDefaultEndpoints()
+				.addAlgorithm(solverConfiguration).addWorker(KryoWorker.class, 2)
 				.build();
 		// Save configuration file for Biohadoop running in a Hadoop environment
 		BiohadoopConfigurationUtil.saveLocal(biohadoopConfiguration,

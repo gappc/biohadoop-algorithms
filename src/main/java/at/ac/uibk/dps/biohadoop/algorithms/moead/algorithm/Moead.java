@@ -9,18 +9,12 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.algorithms.moead.remote.RemoteFunctionValue;
 import at.ac.uibk.dps.biohadoop.functions.Function;
-import at.ac.uibk.dps.biohadoop.persistence.FileLoadException;
-import at.ac.uibk.dps.biohadoop.persistence.FileLoader;
-import at.ac.uibk.dps.biohadoop.persistence.FileSaveException;
-import at.ac.uibk.dps.biohadoop.persistence.FileSaver;
-import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverData;
-import at.ac.uibk.dps.biohadoop.solver.SolverId;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
@@ -36,14 +30,14 @@ public class Moead implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(Moead.class);
 	private static final int LOG_STEPS = 100;
 
-	private TaskSubmitter<double[], double[]> taskClient;
+	private TaskSubmitter<Class<? extends Function>, double[], double[]> taskClient;
 
 	private double minF1 = Double.MAX_VALUE;
 	private double maxF1 = -Double.MAX_VALUE;
 	private double minF2 = Double.MAX_VALUE;
 	private double maxF2 = -Double.MAX_VALUE;
 
-	public void run(SolverId solverId, Map<String, String> properties)
+	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
 
@@ -67,13 +61,13 @@ public class Moead implements Algorithm {
 		}
 
 		// Read persistence settings from configuration
-		String saveAfterIterationProperty = properties
-				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
-		Integer saveAfterIteration = null;
-		if (saveAfterIterationProperty != null) {
-			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
-		}
-		String savePath = properties.get(FileSaver.FILE_SAVE_PATH);
+		// String saveAfterIterationProperty = properties
+		// .get(FileSaver.FILE_SAVE_AFTER_ITERATION);
+		// Integer saveAfterIteration = null;
+		// if (saveAfterIterationProperty != null) {
+		// saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
+		// }
+		// String savePath = properties.get(FileSaver.FILE_SAVE_PATH);
 
 		// 1.1
 		// Dosen't work as expected, so was commented out
@@ -85,23 +79,22 @@ public class Moead implements Algorithm {
 		int[][] B = Initializer.getNeighbors(weightVectors, neighborSize); // neighbors
 
 		// 1.3
-		double[][] population = null;
+		double[][] population = Initializer.getRandomPopulation(N, genomeSize);
 		int persitedIteration = 0;
 
 		// Load old snapshot from file if possible
-		SolverData<?> solverData = null;
-		try {
-			solverData = FileLoader.load(solverId, properties);
-		} catch (FileLoadException e) {
-			throw new AlgorithmException(e);
-		}
-		if (solverData != null) {
-			population = convertToArray(solverData.getData());
-			persitedIteration = solverData.getIteration();
-			LOG.info("Resuming from iteration {}", persitedIteration);
-		} else {
-			population = Initializer.getRandomPopulation(N, genomeSize);
-		}
+		// try {
+		// MoeadData moeadData = FileLoader.load(properties);
+		// if (moeadData != null) {
+		// population = moeadData.getPopulation();
+		// persitedIteration = moeadData.getIteration();
+		// LOG.info("Resuming from iteration {}", persitedIteration);
+		// } else {
+		// population = Initializer.getRandomPopulation(N, genomeSize);
+		// }
+		// } catch (FileLoadException e) {
+		// throw new AlgorithmException(e);
+		// }
 
 		double[][] functionValues = Initializer
 				.computeFunctionValues(population);
@@ -110,7 +103,7 @@ public class Moead implements Algorithm {
 																	// point
 
 		// Initialize default task setting for remote computation
-		taskClient = new SimpleTaskSubmitter<>(RemoteFunctionValue.class,
+		taskClient = new TaskSubmitter<>(RemoteFunctionValue.class,
 				functionClass);
 
 		// Initialization finished
@@ -154,23 +147,23 @@ public class Moead implements Algorithm {
 			iteration++;
 
 			double[][] result = computeResult(functionValues, z);
-			solverData = new SolverData<>(result, 0, iteration);
 
 			// Handle saving of results to file
-			if (saveAfterIteration != null
-					&& iteration % saveAfterIteration == 0) {
-				try {
-					FileSaver.saveRollingJson(solverId, properties, solverData);
-				} catch (FileSaveException e) {
-					throw new AlgorithmException(
-							"Error while trying to save data to file "
-									+ savePath, e);
-				}
-			}
+			// if (saveAfterIteration != null
+			// && iteration % saveAfterIteration == 0) {
+			// try {
+			// FileUtils.save(solverId, properties, new MoeadData(
+			// population, iteration));
+			// } catch (FileSaveException e) {
+			// throw new AlgorithmException(
+			// "Error while trying to save data to file "
+			// + savePath, e);
+			// }
+			// }
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
-			ProgressService.setProgress(solverId, (float) iteration
+			AlgorithmService.setProgress(solverId, (float) iteration
 					/ maxIterations);
 
 			// Check for end condition

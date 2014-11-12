@@ -5,11 +5,10 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.LocalWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker;
 
 public class SleepConfigWriter {
@@ -30,7 +29,7 @@ public class SleepConfigWriter {
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
-		SolverConfiguration solverConfiguration = new SolverConfiguration.Builder(
+		AlgorithmConfiguration solverConfiguration = new AlgorithmConfiguration.Builder(
 				"SLEEP", SleepAlgorithm.class)
 				.addProperty(SleepAlgorithm.ITERATIONS, "10000")
 				.addProperty(SleepAlgorithm.SLEEP_MILLISECONDS, "10")
@@ -39,9 +38,9 @@ public class SleepConfigWriter {
 
 		BiohadoopConfiguration biohadoopConfiguration = new BiohadoopConfiguration.Builder()
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
-				.addSolver(solverConfiguration)
+				.addAlgorithm(solverConfiguration)
+				.addDefaultEndpoints()
 				.addWorker(KryoWorker.class, 1)
-				.addWorker(LocalWorker.class, 0)
 				.addWorker(WebSocketWorker.class, 1).build();
 
 		BiohadoopConfigurationUtil.saveLocal(biohadoopConfiguration,

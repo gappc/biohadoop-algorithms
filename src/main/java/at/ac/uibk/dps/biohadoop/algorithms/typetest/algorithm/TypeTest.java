@@ -11,17 +11,16 @@ import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.ArrayCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.ComplexObjectCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.ListCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.ObjectCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.StringCommunication;
 import at.ac.uibk.dps.biohadoop.algorithms.typetest.remote.complexobject.ComplexObject;
-import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverId;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
@@ -31,7 +30,7 @@ public class TypeTest implements Algorithm {
 	private static final Logger LOG = LoggerFactory.getLogger(TypeTest.class);
 
 	@Override
-	public void run(SolverId solverId, Map<String, String> properties)
+	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Get client to distribute work
 		try {
@@ -40,7 +39,7 @@ public class TypeTest implements Algorithm {
 			testList();
 			testObject();
 			testString();
-			ProgressService.setProgress(solverId, 1.0f);
+			AlgorithmService.setProgress(solverId, 1.0f);
 		} catch (TaskException e) {
 			throw new AlgorithmException("Error while running", e);
 		}
@@ -48,7 +47,7 @@ public class TypeTest implements Algorithm {
 
 	private void testArrays() throws TaskException {
 		int[] initialData = getArrayInitalData();
-		TaskSubmitter<double[], String[]> client = new SimpleTaskSubmitter<>(
+		TaskSubmitter<int[], double[], String[]> client = new TaskSubmitter<>(
 				ArrayCommunication.class, initialData);
 		Random rand = new Random();
 		double[] data = new double[] { rand.nextDouble(), rand.nextDouble(),
@@ -73,7 +72,7 @@ public class TypeTest implements Algorithm {
 
 	private void testComplexObject() throws TaskException {
 		ComplexObject initialData = getComplexObjectInitalData();
-		TaskSubmitter<ComplexObject, ComplexObject> client = new SimpleTaskSubmitter<>(
+		TaskSubmitter<ComplexObject, ComplexObject, ComplexObject> client = new TaskSubmitter<>(
 				ComplexObjectCommunication.class, initialData);
 		ComplexObject data = ComplexObject.buildRandom();
 		TaskFuture<ComplexObject> future = client.add(data);
@@ -89,7 +88,7 @@ public class TypeTest implements Algorithm {
 
 	private void testList() throws TaskException {
 		List<Integer> initialData = getListInitalData();
-		TaskSubmitter<List<Double>, List<String>> client = new SimpleTaskSubmitter<>(
+		TaskSubmitter<List<Integer>, List<Double>, List<String>> client = new TaskSubmitter<>(
 				ListCommunication.class, initialData);
 		Random rand = new Random();
 		List<Double> data = new ArrayList<>();
@@ -114,7 +113,7 @@ public class TypeTest implements Algorithm {
 
 	private void testObject() throws TaskException {
 		UUID initialData = getObjectInitalData();
-		TaskSubmitter<Date, String> client = new SimpleTaskSubmitter<>(
+		TaskSubmitter<UUID, Date, String> client = new TaskSubmitter<>(
 				ObjectCommunication.class, initialData);
 		Date data = new Date();
 		TaskFuture<String> future = client.add(data);
@@ -130,7 +129,7 @@ public class TypeTest implements Algorithm {
 
 	private void testString() throws TaskException {
 		String initialData = getStringInitalData();
-		TaskSubmitter<String, String> client = new SimpleTaskSubmitter<>(
+		TaskSubmitter<String, String, String> client = new TaskSubmitter<>(
 				StringCommunication.class, initialData);
 		Random rand = new Random();
 		String data = "Custom data_" + rand.nextInt();

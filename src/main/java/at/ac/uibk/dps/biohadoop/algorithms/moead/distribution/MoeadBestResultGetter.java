@@ -8,18 +8,18 @@ import at.ac.uibk.dps.biohadoop.islandmodel.RemoteDataLoader;
 import at.ac.uibk.dps.biohadoop.islandmodel.RemoteResultGetter;
 import at.ac.uibk.dps.biohadoop.islandmodel.zookeeper.NodeData;
 
-public class MoeadBestResultGetter implements RemoteResultGetter {
+public class MoeadBestResultGetter implements RemoteResultGetter<Object> {
 
-	private final RemoteDataLoader remoteDataLoader = new RemoteDataLoader();
+	private final RemoteDataLoader<MoeadData> remoteDataLoader = new RemoteDataLoader<>();
 	private final Random random = new Random();
 	
 	@Override
-	public Object getBestRemoteResult(List<NodeData> nodesData) throws IslandModelException {
+	public Object getRemoteData(List<NodeData> nodesData) throws IslandModelException {
 		if (nodesData == null || nodesData.isEmpty()) {
 			return null;
 		}
 		int index = random.nextInt(nodesData.size());
-		return remoteDataLoader.getSolverData(nodesData.get(index));
+		return remoteDataLoader.getRemoteData(nodesData.get(index), MoeadData.class);
 	}
 
 }

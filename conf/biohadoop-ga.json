@@ -1,26 +1,16 @@
 {
   "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
   "communicationConfiguration" : {
-    "dedicatedAdapters" : [ ],
-    "workerConfigurations" : [ {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.KryoWorker",
-      "pipelineName" : "DEFAULT_PIPELINE",
+    "endpoints" : [ {
+      "endpoint" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.endpoint.KryoEndpoint"
+    }, {
+      "endpoint" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.endpoint.WebSocketEndpoint"
+    } ],
+    "workers" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
       "count" : 1
     }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.LocalWorker",
-      "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 0
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.RestWorker",
-      "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.SocketWorker",
-      "pipelineName" : "DEFAULT_PIPELINE",
-      "count" : 3
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.worker.WebSocketWorker",
-      "pipelineName" : "DEFAULT_PIPELINE",
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker",
       "count" : 1
     } ]
   },
@@ -28,7 +18,7 @@
     "ZOOKEEPER_HOSTNAME" : "master",
     "ZOOKEEPER_PORT" : "2181"
   },
-  "solverConfigurations" : [ {
+  "algorithmConfigurations" : [ {
     "name" : "GA",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.ga.algorithm.Ga",
     "properties" : {

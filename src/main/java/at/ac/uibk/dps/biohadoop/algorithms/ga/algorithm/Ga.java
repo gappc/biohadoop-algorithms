@@ -10,29 +10,18 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.DistancesGlobal;
+import at.ac.uibk.dps.biohadoop.algorithms.ga.distribution.GaData;
 import at.ac.uibk.dps.biohadoop.algorithms.ga.remote.RemoteFitness;
-import at.ac.uibk.dps.biohadoop.datastore.DataClient;
-import at.ac.uibk.dps.biohadoop.datastore.DataOptions;
 import at.ac.uibk.dps.biohadoop.islandmodel.IslandModel;
 import at.ac.uibk.dps.biohadoop.islandmodel.IslandModelException;
-import at.ac.uibk.dps.biohadoop.metrics.Metrics;
-import at.ac.uibk.dps.biohadoop.persistence.FileLoadException;
-import at.ac.uibk.dps.biohadoop.persistence.FileLoader;
-import at.ac.uibk.dps.biohadoop.persistence.FileSaver;
-import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverData;
-import at.ac.uibk.dps.biohadoop.solver.SolverId;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
-
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
 
 public class Ga implements Algorithm {
 
@@ -46,7 +35,7 @@ public class Ga implements Algorithm {
 	private final Random rand = new Random();
 
 	@Override
-	public void run(SolverId solverId, Map<String, String> properties)
+	public void run(AlgorithmId algorithmId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Read algorithm settings from configuration
 		String dataPath = properties.get(DATA_PATH);
@@ -58,58 +47,38 @@ public class Ga implements Algorithm {
 		DistancesGlobal.setDistances(tsp.getDistances());
 		int citySize = tsp.getCities().length;
 
-		// Read persistence settings from configuration
-		String saveAfterIterationProperty = properties
-				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
-		Integer saveAfterIteration = null;
-		if (saveAfterIterationProperty != null) {
-			saveAfterIteration = Integer.parseInt(saveAfterIterationProperty);
-		}
-		String savePath = properties.get(FileSaver.FILE_SAVE_PATH);
-
 		// Read island model settings from configuration
-		String mergeAfterIterationProperty = properties
-				.get(FileSaver.FILE_SAVE_AFTER_ITERATION);
-		Integer mergeAfterIteration = null;
-		if (mergeAfterIterationProperty != null) {
-			mergeAfterIteration = Integer.parseInt(mergeAfterIterationProperty);
-		}
+		Integer mergeAfterIteration = 1000;
+
 		// Initialize island model
 		try {
-			IslandModel.initialize(solverId);
+			IslandModel.initialize(algorithmId);
 		} catch (IslandModelException e) {
 			throw new AlgorithmException(
-					"Could not initialize island model for solver " + solverId,
-					e);
+					"Could not initialize island model for solver "
+							+ algorithmId, e);
 		}
 
+		int[][] population = initPopulation(populationSize, citySize);
+
+		// int iterationStart = 0;
 		// Load old snapshot from file if possible
-		SolverData<?> solverData = null;
-		try {
-			solverData = FileLoader.load(solverId, properties);
-		} catch (FileLoadException e) {
-			throw new AlgorithmException(e);
-		}
+		// try {
+		// GaData gaData = FileUtils.load(properties, GaData.class);
+		// if (gaData != null) {
+		// population = gaData.getPopulation();
+		// iterationStart = gaData.getIteration();
+		// LOG.info("Resuming from iteration {}", iterationStart);
+		// } else {
+		// population = initPopulation(populationSize, citySize);
+		// }
+		// } catch (FileLoadException e) {
+		// throw new AlgorithmException(e);
+		// }
 
-		// Initialize population
-		int[][] population = null;
-		int iterationStart = 0;
-		if (solverData != null) {
-			population = convertToArray(solverData.getData());
-			iterationStart = solverData.getIteration();
-			LOG.info("Resuming from iteration {}", iterationStart);
-		} else {
-			population = initPopulation(populationSize, citySize);
-		}
-
-		// Initialize deafult task setting for remote computation
-		TaskSubmitter<int[], Double> taskClient = new SimpleTaskSubmitter<>(
+		// Initialize default task setting for remote computation
+		TaskSubmitter<double[][], int[], Double> taskClient = new TaskSubmitter<>(
 				RemoteFitness.class, DistancesGlobal.getDistances());
-
-		// Initialize metrics
-		Counter iterationCounter = Metrics.getInstance().counter(
-				MetricRegistry.name(Ga.class, solverId + "-iteration-size"));
-		Meter tasksPerSeconds = null;
 
 		// Start algorithm
 		boolean end = false;
@@ -136,11 +105,6 @@ public class Ga implements Algorithm {
 			// Evaluation
 			double[] values = new double[populationSize * 2];
 			try {
-				if (tasksPerSeconds == null) {
-					tasksPerSeconds = Metrics.getInstance().meter(
-							MetricRegistry.name(Ga.class, solverId
-									+ "tasks-per-second"));
-				}
 				// Submit tasks for remote clients
 				List<TaskFuture<Double>> taskFutures = taskClient
 						.addAll(population);
@@ -198,45 +162,48 @@ public class Ga implements Algorithm {
 
 			iteration++;
 
-			solverData = new SolverData<>(population, values[0], iteration);
-
 			// Set this to enable data sharing with other islands
 			// (parallelization using island model)
-			DataClient.setData(solverId, DataOptions.SOLVER_DATA, solverData);
+			IslandModel.publish(algorithmId, new GaData(population, iteration,
+					values[0]));
 
+			if (iteration % mergeAfterIteration == 0) {
+				try {
+					IslandModel.merge(algorithmId, properties, new GaData(
+							population, iteration, values[0]));
+				} catch (IslandModelException e) {
+					LOG.error("Error while merging data from remote island", e);
+				}
+			}
 			// Handle merging of data from other islands (parallelization using
 			// island model)
-//			if (mergeAfterIteration != null
-//					&& iteration % mergeAfterIteration == 0) {
-//				try {
-//					population = (int[][]) IslandModel.merge(solverId,
-//							properties, solverData);
-//				} catch (IslandModelException e) {
-//					throw new AlgorithmException(
-//							"Error while trying to merge island data", e);
-//				}
-//			}
+			// if (mergeAfterIteration != null
+			// && iteration % mergeAfterIteration == 0) {
+			// try {
+			// population = (int[][]) IslandModel.merge(solverId,
+			// properties, solverData);
+			// } catch (IslandModelException e) {
+			// throw new AlgorithmException(
+			// "Error while trying to merge island data", e);
+			// }
+			// }
 
 			// Handle saving of results to file
-//			if (saveAfterIteration != null
-//					&& iteration % saveAfterIteration == 0) {
-//				try {
-//					FileSaver.save(solverId, properties, solverData);
-//				} catch (FileSaveException e) {
-//					throw new AlgorithmException(
-//							"Error while trying to save data to file "
-//									+ savePath, e);
-//				}
-//			}
+			// if (saveAfterIteration != null
+			// && iteration % saveAfterIteration == 0) {
+			// try {
+			// FileSaver.save(solverId, properties, solverData);
+			// } catch (FileSaveException e) {
+			// throw new AlgorithmException(
+			// "Error while trying to save data to file "
+			// + savePath, e);
+			// }
+			// }
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
-			ProgressService.setProgress(solverId, (float) iteration
+			AlgorithmService.setProgress(algorithmId, (float) iteration
 					/ maxIterations);
-
-			// Produce metrics
-			iterationCounter.inc();
-			tasksPerSeconds.mark(populationSize * 2);
 
 			// Check for end condition
 			if (iteration == maxIterations) {
@@ -263,22 +230,6 @@ public class Ga implements Algorithm {
 			throw new AlgorithmException("Could not read TSP input file "
 					+ dataFile);
 		}
-	}
-
-	private int[][] convertToArray(Object input) {
-		@SuppressWarnings("unchecked")
-		List<List<Integer>> data = (List<List<Integer>>) input;
-		int length1 = data.size();
-		int length2 = length1 == 0 ? 0 : data.get(0).size();
-		int[][] population = new int[length1][length2];
-
-		for (int i = 0; i < length1; i++) {
-			for (int j = 0; j < length2; j++) {
-				population[i][j] = data.get(i).get(j);
-			}
-		}
-
-		return population;
 	}
 
 	private int[][] initPopulation(int genomeSize, int citieSize) {

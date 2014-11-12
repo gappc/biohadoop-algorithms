@@ -5,11 +5,10 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.solver.SolverConfiguration;
 import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker;
-import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.LocalWorker;
 import at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker;
 
 public class SumConfigWriter {
@@ -37,7 +36,7 @@ public class SumConfigWriter {
 			ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		// Build solver configuration
-		SolverConfiguration solverConfiguration = new SolverConfiguration.Builder(
+		AlgorithmConfiguration solverConfiguration = new AlgorithmConfiguration.Builder(
 				"SUM", SumAlgorithm.class)
 				// Add properties that are private to this algorithm instance,
 				// and that are provided as arguments when the algorithm is
@@ -49,14 +48,14 @@ public class SumConfigWriter {
 		BiohadoopConfiguration biohadoopConfiguration = new BiohadoopConfiguration.Builder()
 				.addLibPath("/biohadoop/lib/")
 				.addLibPath("/biohadoop/conf/")
-				.addSolver(solverConfiguration)
+				.addAlgorithm(solverConfiguration)
+				.addDefaultEndpoints()
 				// Add the workers, that should be launched by Biohadoop to
 				// compute the tasks. Note that the workers, defined by the
 				// addWorker(String, int) method, are part of the default
 				// pipeline. Also note, that if a worker has a count of 0, no
 				// instance of it is started
 				.addWorker(KryoWorker.class, 0)
-				.addWorker(LocalWorker.class, 1)
 				.addWorker(WebSocketWorker.class, 0).build();
 
 		// Save configuration file for Biohadoop running in a local environment

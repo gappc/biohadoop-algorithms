@@ -6,8 +6,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.utils.PropertyConverter;
 
@@ -17,18 +17,21 @@ public class Preparation {
 			.getLogger(Preparation.class);
 
 	private final int popSize;
+	private final double sbxDistributionFactor;
 	private final double mutationFactor;
 	private final String matrixLayout;
 	private final int matrixSize;
 	private final int maxBlockSize;
 	private final int iterations;
-	private final TaskSubmitter<int[], Long> taskSubmitter;
+	private final TaskSubmitter<Matrices, int[], Long> taskSubmitter;
 
 	public Preparation(Map<String, String> properties)
 			throws AlgorithmException {
 		// Read and parse configuration
 		popSize = PropertyConverter.toInt(properties,
 				TiledMulAlgorithm.POP_SIZE);
+		sbxDistributionFactor = PropertyConverter.toDouble(properties,
+				NsgaII.SBX_DISTRIBUTION_FACTOR);
 		mutationFactor = PropertyConverter.toDouble(properties,
 				TiledMulAlgorithm.MUTATION_FACTOR);
 		matrixLayout = PropertyConverter.toString(properties,
@@ -49,11 +52,11 @@ public class Preparation {
 
 		if (TiledMulAlgorithm.LAYOUT_ROW.equals(matrixLayout)) {
 			// Instanciate TaskSystem
-			taskSubmitter = new SimpleTaskSubmitter<Matrices, int[], Long>(
+			taskSubmitter = new TaskSubmitter<>(
 					AsyncTiledMul.class, new Matrices(matrixA, matrixB));
 		} else if (TiledMulAlgorithm.LAYOUT_COL.equals(matrixLayout)) {
 			double[][] matrixBColLayout = makeCol(matrixB);
-			taskSubmitter = new SimpleTaskSubmitter<Matrices, int[], Long>(
+			taskSubmitter = new TaskSubmitter<>(
 					AsyncTiledMulWithColLayout.class, new Matrices(matrixA,
 							matrixBColLayout));
 		}
@@ -87,6 +90,10 @@ public class Preparation {
 		return popSize;
 	}
 
+	public double getSbxDistributionFactor() {
+		return sbxDistributionFactor;
+	}
+
 	public double getMutationFactor() {
 		return mutationFactor;
 	}
@@ -103,13 +110,14 @@ public class Preparation {
 		return iterations;
 	}
 
-	public TaskSubmitter<int[], Long> getTaskSubmitter() {
+	public TaskSubmitter<Matrices, int[], Long> getTaskSubmitter() {
 		return taskSubmitter;
 	}
 
 	public void logProperties() {
 		LOG.info("----- Parameters: -----");
 		LOG.info("POP_SIZE={}", popSize);
+		LOG.info("SBX_DISTRIBUTION_FACTOR={}", sbxDistributionFactor);
 		LOG.info("MUTATION_FACTOR={}", mutationFactor);
 		LOG.info("MATRIX_SIZE={}", matrixSize);
 		LOG.info("MAX_BLOCK_SIZE={}", maxBlockSize);

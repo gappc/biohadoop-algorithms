@@ -7,11 +7,11 @@ import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfiguration;
 import at.ac.uibk.dps.biohadoop.hadoop.BiohadoopConfigurationUtil;
-import at.ac.uibk.dps.biohadoop.hadoop.launcher.SolverLauncher;
-import at.ac.uibk.dps.biohadoop.hadoop.launcher.AdapterLauncher;
-import at.ac.uibk.dps.biohadoop.solver.SolverId;
+import at.ac.uibk.dps.biohadoop.hadoop.launcher.AlgorithmLauncher;
+import at.ac.uibk.dps.biohadoop.hadoop.launcher.EndpointLauncher;
 
 public class GaMain {
 
@@ -26,15 +26,15 @@ public class GaMain {
 			BiohadoopConfiguration biohadoopConfiguration = BiohadoopConfigurationUtil
 					.read(yarnConfiguration, args[0]);
 
-			List<Future<SolverId>> algorithms = SolverLauncher
-					.launchSolver(biohadoopConfiguration);
+			List<Future<AlgorithmId>> algorithms = AlgorithmLauncher
+					.launchAlgorithm(biohadoopConfiguration);
 
-			AdapterLauncher masterLauncher = new AdapterLauncher(
+			EndpointLauncher masterLauncher = new EndpointLauncher(
 					biohadoopConfiguration);
-			masterLauncher.startAdapters();
+			masterLauncher.startEndpoints();
 
-			for (Future<SolverId> algorithm : algorithms) {
-				SolverId solverId = algorithm.get();
+			for (Future<AlgorithmId> algorithm : algorithms) {
+				AlgorithmId solverId = algorithm.get();
 				LOG.info("{} finished", solverId);
 			}
 		} catch (Exception e) {

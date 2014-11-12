@@ -6,11 +6,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverId;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.SimpleTaskSubmitter;
+import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
@@ -25,7 +24,7 @@ public class SleepAlgorithm implements Algorithm {
 			.getLogger(SleepAlgorithm.class);
 
 	@Override
-	public void run(SolverId solverId, Map<String, String> properties)
+	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Read configuration data
 		long iterations = getPropertyAsLong(properties, ITERATIONS);
@@ -36,7 +35,7 @@ public class SleepAlgorithm implements Algorithm {
 
 		// Create TaskSubmitter to add tasks to the task system. The
 		// constructor sets the initial data to the value of "sleepMilliseconds"
-		TaskSubmitter<Object, Object> taskSubmitter = new SimpleTaskSubmitter<>(
+		TaskSubmitter<Long, Object, Object> taskSubmitter = new TaskSubmitter<>(
 				SleepRemoteExecutable.class, sleepMilliseconds);
 
 		// Create task objects. As we are not sending anything useful, we just
@@ -65,7 +64,7 @@ public class SleepAlgorithm implements Algorithm {
 			for (int i = 0; i < futures.size(); i++) {
 				TaskFuture<Object> future = futures.get(i);
 				future.get();
-				ProgressService.setProgress(solverId, (float) i / iterations);
+				AlgorithmService.setProgress(solverId, (float) i / iterations);
 			}
 		} catch (TaskException e) {
 			throw new AlgorithmException("Error while running tasks", e);

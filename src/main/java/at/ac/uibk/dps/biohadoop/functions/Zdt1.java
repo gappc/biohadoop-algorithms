@@ -2,6 +2,7 @@ package at.ac.uibk.dps.biohadoop.functions;
 
 import java.io.Serializable;
 
+// Implemented according to http://en.wikipedia.org/wiki/Test_functions_for_optimization and http://www.tik.ee.ethz.ch/sop/download/supplementary/testproblems/zdt1/
 public class Zdt1 implements Function, Serializable {
 
 	private static final long serialVersionUID = 3440446319433502123L;
@@ -23,7 +24,7 @@ public class Zdt1 implements Function, Serializable {
 			result += x[i];
 		}
 
-		return 1 + 9 / 29 * result;
+		return 1 + 9 / (x.length - 1) * result;
 	}
 
 	private double h(double f1_x, double g_x) {

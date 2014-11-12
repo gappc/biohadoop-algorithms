@@ -9,11 +9,11 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
+import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.WorkerParametersResolver;
-import at.ac.uibk.dps.biohadoop.solver.ProgressService;
-import at.ac.uibk.dps.biohadoop.solver.SolverId;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.Algorithm;
-import at.ac.uibk.dps.biohadoop.tasksystem.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
@@ -21,6 +21,7 @@ import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 public class TiledMulAlgorithm implements Algorithm {
 
 	public static final String POP_SIZE = "POP_SIZE";
+	public static final String SBX_DISTRIBUTION_FACTOR = "SBX_DISTRIBUTION_FACTOR";
 	public static final String MUTATION_FACTOR = "MUTATION_FACTOR";
 	public static final String MATRIX_LAYOUT = "MATRIX_LAYOUT";
 	public static final String MATRIX_SIZE = "MATRIX_SIZE";
@@ -33,7 +34,7 @@ public class TiledMulAlgorithm implements Algorithm {
 			.getLogger(TiledMulAlgorithm.class);
 
 	@Override
-	public void run(SolverId solverId, Map<String, String> properties)
+	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		// Read configuration and prepare needed data and objects
 		final Preparation prep = new Preparation(properties);
@@ -67,7 +68,7 @@ public class TiledMulAlgorithm implements Algorithm {
 			// Recombination and mutation
 			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
 				int[] child = recombinePopulation(population, fitness,
-						prep.getMaxBlockSize());
+						prep.getMaxBlockSize(), prep.getSbxDistributionFactor());
 				int[] mutatedChild = mutateChild(child,
 						prep.getMutationFactor(), prep.getMaxBlockSize());
 				population[i] = mutatedChild;
@@ -124,7 +125,7 @@ public class TiledMulAlgorithm implements Algorithm {
 							- (remoteEnd - remoteStart),
 					(remoteEnd - remoteStart));
 
-			ProgressService.setProgress(solverId,
+			AlgorithmService.setProgress(solverId,
 					(float) count / prep.getIterations());
 		}
 		prep.logProperties();
@@ -162,14 +163,14 @@ public class TiledMulAlgorithm implements Algorithm {
 	}
 
 	private TaskFuture<Long> submitFitnessComputation(
-			TaskSubmitter<int[], Long> taskSubmitter, int[] blocks)
+			TaskSubmitter<Matrices, int[], Long> taskSubmitter, int[] blocks)
 			throws TaskException {
 		return taskSubmitter.add(blocks);
 	}
 
 	// Using k-tournament with k = 2 for parent selection and SBX for crossover
 	private int[] recombinePopulation(int[][] population, long[] fitness,
-			int maxBlockSize) {
+			int maxBlockSize, double sbxDistributionFactor) {
 		final Random rand = new Random();
 		int parents[] = new int[2];
 
@@ -187,7 +188,7 @@ public class TiledMulAlgorithm implements Algorithm {
 
 		int[] result = new int[2];
 		for (int i = 0; i < 2; i++) {
-			int[] children = SBX.bounded(1, population[parents[0]][i],
+			int[] children = SBX.bounded(sbxDistributionFactor, population[parents[0]][i],
 					population[parents[1]][i], 1, maxBlockSize);
 			// Each child has 50% probability to get chosen
 			if (rand.nextDouble() < 0.5) {
