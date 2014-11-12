@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.ac.uibk.dps</groupId>
 	<artifactId>biohadoop-algorithms</artifactId>
-	<version>0.4.0-SNAPSHOT</version>
+	<version>0.5.0-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<biohadoop-version>0.4.0-SNAPSHOT</biohadoop-version>
-		<hadoop.version>2.5.0</hadoop.version>
+		<biohadoop-version>0.5.0-SNAPSHOT</biohadoop-version>
+		<hadoop.version>2.5.1</hadoop.version>
 		<undertow.websocket.version>1.0.15.Final</undertow.websocket.version>
 		<resteasy.version>3.0.8.Final</resteasy.version>
 	</properties>
