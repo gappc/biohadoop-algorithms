@@ -58,9 +58,9 @@ public class TiledMulAlgorithm implements Algorithm {
 		}
 
 		int count = 0;
-		int[] blockMax = new int[2];
+		int[] blockMax = new int[3];
 		int[] blockMin = new int[] { prep.getMaxBlockSize(),
-				prep.getMaxBlockSize() };
+				prep.getMaxBlockSize(), prep.getMaxBlockSize() };
 		long iterationStart = System.nanoTime();
 		while (count < prep.getIterations()) {
 			long start = System.nanoTime();
@@ -110,7 +110,7 @@ public class TiledMulAlgorithm implements Algorithm {
 
 			// Compute global maximum and minimum blocksize, just for interest
 			for (int i = 0; i < 2 * prep.getPopSize(); i++) {
-				for (int j = 0; j < 2; j++) {
+				for (int j = 0; j < 3; j++) {
 					blockMin[j] = Math.min(population[i][j], blockMin[j]);
 					blockMax[j] = Math.max(population[i][j], blockMax[j]);
 				}
@@ -149,11 +149,11 @@ public class TiledMulAlgorithm implements Algorithm {
 
 	private int[][] generatePopulation(Preparation prep) {
 		final Random rand = new Random();
-		final int[][] population = new int[2 * prep.getPopSize()][2];
+		final int[][] population = new int[2 * prep.getPopSize()][3];
 		// We only need to initialize current population, set new population to
 		// 0
 		for (int i = 0; i < prep.getPopSize(); i++) {
-			for (int j = 0; j < 2; j++) {
+			for (int j = 0; j < 3; j++) {
 				// Set blockSize. As a blockSize of 0 would make no sense, we
 				// add 1
 				population[i][j] = rand.nextInt(prep.getMaxBlockSize()) + 1;
@@ -186,24 +186,24 @@ public class TiledMulAlgorithm implements Algorithm {
 			}
 		}
 
-		int[] result = new int[2];
-		for (int i = 0; i < 2; i++) {
-			int[] children = SBX.bounded(sbxDistributionFactor, population[parents[0]][i],
+		int[] child = new int[3];
+		for (int i = 0; i < 3; i++) {
+			int[] crossoverVariable = SBX.bounded(sbxDistributionFactor, population[parents[0]][i],
 					population[parents[1]][i], 1, maxBlockSize);
 			// Each child has 50% probability to get chosen
 			if (rand.nextDouble() < 0.5) {
-				result[i] = children[0];
+				child[i] = crossoverVariable[0];
 			} else {
-				result[i] = children[1];
+				child[i] = crossoverVariable[1];
 			}
 		}
-		return result;
+		return child;
 	}
 
 	private int[] mutateChild(int[] child, double mutationFactor,
 			int maxBlockSize) {
-		int[] result = new int[2];
-		for (int i = 0; i < 2; i++) {
+		int[] result = new int[3];
+		for (int i = 0; i < 3; i++) {
 			result[i] = ParamterBasedMutator.mutate(child[i], mutationFactor,
 					1, maxBlockSize);
 		}
