@@ -116,6 +116,7 @@ public class Preparation {
 
 	public void logProperties() {
 		LOG.info("----- Parameters: -----");
+		LOG.info("LAYOUT={}", matrixLayout);
 		LOG.info("POP_SIZE={}", popSize);
 		LOG.info("SBX_DISTRIBUTION_FACTOR={}", sbxDistributionFactor);
 		LOG.info("MUTATION_FACTOR={}", mutationFactor);
