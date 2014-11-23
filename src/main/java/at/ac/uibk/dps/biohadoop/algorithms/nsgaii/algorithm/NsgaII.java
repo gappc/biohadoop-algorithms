@@ -15,6 +15,7 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
+import at.ac.uibk.dps.biohadoop.hadoop.Environment;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.WorkerParametersResolver;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
@@ -35,6 +36,11 @@ public class NsgaII implements Algorithm {
 	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		long startTime = System.currentTimeMillis();
+		long biohadoopStartupTime = Long.parseLong(Environment
+				.get(Environment.BIOHADOOP_START_AT_NS));
+		LOG.info(
+				"Starting NSGA-II at System.nanoTime()={}, Biohadoop startup took {}ns",
+				startTime, startTime - biohadoopStartupTime);
 
 		Preparation prep = new Preparation(properties);
 
@@ -50,6 +56,8 @@ public class NsgaII implements Algorithm {
 
 		// Initialization finished
 		LOG.info("Initialisation took {}ns", System.nanoTime() - startTime);
+
+		long workerTime = 0;
 		startTime = System.currentTimeMillis();
 
 		// Start algorithm
@@ -60,8 +68,10 @@ public class NsgaII implements Algorithm {
 			produceOffsprings(population, objectiveValues, fronts,
 					prep.getSbxDistributionFactor(), prep.getMutationFactor());
 
+			long workerStart = System.nanoTime();
 			objectiveValues = computeObjectiveValues(prep, population,
 					objectiveValues, prep.getPopSize(), prep.getPopSize());
+			workerTime += System.nanoTime() - workerStart;
 
 			fronts = FastNonDominatedSort.sort(objectiveValues);
 
@@ -90,7 +100,8 @@ public class NsgaII implements Algorithm {
 					int missingElements = prep.getPopSize() - newPopSize;
 					for (int i = 0; i < missingElements; i++) {
 						newPopulation[newPopSize] = population[front.get(i)];
-						newObjectiveValues[newPopSize] = objectiveValues[front.get(i)];
+						newObjectiveValues[newPopSize] = objectiveValues[front
+								.get(i)];
 						newPopSize++;
 					}
 				}
@@ -101,8 +112,8 @@ public class NsgaII implements Algorithm {
 			objectiveValues = newObjectiveValues;
 
 			// TODO ERROR?
-//			objectiveValues = computeObjectiveValues(prep, population,
-//					objectiveValues, 0, prep.getPopSize());
+			// objectiveValues = computeObjectiveValues(prep, population,
+			// objectiveValues, 0, prep.getPopSize());
 
 			iteration++;
 
@@ -162,6 +173,7 @@ public class NsgaII implements Algorithm {
 		LOG.info("Workers={}", workerSize);
 		LOG.info("Iterations={}", prep.getIterations());
 		LOG.info("Iteration time {}ns", iterationTime);
+		LOG.info("Worker time {}ns", workerTime);
 		LOG.info("Iteration time parseable ({} {})", workerSize,
 				String.format("%.3f", iterationTime / 1e9));
 		LOG.info(
