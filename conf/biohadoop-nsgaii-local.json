@@ -8,7 +8,7 @@
     } ],
     "workers" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
-      "count" : 3
+      "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker",
       "count" : 0
@@ -23,11 +23,11 @@
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter",
       "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
       "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger",
-      "GENOME_SIZE" : "3000",
+      "GENOME_SIZE" : "300",
       "MUTATION_FACTOR" : "20",
       "ASYNC" : "true",
       "SBX_DISTRIBUTION_FACTOR" : "20",
-      "MAX_ITERATIONS" : "500"
+      "MAX_ITERATIONS" : "250"
     }
   } ]
 }
