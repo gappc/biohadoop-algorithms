@@ -14,8 +14,6 @@ import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.WorkerParametersResolver;
-import at.ac.uibk.dps.biohadoop.operators.ParamterBasedMutator;
-import at.ac.uibk.dps.biohadoop.operators.SBX;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 
 public class TiledMulAlgorithm implements Algorithm {
@@ -39,7 +37,7 @@ public class TiledMulAlgorithm implements Algorithm {
 	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
 		long algorithmStartTime = System.nanoTime();
-		
+
 		// Read configuration and prepare needed data and objects
 		final Preparation prep = new Preparation(properties);
 
@@ -48,52 +46,63 @@ public class TiledMulAlgorithm implements Algorithm {
 		final int[][] population = generatePopulation(prep);
 		final long[] fitness = new long[2 * prep.getPopSize()];
 
-		final List<TaskFuture<Long>> futures = new ArrayList<TaskFuture<Long>>();
+		final List<TaskFuture<TiledMulIndividual>> futures = new ArrayList<>();
 		// Submit fitness computation for current population to the task system.
 		// New Child population needs no fitness computation, as it is
 		// overwritten in the following while loop
 		for (int i = 0; i < prep.getPopSize(); i++) {
-			TaskFuture<Long> future = prep.getTaskSubmitter()
-					.add(population[i]);
+			int[] parentIndexes = parentSelectionTournament(population, fitness);
+			int[][] parents = new int[2][];
+			parents[0] = population[parentIndexes[0]];
+			parents[1] = population[parentIndexes[1]];
+			TaskFuture<TiledMulIndividual> future = prep.getTaskSubmitter()
+					.add(parents);
 			futures.add(future);
 		}
 		// Wait for all computations to complete
 		for (int i = 0; i < prep.getPopSize(); i++) {
-			fitness[i] = futures.get(i).get();
+			population[i] = futures.get(i).get().getIndividual();
+			fitness[i] = futures.get(i).get().getObjective();
 		}
 
 		int count = 0;
 		int[] blockMax = new int[BLOCKS];
 		int[] blockMin = new int[] { prep.getMaxBlockSize(),
 				prep.getMaxBlockSize(), prep.getMaxBlockSize() };
-		
+
 		long fullWorkerTime = 0;
 		long loopStartTime = System.nanoTime();
-		
+
 		while (count < prep.getIterations()) {
 			long start = System.nanoTime();
 
 			// Recombination and mutation
-			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
-				int[] child = recombinePopulation(population, fitness,
-						prep.getMaxBlockSize(), prep.getSbxDistributionFactor());
-				int[] mutatedChild = mutateChild(child,
-						prep.getMutationFactor(), prep.getMaxBlockSize());
-				population[i] = mutatedChild;
-			}
+			// for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
+			// int[] child = recombinePopulation(population, fitness,
+			// prep.getMaxBlockSize(), prep.getSbxDistributionFactor());
+			// int[] mutatedChild = mutateChild(child,
+			// prep.getMutationFactor(), prep.getMaxBlockSize());
+			// population[i] = mutatedChild;
+			// }
 
 			// Send data to workers
 			long workerStartTime = System.nanoTime();
 			futures.clear();
 			long remoteStart = System.nanoTime();
 			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
-				TaskFuture<Long> future = prep.getTaskSubmitter().add(
-						population[i]);
+				int[] parentIndexes = parentSelectionTournament(population,
+						fitness);
+				int[][] parents = new int[2][];
+				parents[0] = population[parentIndexes[0]];
+				parents[1] = population[parentIndexes[1]];
+				TaskFuture<TiledMulIndividual> future = prep.getTaskSubmitter()
+						.add(parents);
 				futures.add(future);
 			}
 			// Wait for worker results
 			for (int i = 0; i < prep.getPopSize(); i++) {
-				fitness[i + prep.getPopSize()] = futures.get(i).get();
+				population[i + prep.getPopSize()] = futures.get(i).get().getIndividual();
+				fitness[i + prep.getPopSize()] = futures.get(i).get().getObjective();
 			}
 			fullWorkerTime += System.nanoTime() - workerStartTime;
 			long remoteEnd = System.nanoTime();
@@ -144,7 +153,7 @@ public class TiledMulAlgorithm implements Algorithm {
 		long fullAlgorithmTime = System.nanoTime() - algorithmStartTime;
 		long fullLoopTime = System.nanoTime() - loopStartTime;
 		int workerSize = WorkerParametersResolver.getWorkerParameters().size();
-		
+
 		LOG.info("Workers={}", WorkerParametersResolver.getWorkerParameters()
 				.size());
 		LOG.info("Iterations={}", prep.getIterations());
@@ -178,8 +187,7 @@ public class TiledMulAlgorithm implements Algorithm {
 	}
 
 	// Using k-tournament with k = 2 for parent selection and SBX for crossover
-	private int[] recombinePopulation(int[][] population, long[] fitness,
-			int maxBlockSize, double sbxDistributionFactor) {
+	private int[] parentSelectionTournament(int[][] population, long[] fitness) {
 		final Random rand = new Random();
 		int parents[] = new int[2];
 
@@ -194,39 +202,59 @@ public class TiledMulAlgorithm implements Algorithm {
 				parents[i] = i2;
 			}
 		}
-
-		int[] child = new int[BLOCKS];
-		for (int i = 0; i < BLOCKS; i++) {
-			int[] crossoverVariable = SBX.bounded(sbxDistributionFactor,
-					population[parents[0]][i], population[parents[1]][i], 1,
-					maxBlockSize);
-			// Each child has 50% probability to get chosen
-			if (rand.nextDouble() < 0.5) {
-				child[i] = crossoverVariable[0];
-			} else {
-				child[i] = crossoverVariable[1];
-			}
-		}
-		return child;
+		return parents;
 	}
 
-	private int[] mutateChild(int[] child, double mutationFactor,
-			int maxBlockSize) {
-		Random rand = new Random();
-		int[] result = new int[BLOCKS];
+	// Using k-tournament with k = 2 for parent selection and SBX for crossover
+//	private int[] recombinePopulation(int[][] population, long[] fitness,
+//			int maxBlockSize, double sbxDistributionFactor) {
+//		final Random rand = new Random();
+//		int parents[] = new int[2];
+//
+//		for (int i = 0; i < 2; i++) {
+//			// Take k = 2 parents from current population (remember, current
+//			// population is stored in first half of population[])
+//			int i1 = rand.nextInt(population.length / 2);
+//			int i2 = rand.nextInt(population.length / 2);
+//			if (fitness[i1] < fitness[i2]) {
+//				parents[i] = i1;
+//			} else {
+//				parents[i] = i2;
+//			}
+//		}
+//
+//		int[] child = new int[BLOCKS];
+//		for (int i = 0; i < BLOCKS; i++) {
+//			int[] crossoverVariable = SBX.bounded(sbxDistributionFactor,
+//					population[parents[0]][i], population[parents[1]][i], 1,
+//					maxBlockSize);
+//			// Each child has 50% probability to get chosen
+//			if (rand.nextDouble() < 0.5) {
+//				child[i] = crossoverVariable[0];
+//			} else {
+//				child[i] = crossoverVariable[1];
+//			}
+//		}
+//		return child;
+//	}
 
-		for (int i = 0; i < BLOCKS; i++) {
-			// Modify one block on average
-			if (rand.nextDouble() < 1.0 / BLOCKS) {
-				result[i] = ParamterBasedMutator.mutate(child[i],
-						mutationFactor, 1, maxBlockSize);
-			}
-			else {
-				result[i] = child[i];
-			}
-		}
-		return result;
-	}
+	// private int[] mutateChild(int[] child, double mutationFactor,
+	// int maxBlockSize) {
+	// Random rand = new Random();
+	// int[] result = new int[BLOCKS];
+	//
+	// for (int i = 0; i < BLOCKS; i++) {
+	// // Modify one block on average
+	// if (rand.nextDouble() < 1.0 / BLOCKS) {
+	// result[i] = ParamterBasedMutator.mutate(child[i],
+	// mutationFactor, 1, maxBlockSize);
+	// }
+	// else {
+	// result[i] = child[i];
+	// }
+	// }
+	// return result;
+	// }
 
 	private void logIterationResult(int[][] population, long[] fitness) {
 		StringBuilder sb = new StringBuilder("[");

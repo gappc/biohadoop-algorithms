@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
-import at.ac.uibk.dps.biohadoop.problems.tiledmul.AsyncTiledMul;
-import at.ac.uibk.dps.biohadoop.problems.tiledmul.AsyncTiledMulWithColLayout;
 import at.ac.uibk.dps.biohadoop.problems.tiledmul.Matrices;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.utils.PropertyConverter;
@@ -26,7 +24,7 @@ public class Preparation {
 	private final int matrixSize;
 	private final int maxBlockSize;
 	private final int iterations;
-	private final TaskSubmitter<Matrices, int[], Long> taskSubmitter;
+	private final TaskSubmitter<RemoteConfiguration, int[][], TiledMulIndividual> taskSubmitter;
 
 	public Preparation(Map<String, String> properties)
 			throws AlgorithmException {
@@ -38,7 +36,9 @@ public class Preparation {
 		mutationFactor = PropertyConverter.toDouble(properties,
 				TiledMulAlgorithm.MUTATION_FACTOR);
 		matrixLayout = PropertyConverter.toString(properties,
-				TiledMulAlgorithm.MATRIX_LAYOUT, new String[] { TiledMulAlgorithm.LAYOUT_ROW, TiledMulAlgorithm.LAYOUT_COL });
+				TiledMulAlgorithm.MATRIX_LAYOUT, new String[] {
+						TiledMulAlgorithm.LAYOUT_ROW,
+						TiledMulAlgorithm.LAYOUT_COL });
 		matrixSize = PropertyConverter.toInt(properties,
 				TiledMulAlgorithm.MATRIX_SIZE);
 		maxBlockSize = PropertyConverter.toInt(properties,
@@ -55,16 +55,19 @@ public class Preparation {
 
 		if (TiledMulAlgorithm.LAYOUT_ROW.equals(matrixLayout)) {
 			// Instanciate TaskSystem
-			taskSubmitter = new TaskSubmitter<>(
-					AsyncTiledMul.class, new Matrices(matrixA, matrixB));
+			RemoteConfiguration conf = new RemoteConfiguration(new Matrices(
+					matrixA, matrixB), maxBlockSize, sbxDistributionFactor,
+					mutationFactor);
+			taskSubmitter = new TaskSubmitter<>(RemoteTiledMul.class, conf);
 		} else if (TiledMulAlgorithm.LAYOUT_COL.equals(matrixLayout)) {
 			double[][] matrixBColLayout = makeCol(matrixB);
-			taskSubmitter = new TaskSubmitter<>(
-					AsyncTiledMulWithColLayout.class, new Matrices(matrixA,
-							matrixBColLayout));
-		}
-		else {
-			throw new AlgorithmException("Unknown matrix layout: " + matrixLayout);
+			RemoteConfiguration conf = new RemoteConfiguration(new Matrices(
+					matrixA, matrixBColLayout), maxBlockSize,
+					sbxDistributionFactor, mutationFactor);
+			taskSubmitter = new TaskSubmitter<>(RemoteTiledMul.class, conf);
+		} else {
+			throw new AlgorithmException("Unknown matrix layout: "
+					+ matrixLayout);
 		}
 	}
 
@@ -113,7 +116,7 @@ public class Preparation {
 		return iterations;
 	}
 
-	public TaskSubmitter<Matrices, int[], Long> getTaskSubmitter() {
+	public TaskSubmitter<RemoteConfiguration, int[][], TiledMulIndividual> getTaskSubmitter() {
 		return taskSubmitter;
 	}
 
