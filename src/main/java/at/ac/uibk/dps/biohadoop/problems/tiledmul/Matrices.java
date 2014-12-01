@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.tiledmatrixmul;
+package at.ac.uibk.dps.biohadoop.problems.tiledmul;
 
 public class Matrices {
 

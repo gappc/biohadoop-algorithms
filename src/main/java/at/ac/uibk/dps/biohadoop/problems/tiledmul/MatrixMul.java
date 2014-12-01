@@ -1,4 +1,5 @@
-package at.ac.uibk.dps.biohadoop.algorithms.tiledmatrixmul;
+package at.ac.uibk.dps.biohadoop.problems.tiledmul;
+
 
 public class MatrixMul {
 	
@@ -33,7 +34,7 @@ public class MatrixMul {
 			int iBorder = Math.min(iOuter + blocks[0], size);
 			for (int jOuter = 0; jOuter < size; jOuter += blocks[1]) {
 				int jBorder = Math.min(jOuter + blocks[1], size);
-				for (int kOuter = 0; kOuter < size; kOuter += blocks[2]) {
+				for (int kOuter = 0; kOuter < size; kOuter += blocks[1]) {
 					int kBorder = Math.min(kOuter + blocks[2], size);
 					for (int i = iOuter; i < iBorder; i++) {
 						for (int j = jOuter; j < jBorder; j++) {

@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.tiledmatrixmul;
+package at.ac.uibk.dps.biohadoop.problems.tiledmul;
 
 import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;

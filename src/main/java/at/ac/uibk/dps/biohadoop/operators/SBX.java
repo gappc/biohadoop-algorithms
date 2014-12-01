@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.biohadoop.algorithms.tiledmatrixmul;
+package at.ac.uibk.dps.biohadoop.operators;
 
 import java.util.Random;
 
@@ -19,24 +19,6 @@ public class SBX {
 
 	private static final Random rand = new Random();
 	private static final double EPS = 1e-14;
-
-	public static int[] unbounded(double nc, int x1, int x2) {
-		if (Math.abs(x1 - x2) < EPS) {
-			return new int[] { x1, x2 };
-		}
-		double u = rand.nextDouble();
-		double beta;
-		if (u <= 0.5) {
-			beta = Math.pow(2 * u, 1 / (nc + 1));
-		} else {
-			beta = Math.pow(1 / (2 * (1 - u)), 1 / (nc + 1));
-		}
-
-		int y1 = (int) (0.5 * ((x1 + x2) - beta * Math.abs(x2 - x1)));
-		int y2 = (int) (0.5 * ((x1 + x2) + beta * Math.abs(x2 - x1)));
-
-		return new int[] { y1, y2 };
-	}
 
 	public static int[] bounded(double nc, int p1, int p2, int lower, int upper) {
 		if (Math.abs(p1 - p2) < EPS) {
@@ -68,6 +50,49 @@ public class SBX {
 				.round(0.5 * ((x1 + x2) + betaq * Math.abs(x2 - x1)));
 
 		return new int[] { y1, y2 };
+	}
+	
+	public static double[][] bounded(double nc, double[] parent1,
+			double[] parent2, double lower, double upper) {
+		double[][] result = new double[2][parent1.length];
+		for (int i = 0; i < parent1.length; i++) {
+			double p1 = parent1[i];
+			double p2 = parent2[i];
+
+			if (Math.abs(p1 - p2) < EPS) {
+				result[0][i] = p1;
+				result[1][i] = p2;
+			}
+			double u = rand.nextDouble();
+
+			double x1 = p1;
+			double x2 = p2;
+			if (x2 < x1) {
+				x1 = p2;
+				x2 = p1;
+			}
+
+			double beta = 1.0 + (2.0 * Math.min(x1 - lower, upper - x2))
+					/ (x2 - x1);
+			double alpha = 2.0 - Math.pow(beta, -(nc + 1.0));
+
+			double betaq;
+			if (u <= 0.5) {
+				betaq = Math.pow(alpha * u, 1.0 / (nc + 1.0));
+			} else {
+				betaq = Math.pow(1.0 / (2.0 - alpha * u), 1.0 / (nc + 1.0));
+			}
+
+			double y1 = 0.5 * ((x1 + x2) - betaq * Math.abs(x2 - x1));
+			double y2 = 0.5 * ((x1 + x2) + betaq * Math.abs(x2 - x1));
+
+			result[0][i] = y1;
+			result[1][i] = y2;
+			if (Double.isNaN(y1) || Double.isNaN(y2) || y1 < 0.0 || y2 < 0.0) {
+				System.out.println("NONONO");
+			}
+		}
+		return result;
 	}
 
 }
