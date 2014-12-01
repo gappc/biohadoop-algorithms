@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII;
+import at.ac.uibk.dps.biohadoop.problems.tiledmul.AsyncTiledMul;
+import at.ac.uibk.dps.biohadoop.problems.tiledmul.AsyncTiledMulWithColLayout;
+import at.ac.uibk.dps.biohadoop.problems.tiledmul.Matrices;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 import at.ac.uibk.dps.biohadoop.utils.PropertyConverter;
 
