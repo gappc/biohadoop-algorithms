@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -15,9 +16,9 @@ import at.ac.uibk.dps.biohadoop.algorithm.Algorithm;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
+import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.async.TaskPool;
 import at.ac.uibk.dps.biohadoop.hadoop.Environment;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.WorkerParametersResolver;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
 
 public class NsgaII implements Algorithm {
@@ -28,6 +29,7 @@ public class NsgaII implements Algorithm {
 	public static final String FUNCTION_CLASS = "FUNCTION_CLASS";
 	public static final String SBX_DISTRIBUTION_FACTOR = "SBX_DISTRIBUTION_FACTOR";
 	public static final String MUTATION_FACTOR = "MUTATION_FACTOR";
+	public static final String ASYNC = "ASYNC";
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsgaII.class);
 	private static final int LOG_STEPS = 100;
@@ -35,12 +37,12 @@ public class NsgaII implements Algorithm {
 	@Override
 	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
-		long startTime = System.currentTimeMillis();
+		long algorithmStartTime = System.nanoTime();
 		long biohadoopStartupTime = Long.parseLong(Environment
 				.get(Environment.BIOHADOOP_START_AT_NS));
 		LOG.info(
 				"Starting NSGA-II at System.nanoTime()={}, Biohadoop startup took {}ns",
-				startTime, startTime - biohadoopStartupTime);
+				algorithmStartTime, algorithmStartTime - biohadoopStartupTime);
 
 		Preparation prep = new Preparation(properties);
 
@@ -48,33 +50,97 @@ public class NsgaII implements Algorithm {
 
 		double[][] population = initializePopulation(prep.getPopSize() * 2,
 				prep.getGenomeSize());
-
 		double[][] objectiveValues = new double[prep.getPopSize() * 2][2];
-		computeObjectiveValues(prep, population, objectiveValues, 0,
-				prep.getPopSize());
-		List<List<Integer>> fronts = FastNonDominatedSort.sort(objectiveValues);
+
+		// Initialization: compute front for initial population
+		List<List<Integer>> fronts = FastNonDominatedSort.sort(Arrays.copyOf(
+				objectiveValues, prep.getPopSize()));
+
+		// Initialization: start task pool
+		int workerCount = Integer.parseInt(Environment.get(Environment.WORKER_COUNT));
+		TaskPool pool = new TaskPool(prep.getTaskSubmitter(), 3 * workerCount);
+		pool.update(population, objectiveValues, fronts);
+		pool.start();
+
+		// Initialization: create children from initial population and compute
+		// objective values for them. The children overwrite the initial
+		// population
+		List<TaskFuture<Individual>> offsprings = new ArrayList<>();
+
+		if (prep.isAsync()) {
+			// Asynchronous generational GA
+			for (int i = 0; i < prep.getPopSize(); i++) {
+				Individual individual = pool.getFinishedIndividual();
+				population[i] = individual.getIndividual();
+				objectiveValues[i] = individual.getObjectives();
+			}
+		} else {
+			// Synchronous generational GA
+			Random rand = new Random();
+			for (int i = 0; i < prep.getPopSize(); i++) {
+				double[][] parents = new double[2][];
+				parents[0] = population[rand.nextInt(prep.getPopSize())];
+				parents[1] = population[rand.nextInt(prep.getPopSize())];
+				TaskFuture<Individual> offspring = prep.getTaskSubmitter().add(
+						parents);
+				offsprings.add(offspring);
+			}
+			for (int i = 0; i < prep.getPopSize(); i++) {
+				population[i] = offsprings.get(i).get().getIndividual();
+				objectiveValues[i] = offsprings.get(i).get().getObjectives();
+			}
+		}
+		
+		fronts = FastNonDominatedSort.sort(Arrays.copyOf(
+				objectiveValues, prep.getPopSize()));
 
 		// Initialization finished
-		LOG.info("Initialisation took {}ns", System.nanoTime() - startTime);
+		LOG.info("Algorithm initialisation until main loop took {}ns",
+				System.nanoTime() - algorithmStartTime);
 
-		long workerTime = 0;
-		startTime = System.currentTimeMillis();
+		long fullWorkerTime = 0;
+		long loopStartTime = System.nanoTime();
 
 		// Start algorithm
+		long singleIterationTime = System.nanoTime();
 		int iteration = 0;
 		boolean end = false;
-		long iterationStart = System.nanoTime();
 		while (!end) {
-			produceOffsprings(population, objectiveValues, fronts,
-					prep.getSbxDistributionFactor(), prep.getMutationFactor());
+			long workerStartTime = System.nanoTime();
+			offsprings.clear();
 
-			long workerStart = System.nanoTime();
-			objectiveValues = computeObjectiveValues(prep, population,
-					objectiveValues, prep.getPopSize(), prep.getPopSize());
-			workerTime += System.nanoTime() - workerStart;
-
+			if (prep.isAsync()) {
+				// Asynchronous generational GA
+				pool.update(population, objectiveValues, fronts);
+				for (int i = 0; i < prep.getPopSize(); i++) {
+					Individual individual = pool.getFinishedIndividual();
+					population[i + prep.getPopSize()] = individual
+							.getIndividual();
+					objectiveValues[i + prep.getPopSize()] = individual
+							.getObjectives();
+				}
+			} else {
+				// Synchronous generational GA
+				for (int i = 0; i < prep.getPopSize(); i++) {
+					int[] parentIndexes = parentSelectionTournament(fronts,
+							objectiveValues);
+					double[][] parents = new double[2][];
+					parents[0] = population[parentIndexes[0]];
+					parents[1] = population[parentIndexes[1]];
+					TaskFuture<Individual> offspring = prep.getTaskSubmitter()
+							.add(parents);
+					offsprings.add(offspring);
+				}
+				for (int i = 0; i < prep.getPopSize(); i++) {
+					population[i + prep.getPopSize()] = offsprings.get(i).get()
+							.getIndividual();
+					objectiveValues[i + prep.getPopSize()] = offsprings.get(i)
+							.get().getObjectives();
+				}
+			}
+			fullWorkerTime += System.nanoTime() - workerStartTime;
 			fronts = FastNonDominatedSort.sort(objectiveValues);
-
+			
 			double[][] newPopulation = new double[prep.getPopSize() * 2][prep
 					.getGenomeSize()];
 			double[][] newObjectiveValues = new double[prep.getPopSize() * 2][prep
@@ -111,27 +177,7 @@ public class NsgaII implements Algorithm {
 			population = newPopulation;
 			objectiveValues = newObjectiveValues;
 
-			// TODO ERROR?
-			// objectiveValues = computeObjectiveValues(prep, population,
-			// objectiveValues, 0, prep.getPopSize());
-
 			iteration++;
-
-			// objectiveValues);
-
-			// solverData = new SolverData<>(result, 0, iteration);
-			//
-			// // Handle saving of results to file
-			// if (saveAfterIteration != null
-			// && iteration % saveAfterIteration == 0) {
-			// try {
-			// FileSaver.save(solverId, properties, solverData);
-			// } catch (FileSaveException e) {
-			// throw new AlgorithmException(
-			// "Error while trying to save data to file "
-			// + savePath, e);
-			// }
-			// }
 
 			// By setting the progress here, we inform Biohadoop and Hadoop
 			// about the current progress
@@ -146,8 +192,8 @@ public class NsgaII implements Algorithm {
 				long endTime = System.nanoTime();
 				LOG.info("Counter: {} | last {} NSGAII iterations took {} ns",
 						iteration + persitedIteration, LOG_STEPS, endTime
-								- startTime);
-				startTime = endTime;
+								- singleIterationTime);
+				singleIterationTime = endTime;
 			}
 		}
 
@@ -165,22 +211,25 @@ public class NsgaII implements Algorithm {
 			e.printStackTrace();
 		}
 
+		long fullAlgorithmTime = System.nanoTime() - algorithmStartTime;
+		long fullLoopTime = System.nanoTime() - loopStartTime;
 		int workerSize = WorkerParametersResolver.getWorkerParameters().size();
-		long iterationTime = System.nanoTime() - iterationStart;
 
 		prep.logProperties();
 
+		LOG.info("Async={}", prep.isAsync());
 		LOG.info("Workers={}", workerSize);
 		LOG.info("Iterations={}", prep.getIterations());
-		LOG.info("Iteration time {}ns", iterationTime);
-		LOG.info("Worker time {}ns", workerTime);
+		LOG.info("Algorithm run time {}ns", fullAlgorithmTime);
+		LOG.info("Time spent in main loop {}ns", fullLoopTime);
+		LOG.info("Worker time {}ns", fullWorkerTime);
 		LOG.info("Iteration time parseable ({} {})", workerSize,
-				String.format("%.3f", iterationTime / 1e9));
+				String.format("%.3f", fullLoopTime / 1e9));
 		LOG.info(
 				"Iterations per second ({} {})",
 				workerSize,
 				String.format("%.3f", prep.getIterations()
-						/ (iterationTime / 1e9)));
+						/ (fullLoopTime / 1e9)));
 
 		LOG.info("-----------------------");
 	}
@@ -197,49 +246,6 @@ public class NsgaII implements Algorithm {
 			}
 		}
 		return population;
-	}
-
-	private void produceOffsprings(double[][] population,
-			double[][] objectiveValues, List<List<Integer>> fronts,
-			double sbxDistributionFactor, double mutationFactor) {
-		Random rand = new Random();
-		int populationSize = population.length / 2;
-		int genomeSize = population[0].length;
-
-		for (int i = 0; i < populationSize; i++) {
-			int[] parents = parentSelectionTournament(fronts, objectiveValues);
-
-			double[][] children = SBX.bounded(sbxDistributionFactor,
-					population[parents[0]], population[parents[1]], 0, 1);
-			// Each child has 50% probability to get chosen
-			if (rand.nextDouble() < 0.5) {
-				population[i + populationSize] = children[0];
-			} else {
-				population[i + populationSize] = children[1];
-			}
-
-			for (int j = 0; j < genomeSize; j++)
-				if (Double.isNaN(population[i + populationSize][j])) {
-					System.out.println("POPULATION FUCK");
-				}
-
-			for (int j = 0; j < genomeSize; j++)
-				if (population[i + populationSize][j] < 0.0) {
-					System.out.println("POPULATION FUCK");
-				}
-
-			int mutationGenomeIndex = rand.nextInt(genomeSize);
-			population[i + populationSize][mutationGenomeIndex] = ParamterBasedMutator
-					.mutate(population[i + populationSize][mutationGenomeIndex],
-							mutationFactor, 0, 1);
-			// for (int j = 0; j < genomeSize; j++) {
-			// if (rand.nextDouble() < 1.0 / genomeSize) {
-			// population[i + populationSize][j] = ParamterBasedMutator
-			// .mutate(population[i + populationSize][j],
-			// mutationFactor, 0, 1);
-			// }
-			// }
-		}
 	}
 
 	private int[] parentSelectionTournament(final List<List<Integer>> fronts,
@@ -278,26 +284,6 @@ public class NsgaII implements Algorithm {
 			}
 		}
 		throw new RuntimeException("Kacke");
-	}
-
-	private double[][] computeObjectiveValues(Preparation prep,
-			double[][] population, double[][] objectiveValues, int start,
-			int length) throws AlgorithmException {
-		try {
-			List<TaskFuture<double[]>> taskFutures = new ArrayList<>();
-			for (int i = 0; i < length; i++) {
-				TaskFuture<double[]> tf = prep.getTaskSubmitter().add(
-						population[i + start]);
-				taskFutures.add(tf);
-			}
-			for (int i = 0; i < taskFutures.size(); i++) {
-				objectiveValues[i + start] = taskFutures.get(i).get();
-			}
-			return objectiveValues;
-		} catch (TaskException e) {
-			LOG.error("Error while remote task computation", e);
-			throw new AlgorithmException(e);
-		}
 	}
 
 }
