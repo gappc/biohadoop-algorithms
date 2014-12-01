@@ -8,21 +8,24 @@
     } ],
     "workers" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
-      "count" : 2
+      "count" : 1
     } ]
   },
-  "globalProperties" : { },
+  "globalProperties" : {
+    "KRYO_MAX_BUFFER_SIZE" : "20000000",
+    "KRYO_BUFFER_SIZE" : "1024"
+  },
   "algorithmConfigurations" : [ {
     "name" : "TILED-MATRIX-MUL",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.tiledmatrixmul.TiledMulAlgorithm",
     "properties" : {
-      "MATRIX_LAYOUT" : "LAYOUT_COL",
-      "MAX_BLOCK_SIZE" : "128",
-      "ITERATIONS" : "1000",
-      "MUTATION_FACTOR" : "100",
-      "SBX_DISTRIBUTION_FACTOR" : "1",
-      "MATRIX_SIZE" : "128",
-      "POP_SIZE" : "50"
+      "MATRIX_LAYOUT" : "LAYOUT_ROW",
+      "MAX_BLOCK_SIZE" : "256",
+      "ITERATIONS" : "100",
+      "MUTATION_FACTOR" : "20",
+      "SBX_DISTRIBUTION_FACTOR" : "20",
+      "MATRIX_SIZE" : "256",
+      "POP_SIZE" : "20"
     }
   } ]
 }
