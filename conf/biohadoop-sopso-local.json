@@ -1,0 +1,30 @@
+{
+  "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
+  "communicationConfiguration" : {
+    "endpoints" : [ {
+      "endpoint" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.endpoint.KryoEndpoint"
+    }, {
+      "endpoint" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.endpoint.WebSocketEndpoint"
+    } ],
+    "workers" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
+      "count" : 3
+    } ]
+  },
+  "globalProperties" : { 
+      "KRYO_MAX_BUFFER_SIZE" : "20000000",
+    "KRYO_BUFFER_SIZE" : "1024"
+  },
+  "algorithmConfigurations" : [ {
+    "name" : "SOPSO",
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.sopso.SoPso",
+    "properties" : {
+      "INERTIA" : "0.4",
+      "ITERATIONS" : "100",
+      "GLOBAL_WEIGHT" : "2.0",
+      "PERSONAL_WEIGHT" : "2.0",
+      "MATRIX_SIZE" : "128",
+      "PARTICLE_COUNT" : "30"
+    }
+  } ]
+}
