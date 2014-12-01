@@ -1,0 +1,28 @@
+{
+  "includePaths" : [ "/biohadoop/lib/", "/biohadoop/conf/" ],
+  "communicationConfiguration" : {
+    "endpoints" : [ {
+      "endpoint" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.endpoint.KryoEndpoint"
+    }, {
+      "endpoint" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.endpoint.WebSocketEndpoint"
+    } ],
+    "workers" : [ {
+      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
+      "count" : 2
+    } ]
+  },
+  "globalProperties" : { },
+  "algorithmConfigurations" : [ {
+    "name" : "MOPSO",
+    "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.mopso.MoPso",
+    "properties" : {
+      "INERTIA" : "0.4",
+      "ITERATIONS" : "100",
+      "GLOBAL_WEIGHT" : "2.0",
+      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt1",
+      "PERSONAL_WEIGHT" : "2.0",
+      "ARCHIVE_SIZE" : "100",
+      "PARTICLE_COUNT" : "30"
+    }
+  } ]
+}
