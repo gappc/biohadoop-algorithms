@@ -38,6 +38,8 @@ public class TiledMulAlgorithm implements Algorithm {
 	@Override
 	public void run(AlgorithmId solverId, Map<String, String> properties)
 			throws AlgorithmException {
+		long algorithmStartTime = System.nanoTime();
+		
 		// Read configuration and prepare needed data and objects
 		final Preparation prep = new Preparation(properties);
 
@@ -64,7 +66,10 @@ public class TiledMulAlgorithm implements Algorithm {
 		int[] blockMax = new int[BLOCKS];
 		int[] blockMin = new int[] { prep.getMaxBlockSize(),
 				prep.getMaxBlockSize(), prep.getMaxBlockSize() };
-		long iterationStart = System.nanoTime();
+		
+		long fullWorkerTime = 0;
+		long loopStartTime = System.nanoTime();
+		
 		while (count < prep.getIterations()) {
 			long start = System.nanoTime();
 
@@ -78,6 +83,7 @@ public class TiledMulAlgorithm implements Algorithm {
 			}
 
 			// Send data to workers
+			long workerStartTime = System.nanoTime();
 			futures.clear();
 			long remoteStart = System.nanoTime();
 			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
@@ -89,6 +95,7 @@ public class TiledMulAlgorithm implements Algorithm {
 			for (int i = 0; i < prep.getPopSize(); i++) {
 				fitness[i + prep.getPopSize()] = futures.get(i).get();
 			}
+			fullWorkerTime += System.nanoTime() - workerStartTime;
 			long remoteEnd = System.nanoTime();
 
 			LOG.info("Before sort");
@@ -134,19 +141,23 @@ public class TiledMulAlgorithm implements Algorithm {
 		}
 		prep.logProperties();
 
+		long fullAlgorithmTime = System.nanoTime() - algorithmStartTime;
+		long fullLoopTime = System.nanoTime() - loopStartTime;
 		int workerSize = WorkerParametersResolver.getWorkerParameters().size();
-		long iterationTime = System.nanoTime() - iterationStart;
+		
 		LOG.info("Workers={}", WorkerParametersResolver.getWorkerParameters()
 				.size());
 		LOG.info("Iterations={}", prep.getIterations());
-		LOG.info("Iteration time {}ns", iterationTime);
+		LOG.info("Algorithm run time {}ns", fullAlgorithmTime);
+		LOG.info("Time spent in main loop {}ns", fullLoopTime);
+		LOG.info("Worker time {}ns", fullWorkerTime);
 		LOG.info("Iteration time parseable ({} {})", workerSize,
-				String.format("%.3f", iterationTime / 1e9));
+				String.format("%.3f", fullLoopTime / 1e9));
 		LOG.info(
 				"Iterations per second ({} {})",
 				workerSize,
 				String.format("%.3f", prep.getIterations()
-						/ (iterationTime / 1e9)));
+						/ (fullLoopTime / 1e9)));
 
 		LOG.info("-----------------------");
 	}
