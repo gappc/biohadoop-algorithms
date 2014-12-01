@@ -31,9 +31,9 @@ public class NsgaIIConfigWriter {
 	private static String UIBK_CONFIG_NAME = CONF_OUTPUT_DIR + "/" + CONF_NAME
 			+ "-uibk.json";
 
-	private static final String GENOME_SIZE = "100";
+	private static final String GENOME_SIZE = "10";
 	private static final String MAX_ITERATIONS = "250";
-	private static final String POPULATION_SIZE = "100";
+	private static final String POPULATION_SIZE = "10";
 	private static final String FILE_SAVE_AFTER_ITERATION = "100";
 	private static final String FILE_LOAD_ON_STARTUP = "false";
 	private static final String SBX_DISTRIBUTION_FACTOR = "20";
@@ -93,7 +93,7 @@ public class NsgaIIConfigWriter {
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
 				.addAlgorithm(solverConfiguration).addDefaultEndpoints()
 				.addWorker(KryoWorker.class, KRYO_WORKER_COUNT)
-				.addWorker(WebSocketWorker.class, WEBSOCKET_WORKER_COUNT)
+//				.addWorker(WebSocketWorker.class, WEBSOCKET_WORKER_COUNT)
 				.build();
 	}
 
@@ -120,7 +120,7 @@ public class NsgaIIConfigWriter {
 				.addLibPath("/biohadoop/lib/").addLibPath("/biohadoop/conf/")
 				.addAlgorithm(solverConfiguration).addDefaultEndpoints()
 				.addWorker(KryoWorker.class, KRYO_WORKER_COUNT)
-				.addWorker(WebSocketWorker.class, WEBSOCKET_WORKER_COUNT)
+//				.addWorker(WebSocketWorker.class, WEBSOCKET_WORKER_COUNT)
 				.build();
 	}
 
@@ -148,7 +148,7 @@ public class NsgaIIConfigWriter {
 				.addLibPath("/user/hadoop/biohadoop/conf/")
 				.addAlgorithm(solverConfiguration).addDefaultEndpoints()
 				.addWorker(KryoWorker.class, KRYO_WORKER_COUNT)
-				.addWorker(WebSocketWorker.class, WEBSOCKET_WORKER_COUNT)
+//				.addWorker(WebSocketWorker.class, WEBSOCKET_WORKER_COUNT)
 				.build();
 	}
 }

@@ -9,9 +9,6 @@
     "workers" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
       "count" : 1
-    }, {
-      "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker",
-      "count" : 0
     } ]
   },
   "globalProperties" : { },
@@ -19,11 +16,11 @@
     "name" : "NSGA-II",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII",
     "properties" : {
-      "POPULATION_SIZE" : "100",
+      "POPULATION_SIZE" : "10",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter",
       "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
       "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger",
-      "GENOME_SIZE" : "100",
+      "GENOME_SIZE" : "10",
       "MUTATION_FACTOR" : "20",
       "ASYNC" : "false",
       "SBX_DISTRIBUTION_FACTOR" : "20",
