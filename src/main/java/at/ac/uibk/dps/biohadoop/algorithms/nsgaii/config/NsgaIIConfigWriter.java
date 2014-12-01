@@ -33,7 +33,7 @@ public class NsgaIIConfigWriter {
 
 	private static final String GENOME_SIZE = "10";
 	private static final String MAX_ITERATIONS = "250";
-	private static final String POPULATION_SIZE = "10";
+	private static final String POPULATION_SIZE = "100";
 	private static final String FILE_SAVE_AFTER_ITERATION = "100";
 	private static final String FILE_LOAD_ON_STARTUP = "false";
 	private static final String SBX_DISTRIBUTION_FACTOR = "20";

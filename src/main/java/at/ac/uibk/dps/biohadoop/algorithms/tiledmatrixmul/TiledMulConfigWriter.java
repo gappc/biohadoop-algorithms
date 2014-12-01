@@ -46,12 +46,12 @@ public class TiledMulConfigWriter {
 				// and that are provided as arguments when the algorithm is
 				// started
 				.addProperty(TiledMulAlgorithm.MATRIX_LAYOUT, TiledMulAlgorithm.LAYOUT_ROW)
-				.addProperty(TiledMulAlgorithm.MATRIX_SIZE, "256")
-				.addProperty(TiledMulAlgorithm.MAX_BLOCK_SIZE, "256")
+				.addProperty(TiledMulAlgorithm.MATRIX_SIZE, "128")
+				.addProperty(TiledMulAlgorithm.MAX_BLOCK_SIZE, "128")
 				.addProperty(TiledMulAlgorithm.SBX_DISTRIBUTION_FACTOR, "20")
 				.addProperty(TiledMulAlgorithm.MUTATION_FACTOR, "20")
-				.addProperty(TiledMulAlgorithm.POP_SIZE, "10")
-				.addProperty(TiledMulAlgorithm.ITERATIONS, "50").build();
+				.addProperty(TiledMulAlgorithm.POP_SIZE, "100")
+				.addProperty(TiledMulAlgorithm.ITERATIONS, "250").build();
 
 		// Build Biohadoop configuration
 		BiohadoopConfiguration biohadoopConfiguration = new BiohadoopConfiguration.Builder()
