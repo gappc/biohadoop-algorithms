@@ -204,12 +204,12 @@ public class NsgaII implements Algorithm {
 			sb.append(objectiveValues[i][0] + " " + objectiveValues[i][1]
 					+ "\n");
 		}
-		try {
-			Files.write(Paths.get("/tmp/data.out"), sb.toString().getBytes());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Files.write(Paths.get("/tmp/data.out"), sb.toString().getBytes());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		long fullAlgorithmTime = System.nanoTime() - algorithmStartTime;
 		long fullLoopTime = System.nanoTime() - loopStartTime;
