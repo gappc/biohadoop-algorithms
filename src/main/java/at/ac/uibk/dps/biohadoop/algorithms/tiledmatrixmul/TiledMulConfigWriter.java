@@ -50,8 +50,8 @@ public class TiledMulConfigWriter {
 				.addProperty(TiledMulAlgorithm.MAX_BLOCK_SIZE, "256")
 				.addProperty(TiledMulAlgorithm.SBX_DISTRIBUTION_FACTOR, "20")
 				.addProperty(TiledMulAlgorithm.MUTATION_FACTOR, "20")
-				.addProperty(TiledMulAlgorithm.POP_SIZE, "20")
-				.addProperty(TiledMulAlgorithm.ITERATIONS, "100").build();
+				.addProperty(TiledMulAlgorithm.POP_SIZE, "10")
+				.addProperty(TiledMulAlgorithm.ITERATIONS, "50").build();
 
 		// Build Biohadoop configuration
 		BiohadoopConfiguration biohadoopConfiguration = new BiohadoopConfiguration.Builder()

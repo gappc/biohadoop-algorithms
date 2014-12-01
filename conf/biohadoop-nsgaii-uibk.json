@@ -23,9 +23,9 @@
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter",
       "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
       "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger",
-      "GENOME_SIZE" : "300",
+      "GENOME_SIZE" : "100",
       "MUTATION_FACTOR" : "20",
-      "ASYNC" : "true",
+      "ASYNC" : "false",
       "SBX_DISTRIBUTION_FACTOR" : "20",
       "MAX_ITERATIONS" : "250"
     }

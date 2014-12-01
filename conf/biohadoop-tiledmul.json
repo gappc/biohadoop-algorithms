@@ -21,11 +21,11 @@
     "properties" : {
       "MATRIX_LAYOUT" : "LAYOUT_ROW",
       "MAX_BLOCK_SIZE" : "256",
-      "ITERATIONS" : "100",
+      "ITERATIONS" : "50",
       "MUTATION_FACTOR" : "20",
       "SBX_DISTRIBUTION_FACTOR" : "20",
       "MATRIX_SIZE" : "256",
-      "POP_SIZE" : "20"
+      "POP_SIZE" : "10"
     }
   } ]
 }

@@ -31,7 +31,7 @@ public class NsgaIIConfigWriter {
 	private static String UIBK_CONFIG_NAME = CONF_OUTPUT_DIR + "/" + CONF_NAME
 			+ "-uibk.json";
 
-	private static final String GENOME_SIZE = "300";
+	private static final String GENOME_SIZE = "100";
 	private static final String MAX_ITERATIONS = "250";
 	private static final String POPULATION_SIZE = "100";
 	private static final String FILE_SAVE_AFTER_ITERATION = "100";
@@ -39,7 +39,7 @@ public class NsgaIIConfigWriter {
 	private static final String SBX_DISTRIBUTION_FACTOR = "20";
 	private static final String MUTATION_FACTOR = "20";
 	private static final String FUNCTION_NAME = Zdt3.class.getCanonicalName();
-	private static final String ASYNC = "true";
+	private static final String ASYNC = "false";
 	private static final int KRYO_WORKER_COUNT = 1;
 	private static final int WEBSOCKET_WORKER_COUNT = 0;
 
