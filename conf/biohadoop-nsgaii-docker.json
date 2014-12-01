@@ -8,31 +8,26 @@
     } ],
     "workers" : [ {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.KryoWorker",
-      "count" : 2
+      "count" : 1
     }, {
       "worker" : "at.ac.uibk.dps.biohadoop.tasksystem.communication.worker.WebSocketWorker",
       "count" : 0
     } ]
   },
-  "globalProperties" : {
-    "KRYO_REGISTRATOR" : "at.ac.uibk.dps.biohadoop.functions.KryoFunctionObjects"
-  },
+  "globalProperties" : { },
   "algorithmConfigurations" : [ {
     "name" : "NSGA-II",
     "algorithm" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.NsgaII",
     "properties" : {
       "POPULATION_SIZE" : "100",
       "ISLAND_DATA_REMOTE_RESULT_GETTER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIIBestResultGetter",
-      "FILE_LOAD_PATH" : "/biohadoop/persistence/nsgaii",
-      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt1",
+      "FUNCTION_CLASS" : "at.ac.uibk.dps.biohadoop.functions.Zdt3",
       "ISLAND_DATA_MERGER" : "at.ac.uibk.dps.biohadoop.algorithms.nsgaii.distribution.NsgaIISimpleMerger",
-      "GENOME_SIZE" : "30",
-      "FILE_SAVE_PATH" : "/biohadoop/persistence/nsgaii",
+      "GENOME_SIZE" : "300",
       "MUTATION_FACTOR" : "20",
+      "ASYNC" : "true",
       "SBX_DISTRIBUTION_FACTOR" : "20",
-      "MAX_ITERATIONS" : "250",
-      "FILE_LOAD_ON_STARTUP" : "false",
-      "FILE_SAVE_AFTER_ITERATION" : "100"
+      "MAX_ITERATIONS" : "250"
     }
   } ]
 }
