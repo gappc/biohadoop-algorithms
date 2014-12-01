@@ -14,9 +14,9 @@ import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmException;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmId;
 import at.ac.uibk.dps.biohadoop.algorithm.AlgorithmService;
 import at.ac.uibk.dps.biohadoop.hadoop.launcher.WorkerParametersResolver;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskException;
+import at.ac.uibk.dps.biohadoop.operators.ParamterBasedMutator;
+import at.ac.uibk.dps.biohadoop.operators.SBX;
 import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskFuture;
-import at.ac.uibk.dps.biohadoop.tasksystem.queue.TaskSubmitter;
 
 public class TiledMulAlgorithm implements Algorithm {
 
@@ -29,6 +29,8 @@ public class TiledMulAlgorithm implements Algorithm {
 	public static final String ITERATIONS = "ITERATIONS";
 	public static final String LAYOUT_ROW = "LAYOUT_ROW";
 	public static final String LAYOUT_COL = "LAYOUT_COL";
+
+	private static final int BLOCKS = 3;
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(TiledMulAlgorithm.class);
@@ -49,8 +51,9 @@ public class TiledMulAlgorithm implements Algorithm {
 		// New Child population needs no fitness computation, as it is
 		// overwritten in the following while loop
 		for (int i = 0; i < prep.getPopSize(); i++) {
-			futures.add(submitFitnessComputation(prep.getTaskSubmitter(),
-					population[i]));
+			TaskFuture<Long> future = prep.getTaskSubmitter()
+					.add(population[i]);
+			futures.add(future);
 		}
 		// Wait for all computations to complete
 		for (int i = 0; i < prep.getPopSize(); i++) {
@@ -58,7 +61,7 @@ public class TiledMulAlgorithm implements Algorithm {
 		}
 
 		int count = 0;
-		int[] blockMax = new int[3];
+		int[] blockMax = new int[BLOCKS];
 		int[] blockMin = new int[] { prep.getMaxBlockSize(),
 				prep.getMaxBlockSize(), prep.getMaxBlockSize() };
 		long iterationStart = System.nanoTime();
@@ -78,8 +81,9 @@ public class TiledMulAlgorithm implements Algorithm {
 			futures.clear();
 			long remoteStart = System.nanoTime();
 			for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
-				futures.add(submitFitnessComputation(prep.getTaskSubmitter(),
-						population[i]));
+				TaskFuture<Long> future = prep.getTaskSubmitter().add(
+						population[i]);
+				futures.add(future);
 			}
 			// Wait for worker results
 			for (int i = 0; i < prep.getPopSize(); i++) {
@@ -110,7 +114,7 @@ public class TiledMulAlgorithm implements Algorithm {
 
 			// Compute global maximum and minimum blocksize, just for interest
 			for (int i = 0; i < 2 * prep.getPopSize(); i++) {
-				for (int j = 0; j < 3; j++) {
+				for (int j = 0; j < BLOCKS; j++) {
 					blockMin[j] = Math.min(population[i][j], blockMin[j]);
 					blockMax[j] = Math.max(population[i][j], blockMax[j]);
 				}
@@ -149,23 +153,17 @@ public class TiledMulAlgorithm implements Algorithm {
 
 	private int[][] generatePopulation(Preparation prep) {
 		final Random rand = new Random();
-		final int[][] population = new int[2 * prep.getPopSize()][3];
+		final int[][] population = new int[2 * prep.getPopSize()][BLOCKS];
 		// We only need to initialize current population, set new population to
 		// 0
 		for (int i = 0; i < prep.getPopSize(); i++) {
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < BLOCKS; j++) {
 				// Set blockSize. As a blockSize of 0 would make no sense, we
 				// add 1
 				population[i][j] = rand.nextInt(prep.getMaxBlockSize()) + 1;
 			}
 		}
 		return population;
-	}
-
-	private TaskFuture<Long> submitFitnessComputation(
-			TaskSubmitter<Matrices, int[], Long> taskSubmitter, int[] blocks)
-			throws TaskException {
-		return taskSubmitter.add(blocks);
 	}
 
 	// Using k-tournament with k = 2 for parent selection and SBX for crossover
@@ -186,10 +184,11 @@ public class TiledMulAlgorithm implements Algorithm {
 			}
 		}
 
-		int[] child = new int[3];
-		for (int i = 0; i < 3; i++) {
-			int[] crossoverVariable = SBX.bounded(sbxDistributionFactor, population[parents[0]][i],
-					population[parents[1]][i], 1, maxBlockSize);
+		int[] child = new int[BLOCKS];
+		for (int i = 0; i < BLOCKS; i++) {
+			int[] crossoverVariable = SBX.bounded(sbxDistributionFactor,
+					population[parents[0]][i], population[parents[1]][i], 1,
+					maxBlockSize);
 			// Each child has 50% probability to get chosen
 			if (rand.nextDouble() < 0.5) {
 				child[i] = crossoverVariable[0];
@@ -202,10 +201,18 @@ public class TiledMulAlgorithm implements Algorithm {
 
 	private int[] mutateChild(int[] child, double mutationFactor,
 			int maxBlockSize) {
-		int[] result = new int[3];
-		for (int i = 0; i < 3; i++) {
-			result[i] = ParamterBasedMutator.mutate(child[i], mutationFactor,
-					1, maxBlockSize);
+		Random rand = new Random();
+		int[] result = new int[BLOCKS];
+
+		for (int i = 0; i < BLOCKS; i++) {
+			// Modify one block on average
+			if (rand.nextDouble() < 1.0 / BLOCKS) {
+				result[i] = ParamterBasedMutator.mutate(child[i],
+						mutationFactor, 1, maxBlockSize);
+			}
+			else {
+				result[i] = child[i];
+			}
 		}
 		return result;
 	}
