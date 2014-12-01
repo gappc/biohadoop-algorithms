@@ -9,6 +9,7 @@ Example algorithms for the [Biohadoop](https://github.com/gappc/biohadoop) frame
 * NSGA-II: Implementation of [NSGA-II](http://www.iitk.ac.in/kangal/Deb_NSGA-II.pdf), that tries to solve multi-objective optimization problems
 * Sleep: An algorithm that can be used to simulate workloads
 * Sum: Simple example, that sums the values of an integer value
+* Tiled matrix multiplication: Find optimal tile sizes for tiled matrix multiplication
 * TypeTest: Sending and receiving different Java types
 
 ## Installation
