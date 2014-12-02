@@ -76,15 +76,6 @@ public class TiledMulAlgorithm implements Algorithm {
 		while (count < prep.getIterations()) {
 			long start = System.nanoTime();
 
-			// Recombination and mutation
-			// for (int i = prep.getPopSize(); i < 2 * prep.getPopSize(); i++) {
-			// int[] child = recombinePopulation(population, fitness,
-			// prep.getMaxBlockSize(), prep.getSbxDistributionFactor());
-			// int[] mutatedChild = mutateChild(child,
-			// prep.getMutationFactor(), prep.getMaxBlockSize());
-			// population[i] = mutatedChild;
-			// }
-
 			// Send data to workers
 			long workerStartTime = System.nanoTime();
 			futures.clear();
@@ -160,6 +151,8 @@ public class TiledMulAlgorithm implements Algorithm {
 		LOG.info("Algorithm run time {}ns", fullAlgorithmTime);
 		LOG.info("Time spent in main loop {}ns", fullLoopTime);
 		LOG.info("Worker time {}ns", fullWorkerTime);
+		LOG.info("Best blocks {}", Arrays.toString(population[0]));
+		LOG.info("Best time {}", fitness[0]);
 		LOG.info("Iteration time parseable ({} {})", workerSize,
 				String.format("%.3f", fullLoopTime / 1e9));
 		LOG.info(
@@ -204,57 +197,6 @@ public class TiledMulAlgorithm implements Algorithm {
 		}
 		return parents;
 	}
-
-	// Using k-tournament with k = 2 for parent selection and SBX for crossover
-//	private int[] recombinePopulation(int[][] population, long[] fitness,
-//			int maxBlockSize, double sbxDistributionFactor) {
-//		final Random rand = new Random();
-//		int parents[] = new int[2];
-//
-//		for (int i = 0; i < 2; i++) {
-//			// Take k = 2 parents from current population (remember, current
-//			// population is stored in first half of population[])
-//			int i1 = rand.nextInt(population.length / 2);
-//			int i2 = rand.nextInt(population.length / 2);
-//			if (fitness[i1] < fitness[i2]) {
-//				parents[i] = i1;
-//			} else {
-//				parents[i] = i2;
-//			}
-//		}
-//
-//		int[] child = new int[BLOCKS];
-//		for (int i = 0; i < BLOCKS; i++) {
-//			int[] crossoverVariable = SBX.bounded(sbxDistributionFactor,
-//					population[parents[0]][i], population[parents[1]][i], 1,
-//					maxBlockSize);
-//			// Each child has 50% probability to get chosen
-//			if (rand.nextDouble() < 0.5) {
-//				child[i] = crossoverVariable[0];
-//			} else {
-//				child[i] = crossoverVariable[1];
-//			}
-//		}
-//		return child;
-//	}
-
-	// private int[] mutateChild(int[] child, double mutationFactor,
-	// int maxBlockSize) {
-	// Random rand = new Random();
-	// int[] result = new int[BLOCKS];
-	//
-	// for (int i = 0; i < BLOCKS; i++) {
-	// // Modify one block on average
-	// if (rand.nextDouble() < 1.0 / BLOCKS) {
-	// result[i] = ParamterBasedMutator.mutate(child[i],
-	// mutationFactor, 1, maxBlockSize);
-	// }
-	// else {
-	// result[i] = child[i];
-	// }
-	// }
-	// return result;
-	// }
 
 	private void logIterationResult(int[][] population, long[] fitness) {
 		StringBuilder sb = new StringBuilder("[");
