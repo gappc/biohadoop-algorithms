@@ -1,11 +1,11 @@
 package at.ac.uibk.dps.biohadoop.algorithms.mopso;
 
 import at.ac.uibk.dps.biohadoop.functions.Function;
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
 
 public class RemoteEvaluator implements
-		AsyncComputable<Class<Function>, double[], double[]> {
+		Worker<Class<Function>, double[], double[]> {
 
 	private Function function = null;
 

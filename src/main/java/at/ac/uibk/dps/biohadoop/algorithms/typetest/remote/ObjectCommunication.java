@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 
 public class ObjectCommunication implements
-		AsyncComputable<UUID, Date, String> {
+		Worker<UUID, Date, String> {
 
 	@Override
 	public String compute(Date data, UUID initialData) throws ComputeException {

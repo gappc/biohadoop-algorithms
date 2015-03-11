@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 
 public class ListCommunication implements
-		AsyncComputable<List<Integer>, List<Double>, List<String>> {
+		Worker<List<Integer>, List<Double>, List<String>> {
 
 	@Override
 	public List<String> compute(List<Double> data, List<Integer> initialData)

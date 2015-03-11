@@ -1,6 +1,6 @@
 package at.ac.uibk.dps.biohadoop.problems.tiledmul;
 
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
 
 /**
@@ -10,7 +10,7 @@ import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
  * @author Christian Gapp
  *
  */
-public class AsyncTiledMul implements AsyncComputable<Matrices, int[], Long> {
+public class AsyncTiledMul implements Worker<Matrices, int[], Long> {
 
 	@Override
 	public Long compute(int[] blocks, Matrices matrices)

@@ -5,7 +5,7 @@ import java.util.Random;
 import at.ac.uibk.dps.biohadoop.operators.ParamterBasedMutator;
 import at.ac.uibk.dps.biohadoop.operators.SBX;
 import at.ac.uibk.dps.biohadoop.problems.tiledmul.MatrixMul;
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
 
 /**
@@ -15,7 +15,7 @@ import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
  * @author Christian Gapp
  *
  */
-public class RemoteTiledMul implements AsyncComputable<RemoteConfiguration, int[][], TiledMulIndividual> {
+public class RemoteTiledMul implements Worker<RemoteConfiguration, int[][], TiledMulIndividual> {
 
 	private final Random rand = new Random();
 	

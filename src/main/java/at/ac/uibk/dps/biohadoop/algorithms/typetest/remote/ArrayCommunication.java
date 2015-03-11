@@ -3,10 +3,10 @@ package at.ac.uibk.dps.biohadoop.algorithms.typetest.remote;
 import org.apache.commons.lang.ArrayUtils;
 
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 
 public class ArrayCommunication implements
-		AsyncComputable<int[], double[], String[]> {
+		Worker<int[], double[], String[]> {
 
 	@Override
 	public String[] compute(double[] data, int[] initialData)

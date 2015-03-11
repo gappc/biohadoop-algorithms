@@ -6,11 +6,11 @@ import at.ac.uibk.dps.biohadoop.algorithms.nsgaii.algorithm.Individual;
 import at.ac.uibk.dps.biohadoop.functions.Function;
 import at.ac.uibk.dps.biohadoop.operators.ParamterBasedMutator;
 import at.ac.uibk.dps.biohadoop.operators.SBX;
-import at.ac.uibk.dps.biohadoop.tasksystem.AsyncComputable;
+import at.ac.uibk.dps.biohadoop.tasksystem.Worker;
 import at.ac.uibk.dps.biohadoop.tasksystem.ComputeException;
 
 public class OffspringComputation implements
-		AsyncComputable<OffspringConfiguration, double[][], Individual> {
+		Worker<OffspringConfiguration, double[][], Individual> {
 
 	private final Random rand = new Random();
 
